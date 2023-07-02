@@ -1,7 +1,7 @@
 import express from "express";
 import passport from "passport";
 import { User } from "../models/user.mjs";
-import { getToken, COOKIE_OPTIONS, getRefreshToken } from "../authenticate.mjs";
+import { getToken, COOKIE_OPTIONS, getRefreshToken, verifyUser, } from "../authenticate.mjs";
 import jwt from "jsonwebtoken";
 const router = express.Router();
 function logout(req, res, next) {
@@ -110,6 +110,9 @@ router.post("/refreshToken", (req, res, next) => {
         res.statusCode = 401;
         res.send("Unauthorized");
     }
+});
+router.get("/me", verifyUser, (req, res, next) => {
+    res.send(req.user);
 });
 export default router;
 //# sourceMappingURL=user.mjs.map
