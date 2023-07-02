@@ -1,0 +1,15 @@
+{
+  "configurations": [
+    {
+      "name": "Launch Server",
+      "program": "${workspaceFolder}/dist/server.mjs",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node",
+      "outputCapture": "std",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["--inspect=9229"],
+      "preLaunchTask": "Build"
+    }
+  ]
+}
