@@ -1,14 +1,18 @@
+import "dotenv/config";
 import express from "express";
 import bodyParser from "body-parser";
-import { connectToDatabase } from "./db.mjs";
+import connectToDatabase from "./util/connectdb.mjs";
 import passport from "passport";
-import session from "express-session";
-import MongoDBStoreFactory from "connect-mongodb-session";
-import expressSession from "./middleware/expressSession.mjs";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 // Routes
-import authRouter from "./routes/auth.mjs";
+import userRouter from "./routes/user.mjs";
+import defaultRouter from "./routes/default.mjs";
 import locationsRouter from "./routes/locations.mjs";
+// Authentication
+import "./strategies/jwtStrategy.mjs";
+import "./strategies/LocalStrategy.mjs";
+import "./authenticate.mjs";
 const port = 3001;
 async function startServer() {
     await connectToDatabase();
@@ -17,17 +21,17 @@ async function startServer() {
     });
 }
 const app = express();
-const MongoDBStore = MongoDBStoreFactory(session);
 // Configure the server
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(cors());
 // Configure authentication
-app.use(expressSession());
-app.use(passport.session());
+app.use(passport.initialize());
 // Set up the routes
-app.use(authRouter);
+app.use("/users", userRouter);
 app.use(locationsRouter);
+app.use(defaultRouter);
 // Run it!
 startServer();
 //# sourceMappingURL=server.mjs.map
