@@ -143,6 +143,39 @@ router.post("/refreshToken", (req, res, next) => {
   }
 });
 
+router.get("/logout", verifyUser, (req, res, next) => {
+  const { signedCookies = {} } = req;
+  const { refreshToken } = signedCookies;
+  User.findById(req.user!._id).then(
+    (user) => {
+      const tokenIndex = user!.refreshToken.findIndex(
+        (item) => item.refreshToken === refreshToken
+      );
+
+      if (tokenIndex !== -1) {
+        // remove the token from the array of stored refresh tokens and save the updated list
+        // back to the database.
+        user!.refreshToken.splice(tokenIndex, 1);
+        user!
+          .save()
+          .then(() => {
+            res.clearCookie("refreshToken", COOKIE_OPTIONS);
+            res.send({ success: true });
+          })
+          .catch((err) => {
+            res.statusCode = 500;
+            res.send(err);
+          });
+      } else {
+        // If the token wasn't found in the database for some reason just nuke it from the browser cookies instead.
+        res.clearCookie("refreshToken", COOKIE_OPTIONS);
+        res.send({ success: true });
+      }
+    },
+    (err) => next(err)
+  );
+});
+
 router.get("/me", verifyUser, (req, res, next) => {
   res.send(req.user);
 });
