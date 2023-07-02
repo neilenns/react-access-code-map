@@ -3,6 +3,7 @@ import passport from "passport";
 import { User } from "../models/user.mjs";
 import { getToken, COOKIE_OPTIONS, getRefreshToken } from "../authenticate.mjs";
 import { Error as MongooseError } from "mongoose";
+import jwt, { Jwt, JwtPayload } from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -82,15 +83,59 @@ router.post(
   }
 );
 
-router.get("/login", (req, res, next) => {
-  res.redirect("/");
-});
+router.post("/refreshToken", (req, res, next) => {
+  const { signedCookies = {} } = req;
+  const { refreshToken } = signedCookies;
 
-router.get("/signup", function (req, res, next) {
-  res.redirect("/");
-});
+  if (refreshToken) {
+    try {
+      const payload = jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET
+      );
+      const userId = (payload as JwtPayload)._id;
+      User.findOne({ _id: userId }).then(
+        (user) => {
+          if (user) {
+            // Find the refresh token against the user record in database
+            const tokenIndex = user.refreshToken.findIndex(
+              (item) => item.refreshToken === refreshToken
+            );
 
-router.get("/logout", logout);
-router.post("/logout", logout);
+            if (tokenIndex === -1) {
+              res.statusCode = 401;
+              res.send("Unauthorized");
+            } else {
+              const token = getToken({ _id: userId });
+              // If the refresh token exists, then create new one and replace it.
+              const newRefreshToken = getRefreshToken({ _id: userId });
+              user.refreshToken[tokenIndex] = { refreshToken: newRefreshToken };
+              user
+                .save()
+                .then(() => {
+                  res.cookie("refreshToken", newRefreshToken, COOKIE_OPTIONS);
+                  res.send({ success: true, token });
+                })
+                .catch((error) => {
+                  res.statusCode = 500;
+                  res.send(error);
+                });
+            }
+          } else {
+            res.statusCode = 401;
+            res.send("Unauthorized");
+          }
+        },
+        (err) => next(err)
+      );
+    } catch (err) {
+      res.statusCode = 401;
+      res.send("Unauthorized");
+    }
+  } else {
+    res.statusCode = 401;
+    res.send("Unauthorized");
+  }
+});
 
 export default router;
