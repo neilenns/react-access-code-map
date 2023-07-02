@@ -9,4 +9,5 @@ export default interface ILocation {
   lastModified: Date;
   modifiedByFirstName: string;
   modifiedByLastName: string;
+  _id: Types.ObjectId;
 }
