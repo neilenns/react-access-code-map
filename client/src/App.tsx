@@ -1,5 +1,5 @@
 import './App.css';
-import {AccessCodeMap} from "./components/AccessCodeMap";
+import AccessCodeMap from "./components/AccessCodeMap";
 
 function App() {
   return (

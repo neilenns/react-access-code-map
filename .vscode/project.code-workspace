@@ -19,6 +19,7 @@
       "client": true,
       "server": true
     },
-    "jest.disabledWorkspaceFolders": ["server", "ROOT"]
+    "jest.disabledWorkspaceFolders": ["server", "ROOT"],
+    "sarif-viewer.connectToGithubCodeScanning": "off"
   }
 }
