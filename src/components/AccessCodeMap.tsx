@@ -1,5 +1,6 @@
 import { MapContainer, TileLayer } from 'react-leaflet'
 import { LocateControl } from "./LocateControl";
+import { GeocodeControl } from './GeocodeControl';
 
 export function AccessCodeMap() {
 	return (
@@ -8,6 +9,7 @@ export function AccessCodeMap() {
 				attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 			/>
+		<GeocodeControl position="topright"/>
 		<LocateControl position="topright" />
 		</MapContainer>
 	);
