@@ -4,7 +4,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import connectToDatabase from "./util/connectdb.mjs";
 import passport from "passport";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import cookieParser from "cookie-parser";
 
 // Routes
@@ -33,7 +33,24 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(cors());
+
+const whitelist = process.env.WHITELISTED_DOMAINS
+  ? process.env.WHITELISTED_DOMAINS.split(",")
+  : [];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+
+  credentials: true,
+} as CorsOptions;
+
+app.use(cors(corsOptions));
 
 // Configure authentication
 app.use(passport.initialize());

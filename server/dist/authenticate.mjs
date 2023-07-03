@@ -6,7 +6,7 @@ export const COOKIE_OPTIONS = {
     secure: !dev,
     signed: true,
     maxAge: eval(process.env.REFRESH_TOKEN_EXPIRY) * 1000,
-    sameSite: "none",
+    sameSite: dev ? false : "none",
 };
 export const getToken = (user) => {
     return jwt.sign(user, process.env.JWT_SECRET, {
