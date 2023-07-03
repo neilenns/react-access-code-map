@@ -44,23 +44,24 @@ function App() {
   useEffect(() => {
     verifyUser()
   }, [verifyUser])
-  
-    /**
-   * Sync logout across tabs
-   */
-    const syncLogout = useCallback((event: StorageEvent) => {
-      if (event.key === "logout") {
-        // If using react-router-dom, you may call history.push("/")
-        window.location.reload()
-      }
-    }, [])
-  
-    useEffect(() => {
-      window.addEventListener("storage", syncLogout)
-      return () => {
-        window.removeEventListener("storage", syncLogout)
-      }
-    }, [syncLogout])
+
+  // Watch for changes to local storage for a logout key and if it's there that
+  // means the site was logged out in a different tab. Refresh the page and log out!
+  const syncLogout = useCallback((event: StorageEvent) => {
+    if (event.key === "logout") {
+      // If using react-router-dom, you may call history.push("/")
+      window.location.reload()
+    }
+  }, [])
+
+
+  // Register for events on local storage to watch for cross-tab logout.
+  useEffect(() => {
+    window.addEventListener("storage", syncLogout)
+    return () => {
+      window.removeEventListener("storage", syncLogout)
+    }
+  }, [syncLogout])
 
   // This is passed to the AccessCodeMap component to handle when the logout button
   // on the map is clicked.
@@ -84,14 +85,16 @@ function App() {
   }
 
   return userContext.token === null ? (
-    <Card elevation={Elevation.TWO}>
-      <Tabs id="Tabs" onChange={handleTabChange} selectedTabId={currentTab}>
-        <Tab id="login" title="Login" panel={<Login />} />
-        <Tab id="register" title="Register" panel={<Register />} />
-        <Tabs.Expander />
-      </Tabs>
-    </Card>
-  ) : userContext.token ? (
+    <div className="loginPage">
+      <Card elevation={Elevation.TWO} style={{width: '20rem'}}>
+        <Tabs id="Tabs" onChange={handleTabChange} selectedTabId={currentTab}>
+          <Tab id="login" title="Login" panel={<Login />} />
+          <Tab id="register" title="Register" panel={<Register />} />
+          <Tabs.Expander />
+        </Tabs>
+      </Card>
+      </div>
+    ) : userContext.token ? (
     <div className="App">
       <AccessCodeMap onSignOutClick={logoutHandler}/>
     </div>
