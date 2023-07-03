@@ -21,7 +21,7 @@ export default function AccessCodeMap(props : IAccessCodeMapProps) {
 			<GeocodeControl position="topright"/>
 			<LocateControl position="topright" />
 			<LocationMarkers/>
-			<Control prepend position='topright'>
+			<Control position='topright'>
 				<Button onClick={onSignOutClick}>
 					<BoxArrowRight/>
 				</Button>
