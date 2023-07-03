@@ -5,12 +5,19 @@ import { serverUrl } from "../configs/accessCodeServer";
 import LocationMarker from './LocationMarker';
 
 export interface ILocationMarkerProps {
-	onDeleteMarkerClick: React.MouseEventHandler;
 }
 
 export default function LocationMarkers(props: ILocationMarkerProps) {
-	const [posts, setPosts ] = React.useState<ILocation[]>([]);
+	const [locations, setLocations ] = React.useState<ILocation[]>([]);
 	
+	function onRemoveMarker(_id: string)
+	{
+		// Remove the marker from the ones on the map.
+		setLocations(locations.filter(loc => loc._id !== _id));
+
+		console.log(`Removing ${_id}`);
+	}
+
 	React.useEffect(() => {
 		axios.get<ILocation[]>(new URL("locations", serverUrl).toString())
 		.then(response => {
@@ -18,7 +25,7 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
 				...location,
 				lastModified: new Date(location.lastModified)
 			}))
-			setPosts(locations);
+			setLocations(locations);
 		})
 		.catch(function (error) {
 			console.log(error);
@@ -28,8 +35,8 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
 	return (
 			<>
 				{
-					posts?.map(location => (
-						<LocationMarker location={location}/>
+					locations?.map(location => (
+						<LocationMarker location={location} key={location._id} onRemoveMarker={onRemoveMarker}/>
 					))
 				}
 			</>

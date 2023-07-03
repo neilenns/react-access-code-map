@@ -7,11 +7,11 @@ import { Button, Icon } from '@blueprintjs/core';
 
 export interface IAccessCodeMapProps {
 	onSignOutClick: React.MouseEventHandler;
-	onDeleteMarkerClick: React.MouseEventHandler;
 }
 
 export default function AccessCodeMap(props : IAccessCodeMapProps) {
-	const { onSignOutClick, onDeleteMarkerClick } = props;
+	const { onSignOutClick } = props;
+
 	return (
 		<MapContainer center={[47.65496185820956, -122.25201847353225]} zoom={11} scrollWheelZoom={true}>
 			<TileLayer
@@ -20,7 +20,7 @@ export default function AccessCodeMap(props : IAccessCodeMapProps) {
 			/>
 			<GeocodeControl position="topright"/>
 			<LocateControl position="topright" />
-			<LocationMarkers onDeleteMarkerClick={onDeleteMarkerClick}/>
+			<LocationMarkers/>
 			<Control position='topright'>
 				<Button onClick={onSignOutClick}>
 					<Icon icon="log-out"/>
