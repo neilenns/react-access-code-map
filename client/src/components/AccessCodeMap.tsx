@@ -3,8 +3,7 @@ import { LocateControl } from "./LocateControl";
 import { GeocodeControl } from './GeocodeControl';
 import LocationMarkers from './LocationMarkers';
 import Control from 'react-leaflet-custom-control';
-import { Button } from '@blueprintjs/core';
-import { BoxArrowRight } from 'react-bootstrap-icons';
+import { Button, Icon } from '@blueprintjs/core';
 
 export interface IAccessCodeMapProps {
 	onSignOutClick: React.MouseEventHandler;
@@ -23,7 +22,7 @@ export default function AccessCodeMap(props : IAccessCodeMapProps) {
 			<LocationMarkers/>
 			<Control position='topright'>
 				<Button onClick={onSignOutClick}>
-					<BoxArrowRight/>
+					<Icon icon="log-out"/>
 				</Button>
 			</Control>
 		</MapContainer>

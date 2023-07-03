@@ -3,6 +3,7 @@ import axios from "axios";
 import React from "react";
 import ILocation from '../types/location';
 import { serverUrl } from "../configs/accessCodeServer";
+import { Button, Icon } from '@blueprintjs/core';
 
 export default function LocationMarkers() {
 	const [posts, setPosts ] = React.useState<ILocation[]>([]);
@@ -31,6 +32,12 @@ export default function LocationMarkers() {
 								<p>{location.note}</p>
 								<p><i>Last modified by {location.modifiedByFirstName} on {location.lastModified?.toISOString().slice(0, 10)}</i></p>
 								<div className="button-container">
+									<Button id="markerEdit">
+										<Icon icon="edit"/>
+									</Button>
+									<Button id="markerDelete">
+										<Icon icon="delete"/>
+									</Button>
 								</div>
 							</Popup>
 						</Marker>
