@@ -1,15 +1,19 @@
 import axios from "axios";
-import React from "react";
+import React, { useContext } from "react";
 import ILocation from '../types/location';
 import { serverUrl } from "../configs/accessCodeServer";
 import LocationMarker from './LocationMarker';
+import { useMapEvent } from "react-leaflet";
+import { LeafletMouseEvent } from "leaflet";
+import { UserContext } from "../context/UserContext";
 
 export interface ILocationMarkerProps {
 }
 
 export default function LocationMarkers(props: ILocationMarkerProps) {
 	const [locations, setLocations ] = React.useState<ILocation[]>([]);
-	
+	const [ userContext ] = useContext(UserContext)
+
 	function onRemoveMarker(_id: string)
 	{
 		// Remove the marker from the ones on the map.
@@ -18,6 +22,32 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
 		console.log(`Removing ${_id}`);
 	}
 
+	useMapEvent('contextmenu', (e: LeafletMouseEvent) => {
+		const newLocation = {
+			latitude: e.latlng.lat,
+			longitude: e.latlng.lng,
+			note: "note",
+			title: "title",
+		};
+
+			axios.post<ILocation>(new URL("locations", serverUrl).toString(),
+				newLocation,
+				{
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${userContext.token}`
+					}
+				}).then(response => {
+					if (response.status === 200)
+					{
+						setLocations((prevValue) => [...prevValue, response.data]);
+					}
+				}).catch(err =>{
+					console.log(`Unable to create new marker: ${err}`);
+				});
+		}
+	);
+		
 	React.useEffect(() => {
 		axios.get<ILocation[]>(new URL("locations", serverUrl).toString())
 		.then(response => {

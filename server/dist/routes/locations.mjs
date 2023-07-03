@@ -1,8 +1,9 @@
 import express from "express";
 import { ObjectId } from "mongodb";
 import { Location } from "../models/location.mjs";
+import { verifyUser } from "../authenticate.mjs";
 const router = express.Router();
-router.get("/locations", async (req, res) => {
+router.get("/locations", verifyUser, async (req, res) => {
     try {
         var result = await Location.aggregate([
             {
@@ -36,7 +37,7 @@ router.get("/locations", async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 });
-router.put("/locations/:id", async (req, res) => {
+router.put("/locations/:id", verifyUser, async (req, res) => {
     try {
         const locationId = req.params.id;
         const updatedData = {
@@ -52,7 +53,7 @@ router.put("/locations/:id", async (req, res) => {
         res.status(500).json({ error: "Failed to update marker" });
     }
 });
-router.post("/locations", async (req, res) => {
+router.post("/locations", verifyUser, async (req, res) => {
     try {
         const { title, latitude, longitude, note } = req.body;
         var date = new Date();
@@ -74,7 +75,7 @@ router.post("/locations", async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 });
-router.delete("/locations/:id", async (req, res) => {
+router.delete("/locations/:id", verifyUser, async (req, res) => {
     try {
         const locationId = req.params.id;
         const result = await Location.findByIdAndDelete(new ObjectId(locationId));

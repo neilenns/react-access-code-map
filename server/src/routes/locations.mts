@@ -1,11 +1,13 @@
 import express from "express";
 import { ObjectId } from "mongodb";
 import { Location, ILocation } from "../models/location.mjs";
+import { verifyUser } from "../authenticate.mjs";
 
 const router = express.Router();
 
 router.get(
   "/locations",
+  verifyUser,
   async (req: express.Request, res: express.Response): Promise<void> => {
     try {
       var result = await Location.aggregate([
@@ -44,6 +46,7 @@ router.get(
 
 router.put(
   "/locations/:id",
+  verifyUser,
   async (req: express.Request, res: express.Response) => {
     try {
       const locationId = req.params.id;
@@ -68,6 +71,7 @@ router.put(
 
 router.post(
   "/locations",
+  verifyUser,
   async (req: express.Request, res: express.Response) => {
     try {
       const { title, latitude, longitude, note } = req.body;
@@ -97,6 +101,7 @@ router.post(
 
 router.delete(
   "/locations/:id",
+  verifyUser,
   async (req: express.Request, res: express.Response) => {
     try {
       const locationId = req.params.id;
