@@ -19,8 +19,6 @@ const Login = () => {
 
     const genericErrorMessage = "Something went wrong, try again later.";
 
-    const endpoint = new URL("users/login", serverUrl).toString();
-    console.log(endpoint);
     axios.post(new URL("users/login", serverUrl).toString(),
     {
       username,
@@ -30,6 +28,7 @@ const Login = () => {
       withCredentials: true
     })
     .then(async response => {
+      setIsSubmitting(false);
       if (response.status === 400)
       {
         setError("Fill all the fields in correctly.");
@@ -49,7 +48,6 @@ const Login = () => {
           return { ...oldValues, token: response.data.token }
         })
         console.log(userContext);
-        setIsSubmitting(false);
       }
     })
     .catch(error => {
