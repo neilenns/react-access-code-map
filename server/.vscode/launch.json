@@ -9,6 +9,9 @@
       "outputCapture": "std",
       "runtimeExecutable": "node",
       "runtimeArgs": ["--inspect=9229"],
+      "env": {
+        "NODE_ENV": "development"
+      },
       "preLaunchTask": "Build"
     }
   ]

@@ -12,7 +12,7 @@ export const COOKIE_OPTIONS = {
   sameSite: dev ? false : "none",
 } as CookieOptions;
 
-export const getToken = (user: any): string => {
+export const getAuthToken = (user: any): string => {
   return jwt.sign(user, process.env.JWT_SECRET, {
     expiresIn: eval(process.env.SESSION_EXPIRY),
   });

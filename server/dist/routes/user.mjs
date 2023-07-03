@@ -1,7 +1,7 @@
 import express from "express";
 import passport from "passport";
 import { User } from "../models/user.mjs";
-import { getToken, COOKIE_OPTIONS, getRefreshToken, verifyUser, } from "../authenticate.mjs";
+import { getAuthToken, COOKIE_OPTIONS, getRefreshToken, verifyUser, } from "../authenticate.mjs";
 import jwt from "jsonwebtoken";
 const router = express.Router();
 function logout(req, res, next) {
@@ -25,14 +25,14 @@ router.post("/signup", function (req, res) {
         else {
             user.firstName = req.body.firstName || "";
             user.lastName = req.body.lastName || "";
-            const token = getToken({ _id: user._id });
+            const authToken = getAuthToken({ _id: user._id });
             const refreshToken = getRefreshToken({ _id: user._id });
             user.refreshToken.push({ refreshToken });
             user
                 .save()
                 .then(() => {
                 res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS);
-                res.send({ success: true, token });
+                res.send({ success: true, token: authToken });
             })
                 .catch((err) => {
                 res.statusCode = 500;
@@ -44,7 +44,7 @@ router.post("/signup", function (req, res) {
 router.post("/login", passport.authenticate("local", {
     session: false,
 }), (req, res, next) => {
-    const token = getToken({ _id: req.user._id });
+    const authToken = getAuthToken({ _id: req.user._id });
     const refreshToken = getRefreshToken({ _id: req.user._id });
     User.findById(req.user._id).then((user) => {
         if (!user) {
@@ -55,7 +55,7 @@ router.post("/login", passport.authenticate("local", {
             .save()
             .then(() => {
             res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS);
-            res.send({ success: true, token });
+            res.send({ success: true, token: authToken });
         })
             .catch((err) => {
             res.statusCode = 500;
@@ -79,7 +79,7 @@ router.post("/refreshToken", (req, res, next) => {
                         res.send("Unauthorized");
                     }
                     else {
-                        const token = getToken({ _id: userId });
+                        const authToken = getAuthToken({ _id: userId });
                         // If the refresh token exists, then create new one and replace it.
                         const newRefreshToken = getRefreshToken({ _id: userId });
                         user.refreshToken[tokenIndex] = { refreshToken: newRefreshToken };
@@ -87,7 +87,7 @@ router.post("/refreshToken", (req, res, next) => {
                             .save()
                             .then(() => {
                             res.cookie("refreshToken", newRefreshToken, COOKIE_OPTIONS);
-                            res.send({ success: true, token });
+                            res.send({ success: true, token: authToken });
                         })
                             .catch((error) => {
                             res.statusCode = 500;

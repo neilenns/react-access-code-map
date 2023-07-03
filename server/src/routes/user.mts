@@ -2,7 +2,7 @@ import express from "express";
 import passport from "passport";
 import { User } from "../models/user.mjs";
 import {
-  getToken,
+  getAuthToken,
   COOKIE_OPTIONS,
   getRefreshToken,
   verifyUser,
@@ -40,14 +40,14 @@ router.post("/signup", function (req, res) {
       } else {
         user.firstName = req.body.firstName || "";
         user.lastName = req.body.lastName || "";
-        const token = getToken({ _id: user._id });
+        const authToken = getAuthToken({ _id: user._id });
         const refreshToken = getRefreshToken({ _id: user._id });
         user.refreshToken.push({ refreshToken });
         user
           .save()
           .then(() => {
             res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS);
-            res.send({ success: true, token });
+            res.send({ success: true, token: authToken });
           })
           .catch((err: MongooseError) => {
             res.statusCode = 500;
@@ -64,7 +64,7 @@ router.post(
     session: false,
   }),
   (req, res, next) => {
-    const token = getToken({ _id: req.user!._id });
+    const authToken = getAuthToken({ _id: req.user!._id });
     const refreshToken = getRefreshToken({ _id: req.user!._id });
     User.findById(req.user!._id).then(
       (user) => {
@@ -76,7 +76,7 @@ router.post(
           .save()
           .then(() => {
             res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS);
-            res.send({ success: true, token });
+            res.send({ success: true, token: authToken });
           })
           .catch((err: MongooseError) => {
             res.statusCode = 500;
@@ -111,7 +111,7 @@ router.post("/refreshToken", (req, res, next) => {
               res.statusCode = 401;
               res.send("Unauthorized");
             } else {
-              const token = getToken({ _id: userId });
+              const authToken = getAuthToken({ _id: userId });
               // If the refresh token exists, then create new one and replace it.
               const newRefreshToken = getRefreshToken({ _id: userId });
               user.refreshToken[tokenIndex] = { refreshToken: newRefreshToken };
@@ -119,7 +119,7 @@ router.post("/refreshToken", (req, res, next) => {
                 .save()
                 .then(() => {
                   res.cookie("refreshToken", newRefreshToken, COOKIE_OPTIONS);
-                  res.send({ success: true, token });
+                  res.send({ success: true, token: authToken });
                 })
                 .catch((error) => {
                   res.statusCode = 500;

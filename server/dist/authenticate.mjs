@@ -8,7 +8,7 @@ export const COOKIE_OPTIONS = {
     maxAge: eval(process.env.REFRESH_TOKEN_EXPIRY) * 1000,
     sameSite: dev ? false : "none",
 };
-export const getToken = (user) => {
+export const getAuthToken = (user) => {
     return jwt.sign(user, process.env.JWT_SECRET, {
         expiresIn: eval(process.env.SESSION_EXPIRY),
     });
