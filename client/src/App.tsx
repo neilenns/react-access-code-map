@@ -80,6 +80,10 @@ function App() {
     });
   }
 
+  const deleteMarkerHandler = () => {
+    console.log("Delete marker clicked");
+  }
+
   function handleTabChange(navbarTabId: TabId) {
     setCurrentTab(navbarTabId);
   }
@@ -96,7 +100,7 @@ function App() {
       </div>
     ) : userContext.token ? (
     <div className="App">
-      <AccessCodeMap onSignOutClick={logoutHandler}/>
+      <AccessCodeMap onSignOutClick={logoutHandler} onDeleteMarkerClick={deleteMarkerHandler}/>
     </div>
   ) :
   (
