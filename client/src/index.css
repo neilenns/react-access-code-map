@@ -19,3 +19,7 @@ code {
 .auth-form {
   margin-top: 10px;
 }
+
+.loader {
+  margin: 100px auto;
+}

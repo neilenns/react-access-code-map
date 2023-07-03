@@ -8,7 +8,7 @@ export interface IProviderProps {
 // It took forever to find the way to get this to work without any type errors.
 // Solution comes from https://stackoverflow.com/a/62932958
 type IUserState = {
-    token?: string;
+    token?: string | null;
 };
 
 type IUserContext = [IUserState, React.Dispatch<React.SetStateAction<IUserState>>];
@@ -16,7 +16,7 @@ type IUserContext = [IUserState, React.Dispatch<React.SetStateAction<IUserState>
 const UserContext = React.createContext<IUserContext>([{}, () => null])
 
 const UserProvider = (props: IProviderProps) => {
-    const [state, setState] = useState<IUserState>({ token: ""});
+    const [state, setState] = useState<IUserState>({ token: null});
 
     return (
         <UserContext.Provider value={[ state, setState ]}>

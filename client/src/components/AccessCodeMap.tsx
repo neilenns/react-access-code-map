@@ -2,8 +2,16 @@ import { MapContainer, TileLayer } from 'react-leaflet'
 import { LocateControl } from "./LocateControl";
 import { GeocodeControl } from './GeocodeControl';
 import LocationMarkers from './LocationMarkers';
+import Control from 'react-leaflet-custom-control';
+import { Button } from '@blueprintjs/core';
+import { BoxArrowRight } from 'react-bootstrap-icons';
 
-export default function AccessCodeMap() {
+export interface IAccessCodeMapProps {
+	onSignOutClick: React.MouseEventHandler;
+}
+
+export default function AccessCodeMap(props : IAccessCodeMapProps) {
+	const { onSignOutClick } = props;
 	return (
 		<MapContainer center={[47.65496185820956, -122.25201847353225]} zoom={11} scrollWheelZoom={true}>
 			<TileLayer
@@ -13,6 +21,11 @@ export default function AccessCodeMap() {
 			<GeocodeControl position="topright"/>
 			<LocateControl position="topright" />
 			<LocationMarkers/>
+			<Control prepend position='topright'>
+				<Button onClick={onSignOutClick}>
+					<BoxArrowRight/>
+				</Button>
+			</Control>
 		</MapContainer>
 	);
 }
