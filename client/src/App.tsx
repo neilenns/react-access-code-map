@@ -45,6 +45,25 @@ function App() {
     verifyUser()
   }, [verifyUser])
   
+    /**
+   * Sync logout across tabs
+   */
+    const syncLogout = useCallback((event: StorageEvent) => {
+      if (event.key === "logout") {
+        // If using react-router-dom, you may call history.push("/")
+        window.location.reload()
+      }
+    }, [])
+  
+    useEffect(() => {
+      window.addEventListener("storage", syncLogout)
+      return () => {
+        window.removeEventListener("storage", syncLogout)
+      }
+    }, [syncLogout])
+
+  // This is passed to the AccessCodeMap component to handle when the logout button
+  // on the map is clicked.
   const logoutHandler = () => {
     axios.get(new URL("users/logout", serverUrl).toString(),
     {
