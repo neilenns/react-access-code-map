@@ -27,9 +27,9 @@ export default function LocationMarkers() {
 					posts?.map(location => (
 						<Marker position={[location.latitude, location.longitude]} key={location._id}>
 							<Popup>
-								<h1 className="small-heading">${location.title}</h1>
-								<p>${location.note}</p>
-								<p><i>Last modified by ${location.modifiedByFirstName} on ${location.lastModified?.toISOString().slice(0, 10)}</i></p>
+								<h1 className="small-heading">{location.title}</h1>
+								<p>{location.note}</p>
+								<p><i>Last modified by {location.modifiedByFirstName} on {location.lastModified?.toISOString().slice(0, 10)}</i></p>
 								<div className="button-container">
 								</div>
 							</Popup>
