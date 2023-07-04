@@ -4,7 +4,10 @@
     {
       "type": "npm",
       "script": "start",
-      "label": "run server",
+      "label": "run client",
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
       "group": {
         "kind": "build",
         "isDefault": true
@@ -28,6 +31,26 @@
           }
         }
       ]
+    },
+    {
+      "type": "npm",
+      "script": "start:dev",
+      "label": "run server",
+      "options": {
+        "cwd": "${workspaceFolder}/server"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "isBackground": true,
+      "problemMatcher": ["$tsc-watch"]
+    },
+    {
+      "label": "run server and client",
+      "dependsOrder": "sequence",
+      "dependsOn": ["run server", "run client"],
+      "problemMatcher": []
     }
   ]
 }

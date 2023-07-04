@@ -5,8 +5,8 @@
       "request": "launch",
       "name": "Launch Microsoft Edge and open the Edge DevTools",
       "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}/src",
-      "preLaunchTask": "run server"
+      "webRoot": "${workspaceFolder}/client/src",
+      "preLaunchTask": "run client"
     }
   ]
 }

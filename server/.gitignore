@@ -1,2 +1,4 @@
 dist/
+src/dist/
+client/dist/
 **/*.map
