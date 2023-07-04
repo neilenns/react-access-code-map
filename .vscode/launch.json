@@ -1,12 +1,20 @@
 {
   "configurations": [
     {
-      "type": "vscode-edge-devtools.debug",
+      "name": "Attach",
+      "port": 9229,
+      "request": "attach",
+      "skipFiles": ["<node_internals>/**"],
+      "localRoot": "${workspaceFolder}/server/src",
+      "type": "node"
+    },
+    {
+      "name": "Launch Edge",
       "request": "launch",
-      "name": "Launch Microsoft Edge and open the Edge DevTools",
+      "type": "msedge",
+      "runtimeExecutable": "dev",
       "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}/client/src",
-      "preLaunchTask": "run client"
+      "webRoot": "${workspaceFolder}/client/src"
     }
   ]
 }
