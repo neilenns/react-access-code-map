@@ -2,7 +2,6 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "npm: start",
       "type": "npm",
       "script": "start",
       "group": {
@@ -11,8 +10,22 @@
       },
       "isBackground": true,
       "problemMatcher": [
-        "$ts-checker-webpack-watch",
-        "$ts-checker-eslint-webpack"
+        {
+          "base": "$ts-checker-webpack-watch",
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": "Compiling...", // Signals the begin of the Task
+            "endsPattern": "webpack compiled .*" // Signals that now the initialization of the task is complete
+          }
+        },
+        {
+          "base": "$ts-checker-eslint-webpack-watch",
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": "Issues checking in progress...",
+            "endsPattern": ".* issues found."
+          }
+        }
       ]
     }
   ]
