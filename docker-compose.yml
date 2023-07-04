@@ -2,6 +2,19 @@ version: '3.8'
 name: access-code-map
 
 services:
+  mongodb:
+    image: mongo:latest
+    container_name: access-code-map-mongodb
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - MONGO_INITDB_DATABASE=admin
+    volumes:
+      - d:\access-code-map\data:/data/db
+    ports:
+      - 27017:27017
+
   client:
     build:
       context: ./client
@@ -15,7 +28,7 @@ services:
       args:
         REACT_APP_SERVER_URL: http://access-code-map-server:3001/
     ports:
-      - '3000:80'
+      - 3000:80
     depends_on:
       - server
 
@@ -23,14 +36,17 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
+    container_name: access-code-map-server
     ports:
-      - '3001:3001'
+      - 3001:3001
     environment:
       - JWT_SECRET=cd9de1b2-6c02-4b03-b8f8-39d1987a23a6
       - REFRESH_TOKEN_SECRET=f2f8c61e-d08b-4df2-9be9-8507a3d4a8ca
       - SESSION_EXPIRY=900
       - REFRESH_TOKEN_EXPIRY=2592000
-      - MONGO_DB_CONNECTION_STRING=mongodb://admin:admin@tom:28018/
+      - MONGO_DB_CONNECTION_STRING=mongodb://admin:admin@access-code-map-mongodb:28017/
       - MONGO_DB_NAME=access-code-map
       - COOKIE_SECRET=a5b6e1f7-3be7-4d8a-9c9f-2e86d2f1b7bc
       - WHITELISTED_DOMAINS=http://localhost:3000
+    depends_on:
+      - mongodb
