@@ -4,6 +4,7 @@
     {
       "type": "npm",
       "script": "start",
+      "label": "run server",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -14,8 +15,8 @@
           "base": "$ts-checker-webpack-watch",
           "background": {
             "activeOnStart": true,
-            "beginsPattern": "Compiling...", // Signals the begin of the Task
-            "endsPattern": "webpack compiled .*" // Signals that now the initialization of the task is complete
+            "beginsPattern": "Compiling...",
+            "endsPattern": "webpack compiled .*"
           }
         },
         {

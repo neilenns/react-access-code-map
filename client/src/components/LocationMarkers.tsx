@@ -70,7 +70,7 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
 		.catch(function (error) {
 			console.log(error);
 		});
-	}, []);
+	}, [userContext.token]);
 
 	return (
 			<>
