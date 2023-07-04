@@ -39,10 +39,11 @@ services:
       #
       # Having to remember to make this port number match the one set up for the server is lame.
       # Someday I'll find a better way.
+      # Note that this has to be the *public facing URL* for the server. It can't be the
+      # internal Docker server name (e.g. http://server:3001/) because it is accessed
+      # from the browser, NOT the Docker container.
       args:
-        REACT_APP_SERVER_URL: http://server:3001/
-    links:
-      - server
+        REACT_APP_SERVER_URL: http://localhost:3001/
     ports:
       - 3000:80
     depends_on:
