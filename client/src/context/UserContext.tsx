@@ -7,7 +7,7 @@ export interface IProviderProps {
 
 // It took forever to find the way to get this to work without any type errors.
 // Solution comes from https://stackoverflow.com/a/62932958
-export type IUserState = {
+type IUserState = {
     token?: string | null;
 };
 

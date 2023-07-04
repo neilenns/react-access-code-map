@@ -1,5 +1,6 @@
 import './App.css';
 import { Card, Elevation, Tab, TabId, Tabs } from "@blueprintjs/core"
+// import AccessCodeMap from "./components/AccessCodeMap";
 import { useCallback, useContext, useEffect, useState } from "react"
 import Login from "./components/Login"
 import Register from "./components/Register"
@@ -15,10 +16,6 @@ function App() {
   const [userContext, setUserContext] = useContext(UserContext)
 
   const verifyUser = useCallback(() => {
-    // Don't run this if the user is logged out.
-    if (!userContext.token)
-      return;
-
     axios.post(new URL("users/refreshToken", serverUrl).toString(),
     {},
     {
@@ -42,7 +39,7 @@ function App() {
         return { ...oldValues, token: null }
       })
     });
-  }, [setUserContext, userContext.token])
+  }, [setUserContext])
 
   useEffect(() => {
     verifyUser()
@@ -57,6 +54,7 @@ function App() {
     }
   }, [])
 
+
   // Register for events on local storage to watch for cross-tab logout.
   useEffect(() => {
     window.addEventListener("storage", syncLogout)
@@ -64,21 +62,6 @@ function App() {
       window.removeEventListener("storage", syncLogout)
     }
   }, [syncLogout])
-
-  // Register for changes to the UserContext to set the token for axios calls
-  useEffect(() => {
-    if (!userContext.token)
-    {
-      axios.defaults.withCredentials = false;
-      axios.defaults.headers.common['Authorization'] = null;
-    }
-    else
-    {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${userContext.token}`;
-      axios.defaults.baseURL = serverUrl;
-      axios.defaults.withCredentials = true;
-    }
-  }, [userContext.token]);
 
   // This is passed to the AccessCodeMap component to handle when the logout button
   // on the map is clicked.

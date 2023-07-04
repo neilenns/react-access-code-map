@@ -3,6 +3,8 @@ import ILocation from '../types/location';
 import { Button, Icon } from '@blueprintjs/core';
 import { serverUrl } from "../configs/accessCodeServer";
 import axios from "axios";
+import { useContext } from 'react';
+import { UserContext } from '../context/UserContext';
 
 export type RemoveMarkerHandler = (_id: string) => void;
 
@@ -13,7 +15,8 @@ export interface ILocationMarkerProps {
 
 export default function LocationMarkers(props: ILocationMarkerProps) {
 	const { location, onRemoveMarker } = props;
-	
+	const [ userContext ] = useContext(UserContext)
+
 	const onMarkerEdit = () => {
 		console.log(`Editing ${location._id}`);
 	}
@@ -22,6 +25,9 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
 		axios.delete(new URL(`locations/${location._id}`, serverUrl).toString(),
 		{
       withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${userContext.token}`
+      }
 		})
 		.then(() => {
 			console.log(`Successfully deleted ${location._id} from the database`);

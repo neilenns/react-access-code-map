@@ -31,27 +31,33 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
 		};
 
 			axios.post<ILocation>(new URL("locations", serverUrl).toString(),
-			newLocation,
-			{
-				withCredentials: true,
-			}).then(response => {
-				if (response.status === 201)
+				newLocation,
 				{
-					setLocations((prevValue) => [...prevValue, {
-						...response.data,
-						lastModified: new Date(response.data.lastModified),
-						created: new Date(response.data.created)
-					}]);
-				}
-			}).catch(err =>{
-				console.log(`Unable to create new marker: ${err}`);
-			});
+					withCredentials: true,
+					headers: {
+						Authorization: `Bearer ${userContext.token}`
+					}
+				}).then(response => {
+					if (response.status === 201)
+					{
+						setLocations((prevValue) => [...prevValue, {
+							...response.data,
+							lastModified: new Date(response.data.lastModified),
+							created: new Date(response.data.created)
+						}]);
+					}
+				}).catch(err =>{
+					console.log(`Unable to create new marker: ${err}`);
+				});
 		}
 	);
 		
 	React.useEffect(() => {
 		axios.get<ILocation[]>(new URL("locations", serverUrl).toString(), {
-				withCredentials: true
+				withCredentials: true,
+				headers: {
+					Authorization: `Bearer ${userContext.token}`
+				}
 		})
 		.then(response => {
 			const locations = response.data.map(location => ({
