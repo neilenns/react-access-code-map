@@ -6,7 +6,9 @@
       "type": "msedge",
       "runtimeExecutable": "dev",
       "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}/client/src"
+      "webRoot": "${workspaceFolder}/client/src",
+      "preLaunchTask": "run server and client",
+      }
     }
   ]
 }
