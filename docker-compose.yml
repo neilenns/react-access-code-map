@@ -1,0 +1,36 @@
+version: '3.8'
+name: access-code-map
+
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      # This has to be set as an arg instead of an environment variable
+      # because React apps are compiled and all the environment variables
+      # get hardcoded when the app is built. This gets passed
+      # to the Dockerfile, which then uses it to set an ENV before
+      # the build runs.
+      # Solution from: https://stackoverflow.com/a/52194018
+      args:
+        REACT_APP_SERVER_URL: http://access-code-map-server:3001/
+    ports:
+      - '3000:80'
+    depends_on:
+      - server
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - '3001:3001'
+    environment:
+      - JWT_SECRET=cd9de1b2-6c02-4b03-b8f8-39d1987a23a6
+      - REFRESH_TOKEN_SECRET=f2f8c61e-d08b-4df2-9be9-8507a3d4a8ca
+      - SESSION_EXPIRY=900
+      - REFRESH_TOKEN_EXPIRY=2592000
+      - MONGO_DB_CONNECTION_STRING=mongodb://admin:admin@tom:28018/
+      - MONGO_DB_NAME=access-code-map
+      - COOKIE_SECRET=a5b6e1f7-3be7-4d8a-9c9f-2e86d2f1b7bc
+      - WHITELISTED_DOMAINS=http://localhost:3000

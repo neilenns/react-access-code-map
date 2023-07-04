@@ -1,1 +1,2 @@
-export const serverUrl = process.env.SERVER_URL ?? "http://localhost:3001/";
+export const serverUrl =
+  process.env.REACT_APP_SERVER_URL ?? "http://localhost:3001/";
