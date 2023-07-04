@@ -1,14 +1,6 @@
 {
   "configurations": [
     {
-      "name": "Attach",
-      "port": 9229,
-      "request": "attach",
-      "skipFiles": ["<node_internals>/**"],
-      "localRoot": "${workspaceFolder}/server/src",
-      "type": "node"
-    },
-    {
       "name": "Launch Edge",
       "request": "launch",
       "type": "msedge",

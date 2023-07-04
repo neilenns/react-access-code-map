@@ -20,6 +20,7 @@
       "server": true
     },
     "jest.disabledWorkspaceFolders": ["server", "ROOT"],
-    "sarif-viewer.connectToGithubCodeScanning": "off"
+    "sarif-viewer.connectToGithubCodeScanning": "off",
+    "debug.javascript.autoAttachFilter": "smart"
   }
 }
