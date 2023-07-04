@@ -6,20 +6,26 @@
     },
     {
       "name": "client",
-      "path": "../client"
+      "path": "../client",
+      "settings": {
+        "files.exclude": {
+          "dist": true,
+          "node_modules": true
+        }
+      }
     },
     {
       "name": "server",
-      "path": "../server"
+      "path": "../server",
+      "settings": {
+        "files.exclude": {
+          "dist": true,
+          "node_modules": true
+        }
+      }
     }
   ],
   "settings": {
-    "files.exclude": {
-      "**/node_modules": true,
-      "client": true,
-      "server": true
-    },
-    "jest.disabledWorkspaceFolders": ["server", "ROOT"],
     "sarif-viewer.connectToGithubCodeScanning": "off",
     "debug.javascript.autoAttachFilter": "smart"
   }
