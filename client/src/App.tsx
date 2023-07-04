@@ -14,6 +14,7 @@ import Loader from './components/Loader';
 function App() {
   const [currentTab, setCurrentTab] = useState<TabId>("login")
   const [userContext, setUserContext] = useContext(UserContext)
+  const [loading, setLoading] = useState(true)
 
   const verifyUser = useCallback(() => {
     axios.post(new URL("users/refreshToken", serverUrl).toString(),
@@ -34,11 +35,13 @@ function App() {
       }
 
       setTimeout(verifyUser, 5 * 60 * 1000)
-    }).catch(err => {
+    })
+    .catch(err => {
       setUserContext(oldValues => {
         return { ...oldValues, token: null }
       })
-    });
+    })
+    .finally(() => setLoading(false));
   }, [setUserContext])
 
   useEffect(() => {
@@ -84,25 +87,30 @@ function App() {
     setCurrentTab(navbarTabId);
   }
 
-  return userContext.token === null ? (
-    <div className="loginPage">
-      <Card elevation={Elevation.TWO} style={{width: '20rem'}}>
-        <Tabs id="Tabs" onChange={handleTabChange} selectedTabId={currentTab}>
-          <Tab id="login" title="Login" panel={<Login />} />
-          <Tab id="register" title="Register" panel={<Register />} />
-          <Tabs.Expander />
-        </Tabs>
-      </Card>
-      </div>
-    ) : userContext.token ? (
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (userContext.token === null)
+  {
+    return (
+      <div className="loginPage">
+        <Card elevation={Elevation.TWO} style={{width: '20rem'}}>
+          <Tabs id="Tabs" onChange={handleTabChange} selectedTabId={currentTab}>
+            <Tab id="login" title="Login" panel={<Login />} />
+            <Tab id="register" title="Register" panel={<Register />} />
+            <Tabs.Expander />
+          </Tabs>
+        </Card>
+        </div>
+      );  
+  }
+
+  return (
     <div className="App">
       <AccessCodeMap onSignOutClick={logoutHandler}/>
     </div>
-  ) :
-  (
-    <Loader/>
-  )
- ;
+  );
 }
 
 export default App;
