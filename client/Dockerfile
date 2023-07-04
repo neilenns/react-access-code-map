@@ -27,4 +27,7 @@ WORKDIR /usr/share/nginx/html
 # Delete any default static HTML files that come with the image
 RUN rm -rf ./*
 COPY --from=build /app/build/ .
+
+EXPOSE 80
+
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

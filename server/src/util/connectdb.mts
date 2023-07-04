@@ -11,6 +11,8 @@ export default async function connectToDatabase() {
   }
 
   mongoose.set("bufferCommands", false);
+
+  console.log(`Connecting to database at ${url}...`);
   const connect = mongoose.connect(url, {
     dbName: process.env.MONGO_DB_NAME,
   });
@@ -20,6 +22,11 @@ export default async function connectToDatabase() {
       console.log("Connected to database");
     })
     .catch((err) => {
-      console.log(err);
+      // Auto-reconnect logic from:
+      // https://team.goodeggs.com/reconnecting-to-mongodb-when-mongoose-connect-fails-at-startup-83ca8496ca02
+      console.log(
+        `Failed to connect to mongo on startup - retrying in 5 secconds:\n${err}`
+      );
+      setTimeout(connectToDatabase, 5000);
     });
 }

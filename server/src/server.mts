@@ -17,7 +17,7 @@ import "./strategies/jwtStrategy.mjs";
 import "./strategies/LocalStrategy.mjs";
 import "./authenticate.mjs";
 
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 async function startServer() {
   await connectToDatabase();
