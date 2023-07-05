@@ -4,10 +4,12 @@ import ILocation from '../interfaces/ILocation.mjs';
 import { serverUrl } from "../configs/accessCodeServer";
 import LocationMarker from './LocationMarker';
 import { useMapEvent } from "react-leaflet";
-import { LeafletMouseEvent } from "leaflet";
+import { LatLng, LeafletMouseEvent } from "leaflet";
 import { UserContext } from "../context/UserContext";
 import { Types } from "mongoose";
 import { MarkerEditDialog } from "./MarkerEditDialog";
+import INominatimReverseResponse from "../interfaces/INominatimReverseResponse.mjs";
+import { resolve } from "path";
 
 export interface ILocationMarkerProps {
 }
@@ -53,12 +55,24 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
 		setIsOpen(false);
 	}
 
-	useMapEvent('contextmenu', (e: LeafletMouseEvent) => {
+	async function reverseGeocode(latlng: LatLng): Promise<INominatimReverseResponse | null> {
+		return axios
+			.get<INominatimReverseResponse>(`https://nominatim.openstreetmap.org/reverse?lat=${latlng.lat}&lon=${latlng.lng}&format=json`)
+			.then(response => response.data)
+			.catch(error => {
+				console.error('Error during reverse geocoding:', error);
+				throw error;
+			})
+	};
+
+	useMapEvent('contextmenu', async (e: LeafletMouseEvent) => {
+		const geoDetails = await reverseGeocode(e.latlng);
+
 		const newLocation = {
+			title: geoDetails ? `${geoDetails.address?.house_number ?? ""} ${geoDetails.address?.road ?? ""}`.trim() : "",
 			latitude: e.latlng.lat,
 			longitude: e.latlng.lng,
 			note: "",
-			title: "",
 		};
 
 		setSelectedLocation(newLocation);
@@ -82,6 +96,9 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
 		})
 		.catch(function (error) {
 			console.log(error);
+		})
+		.finally(() =>
+		{
 		});
 	}, [userContext.token]);
 
