@@ -37,16 +37,15 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
 					headers: {
 						Authorization: `Bearer ${userContext.token}`
 					}
-				}).then(response => {
-					if (response.status === 201)
-					{
-						setLocations((prevValue) => [...prevValue, {
-							...response.data,
-							lastModified: new Date(response.data.lastModified),
-							created: new Date(response.data.created)
-						}]);
-					}
-				}).catch(err =>{
+				})
+				.then(response => {
+					setLocations((prevValue) => [...prevValue, {
+						...response.data,
+						lastModified: new Date(response.data.lastModified),
+						created: new Date(response.data.created)
+					}]);
+				})
+				.catch(err =>{
 					console.log(`Unable to create new marker: ${err}`);
 				});
 		}
