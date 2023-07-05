@@ -6,6 +6,7 @@ export default interface INominatimReverseResponse {
   lon: string;
   display_name: string;
   address: {
+    building?: string;
     house_number?: string;
     road?: string;
     neighbourhood?: string;

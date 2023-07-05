@@ -145,9 +145,9 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
 
     const newLocation = {
       title: geoDetails
-        ? `${geoDetails.address?.house_number ?? ""} ${
-            geoDetails.address?.road ?? ""
-          }`.trim()
+        ? `${geoDetails.address?.building ?? ""} ${
+            geoDetails.address?.house_number ?? ""
+          } ${geoDetails.address?.road ?? ""}`.trim()
         : "",
       latitude: e.latlng.lat,
       longitude: e.latlng.lng,
