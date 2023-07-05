@@ -30,7 +30,7 @@ export const MarkerEditDialog: React.FC<IMarkerEditDialogProps> = (props) => {
 
 	return (
 		<Dialog open={props.isOpen} onClose={onDialogClose}>
-        <DialogTitle>Subscribe</DialogTitle>
+        <DialogTitle>Add access code</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -52,6 +52,8 @@ export const MarkerEditDialog: React.FC<IMarkerEditDialogProps> = (props) => {
             id="note"
             label="Note"
             type="text"
+            multiline
+            rows={4}
             fullWidth
             variant="standard"
 						onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
