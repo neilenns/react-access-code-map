@@ -10,33 +10,12 @@ router.get(
   verifyUser,
   async (req: express.Request, res: express.Response): Promise<void> => {
     try {
-      var result = await Location.aggregate([
-        {
-          $lookup: {
-            from: "users",
-            localField: "modifiedBy",
-            foreignField: "_id",
-            as: "user",
-          },
-        },
-        {
-          $unwind: "$user",
-        },
-        {
-          $addFields: {
-            modifiedByFirstName: "$user.firstName",
-            modifiedByLastName: "$user.lastName",
-          },
-        },
-        {
-          $project: {
-            user: 0,
-          },
-        },
-      ]);
+      const locations = await Location.find()
+        .populate("createdBy", "firstName lastName")
+        .populate("modifiedBy", "firstName lastName");
 
-      // const locations = await Location.find();
-      res.json(result);
+      console.log(JSON.stringify(locations));
+      res.json(locations);
     } catch (err) {
       console.error("Error fetching locations:", err);
       res.status(500).json({ error: "Internal server error" });
@@ -61,7 +40,9 @@ router.put(
         new ObjectId(locationId),
         updatedData,
         { new: true } // This option returns the updated location
-      );
+      )
+        .populate("createdBy", "firstName lastName")
+        .populate("modifiedBy", "firstName lastName");
 
       res.json(result);
     } catch (error) {
@@ -90,7 +71,8 @@ router.post(
         lastModified: date,
       } as ILocation);
 
-      // const savedLocation = await newLocation.save();
+      await newLocation.populate("createdBy", "firstName lastName");
+      await newLocation.populate("modifiedBy", "firstName lastName");
 
       res.status(201).json(newLocation);
     } catch (err) {

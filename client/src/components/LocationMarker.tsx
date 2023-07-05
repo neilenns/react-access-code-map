@@ -4,6 +4,7 @@ import { Types } from "mongoose";
 import { Typography, Box, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { IUser } from "../interfaces/IUser.mjs";
 
 export type MarkerEventHandler = (_id: Types.ObjectId) => void;
 
@@ -17,12 +18,10 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
   const { location, onRemoveMarker } = props;
 
   const onMarkerEdit = () => {
-    console.log(`Editing ${location._id}`);
     props.onEditMarker(location._id!);
   };
 
   const onMarkerDelete = () => {
-    console.log(`Removing ${location._id}`);
     onRemoveMarker(location._id!);
   };
 
@@ -41,7 +40,7 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
           </Typography>
           <Typography variant="body2" component="p">
             <i>
-              Last modified by {location.modifiedByFirstName} on{" "}
+              Last modified by {(location.modifiedBy as IUser)?.firstName} on{" "}
               {location.lastModified?.toISOString().slice(0, 10)}
             </i>
           </Typography>

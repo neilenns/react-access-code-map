@@ -1,14 +1,19 @@
 import axios from "axios";
-import React, { useContext } from "react";
-import ILocation from "../interfaces/ILocation.mjs";
-import { serverUrl } from "../configs/accessCodeServer";
-import LocationMarker from "./LocationMarker";
-import { useMapEvent } from "react-leaflet";
 import { LatLng, LeafletMouseEvent } from "leaflet";
-import { UserContext } from "../context/UserContext";
 import { Types } from "mongoose";
-import { MarkerEditDialog } from "./MarkerEditDialog";
+import React, { useContext } from "react";
+import { useMapEvent } from "react-leaflet";
+import { UserContext } from "../context/UserContext";
+import ILocation from "../interfaces/ILocation.mjs";
 import INominatimReverseResponse from "../interfaces/INominatimReverseResponse.mjs";
+import {
+  addLocation,
+  getLocations,
+  removeLocation,
+  updateLocation,
+} from "../markerApi";
+import LocationMarker from "./LocationMarker";
+import { MarkerEditDialog } from "./MarkerEditDialog";
 
 export interface ILocationMarkerProps {}
 
@@ -18,109 +23,11 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
   const [selectedLocation, setSelectedLocation] = React.useState<ILocation>({});
   const [userContext] = useContext(UserContext);
 
-  async function updateLocation(location: ILocation) {
-    return new Promise((resolve, reject) => {
-      axios
-        .put(
-          new URL(`/locations/${location._id!}`, serverUrl).toString(),
-          location,
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${userContext.token}`,
-            },
-          }
-        )
-        .then((response) => {
-          resolve(`Location ${location._id!.toString()} updated successfully`);
-        })
-        .catch((error) => {
-          reject(error.message || "An error occurred");
-        });
-    });
-  }
-
-  function onEditMarker(_id: Types.ObjectId) {
-    const location = locations.find((location) => location._id === _id);
-
-    if (location) {
-      setSelectedLocation(location);
-      setIsOpen(true);
-    }
-  }
-
-  function addMarkerToMap(location: ILocation) {
-    setLocations((prevValue) => [...prevValue, location]);
-  }
-
-  function removeMarkerFromMap(_id: Types.ObjectId) {
-    setLocations((prevValue) =>
-      prevValue.filter((location) => location._id !== _id)
-    );
-  }
-
-  function onRemoveMarker(_id: Types.ObjectId) {
-    console.log(`Removing ${_id}`);
-
-    axios
-      .delete(new URL(`locations/${_id}`, serverUrl).toString(), {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${userContext.token}`,
-        },
-      })
-      .then(() => {
-        console.log(`Successfully deleted ${_id} from the database`);
-        removeMarkerFromMap(_id);
-      })
-      .catch((err) => {
-        console.log(`Unable to delete ${_id} from the database: ${err}`);
-      });
-  }
-
-  function onMarkerEditCancel() {
-    setIsOpen(false);
-  }
-
-  async function onMarkerEditSave(location: ILocation) {
-    console.log(location);
-
-    if (location._id) {
-      updateLocation(location)
-        .then((message) => {
-          console.log(message);
-          removeMarkerFromMap(location._id!);
-          addMarkerToMap(location);
-        })
-        .catch((err) => {
-          console.log(`Unable to update location: ${err}`);
-        });
-    } else {
-      axios
-        .post<ILocation>(new URL("locations", serverUrl).toString(), location, {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${userContext.token}`,
-          },
-        })
-        .then((response) => {
-          setLocations((prevValue) => [
-            ...prevValue,
-            {
-              ...response.data,
-              lastModified: new Date(response.data.lastModified!),
-              created: new Date(response.data.created!),
-            },
-          ]);
-        })
-        .catch((err) => {
-          console.log(`Unable to create new marker: ${err}`);
-        });
-    }
-
-    setIsOpen(false);
-  }
-
+  /**
+   * Helper function to reverse geocode a map location.
+   * @param latlng - The latitude and longitude of the location to be reverse geocoded.
+   * @returns {Promise<INominatimReverseResponse | null>} A promise that resolves to the reverse geocoded location.
+   */
   async function reverseGeocode(
     latlng: LatLng
   ): Promise<INominatimReverseResponse | null> {
@@ -135,6 +42,104 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
       });
   }
 
+  /**
+   * Adds a marker to the map.
+   * @param {ILocation} location - The location object representing the marker to be added.
+   * @returns {void} Returns nothing.
+   * @group Marker Management
+   */
+  function addMarkerToMap(location: ILocation): void {
+    setLocations((prevValue) => [...prevValue, location]);
+  }
+
+  /**
+   * Removes a marker from the map.
+   * @param {Types.ObjectId} _id - The ID of the marker to be removed.
+   * @returns {void} Returns nothing.
+   * @group Marker Management
+   */
+  function removeMarkerFromMap(_id: Types.ObjectId): void {
+    setLocations((prevValue) =>
+      prevValue.filter((location) => location._id !== _id)
+    );
+  }
+
+  /**
+   * Handles the edit action for a marker. Opens the edit dialog with the marker's data.
+   * @param {Types.ObjectId} _id - The ID of the marker to be edited.
+   * @returns {void} Returns nothing.
+   * @group Event Handlers
+   */
+  function onEditMarker(_id: Types.ObjectId): void {
+    const location = locations.find((location) => location._id === _id);
+
+    if (location) {
+      setSelectedLocation(location);
+      setIsOpen(true);
+    }
+  }
+
+  /**
+   * Handles the removal of a marker. Removes the marker from the map and the database.
+   * @param _id - The ID of the marker to be removed.
+   * @returns {void} Returns nothing.
+   * @group Event Handlers
+   */
+  function onRemoveMarker(_id: Types.ObjectId): void {
+    console.log(`Removing ${_id}`);
+
+    removeLocation(_id, userContext.token)
+      .then(() => {
+        console.log(`Successfully removed ${_id} from the database`);
+        removeMarkerFromMap(_id);
+      })
+      .catch((error) => {
+        console.log(`Unable to removed ${_id} from the database: ${error}`);
+      });
+  }
+
+  /**
+   * Handles the cancel action for the marker edit. Closes the edit dialog.
+   * @returns {void} Returns nothing.
+   * @group Event Handlers
+   */
+  function onMarkerEditCancel(): void {
+    setIsOpen(false);
+  }
+
+  /**
+   * Handles the save action for the marker edit. If the marker has an ID, it is updated. Otherwise, it is created.
+   * @param location - The location object representing the marker to be saved.
+   * @returns {void} Returns nothing.
+   */
+  function onMarkerEditSave(location: ILocation): void {
+    if (location._id) {
+      updateLocation(location, userContext.token)
+        .then((updatedLocation) => {
+          removeMarkerFromMap(location._id!);
+          addMarkerToMap(updatedLocation);
+        })
+        .catch((err) => {
+          console.log(`Unable to update location: ${err}`);
+        })
+        .finally(() => {
+          setIsOpen(false);
+        });
+    } else {
+      addLocation(location, userContext.token)
+        .then((newLocation) => {
+          setLocations((prevValue) => [...prevValue, newLocation]);
+        })
+        .catch((err) => {
+          console.log(`Unable to create new marker: ${err}`);
+        })
+        .finally(() => {
+          setIsOpen(false);
+        });
+    }
+  }
+
+  // Adds a marker to the map when the user clicks on the map.
   useMapEvent("contextmenu", async (e: LeafletMouseEvent) => {
     const geoDetails = await reverseGeocode(e.latlng);
 
@@ -153,26 +158,15 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
     setIsOpen(true);
   });
 
+  // Gets the locations from the database when the component is mounted.
   React.useEffect(() => {
-    axios
-      .get<ILocation[]>(new URL("locations", serverUrl).toString(), {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${userContext.token}`,
-        },
-      })
-      .then((response) => {
-        const locations = response.data.map((location) => ({
-          ...location,
-          lastModified: new Date(location.lastModified!),
-          created: new Date(location.created!),
-        }));
+    getLocations(userContext.token)
+      .then((locations) => {
         setLocations(locations);
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
-      })
-      .finally(() => {});
+      });
   }, [userContext.token]);
 
   return (
