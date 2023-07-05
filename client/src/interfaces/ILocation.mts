@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 export default interface ILocation {
   title: string;
   latitude: number;

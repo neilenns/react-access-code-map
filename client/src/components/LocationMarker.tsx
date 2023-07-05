@@ -1,12 +1,13 @@
 import { Marker, Popup } from 'react-leaflet'
-import ILocation from '../types/location';
+import ILocation from '../interfaces/ILocation.mjs';
 import { Button, Icon } from '@blueprintjs/core';
 import { serverUrl } from "../configs/accessCodeServer";
 import axios from "axios";
 import { useContext } from 'react';
 import { UserContext } from '../context/UserContext';
+import { Types } from 'mongoose';
 
-export type RemoveMarkerHandler = (_id: string) => void;
+export type RemoveMarkerHandler = (_id: Types.ObjectId) => void;
 
 export interface ILocationMarkerProps {
 	location: ILocation;
@@ -39,7 +40,7 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
 	}
 
 	return (
-		<Marker position={[location.latitude, location.longitude]} key={location._id}>
+		<Marker position={[location.latitude, location.longitude]} key={location._id.toString()}>
 			<Popup>
 				<h1 className="small-heading">{location.title}</h1>
 				<p>{location.note}</p>
