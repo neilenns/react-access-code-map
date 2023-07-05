@@ -51,6 +51,7 @@ router.put(
     try {
       const locationId = req.params.id;
       const updatedData = {
+        title: req.body.title,
         note: req.body.note,
         lastModified: new Date(),
         modifiedBy: req.user?._id,
