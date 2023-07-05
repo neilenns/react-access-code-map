@@ -4,10 +4,12 @@ import ILocation from '../interfaces/ILocation.mjs';
 import { serverUrl } from "../configs/accessCodeServer";
 import LocationMarker from './LocationMarker';
 import { useMapEvent } from "react-leaflet";
-import { LatLng, LeafletMouseEvent, latLng } from "leaflet";
+import { LatLng, LeafletMouseEvent } from "leaflet";
 import { UserContext } from "../context/UserContext";
 import { Types } from "mongoose";
 import { MarkerEditDialog } from "./MarkerEditDialog";
+import INominatimReverseResponse from "../interfaces/INominatimReverseResponse.mjs";
+import { resolve } from "path";
 
 export interface ILocationMarkerProps {
 }
@@ -53,17 +55,14 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
 		setIsOpen(false);
 	}
 
-	async function reverseGeocode(latlng: LatLng) {
-		try {
-			const response = await fetch(
-				`https://nominatim.openstreetmap.org/reverse?lat=${latlng.lat}&lon=${latlng.lng}&format=json`
-			);
-			const data = await response.json();
-			return data;
-		} catch (error) {
-			console.error('Error during reverse geocoding:', error);
-			throw error;
-		}
+	async function reverseGeocode(latlng: LatLng): Promise<INominatimReverseResponse | null> {
+		return axios
+			.get<INominatimReverseResponse>(`https://nominatim.openstreetmap.org/reverse?lat=${latlng.lat}&lon=${latlng.lng}&format=json`)
+			.then(response => response.data)
+			.catch(error => {
+				console.error('Error during reverse geocoding:', error);
+				throw error;
+			})
 	};
 
 	useMapEvent('contextmenu', async (e: LeafletMouseEvent) => {
@@ -97,6 +96,9 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
 		})
 		.catch(function (error) {
 			console.log(error);
+		})
+		.finally(() =>
+		{
 		});
 	}, [userContext.token]);
 
