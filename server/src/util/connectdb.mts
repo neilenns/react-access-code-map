@@ -17,7 +17,7 @@ export default async function connectToDatabase() {
     dbName: process.env.MONGO_DB_NAME,
   });
 
-  connect
+  await connect
     .then((db) => {
       console.log("Connected to database");
     })

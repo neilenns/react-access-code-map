@@ -10,11 +10,8 @@ router.get(
   verifyUser,
   async (req: express.Request, res: express.Response): Promise<void> => {
     try {
-      const locations = await Location.find()
-        .populate("createdBy", "firstName lastName")
-        .populate("modifiedBy", "firstName lastName");
+      const locations = await Location.find();
 
-      console.log(JSON.stringify(locations));
       res.json(locations);
     } catch (err) {
       console.error("Error fetching locations:", err);
@@ -40,9 +37,7 @@ router.put(
         new ObjectId(locationId),
         updatedData,
         { new: true } // This option returns the updated location
-      )
-        .populate("createdBy", "firstName lastName")
-        .populate("modifiedBy", "firstName lastName");
+      );
 
       res.json(result);
     } catch (error) {
@@ -70,9 +65,6 @@ router.post(
         modifiedBy: req.user?._id,
         lastModified: date,
       } as ILocation);
-
-      await newLocation.populate("createdBy", "firstName lastName");
-      await newLocation.populate("modifiedBy", "firstName lastName");
 
       res.status(201).json(newLocation);
     } catch (err) {

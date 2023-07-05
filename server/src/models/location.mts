@@ -1,5 +1,6 @@
 import { Schema, model, Types } from "mongoose";
 import { IUser } from "./user.mjs";
+import autopopulate from "mongoose-autopopulate";
 
 // Define the interface for the Location document
 export interface ILocation {
@@ -22,14 +23,22 @@ const locationSchema = new Schema<ILocation>({
     type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
+    autopopulate: {
+      select: "firstName lastName",
+    },
   },
   created: { type: Date, required: true },
   modifiedBy: {
     type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
+    autopopulate: {
+      select: "firstName lastName",
+    },
   },
   lastModified: { type: Date, required: true },
 });
+
+locationSchema.plugin(autopopulate);
 
 export const Location = model<ILocation>("Location", locationSchema);
