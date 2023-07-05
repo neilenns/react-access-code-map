@@ -1,52 +1,34 @@
 import { Marker, Popup } from "react-leaflet";
 import ILocation from "../interfaces/ILocation.mjs";
-import { serverUrl } from "../configs/accessCodeServer";
-import axios from "axios";
-import { useContext } from "react";
-import { UserContext } from "../context/UserContext";
 import { Types } from "mongoose";
 import { Typography, Box, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { IUser } from "../interfaces/IUser.mjs";
 
-export type RemoveMarkerHandler = (_id: Types.ObjectId) => void;
+export type MarkerEventHandler = (_id: Types.ObjectId) => void;
 
 export interface ILocationMarkerProps {
   location: ILocation;
-  onRemoveMarker: RemoveMarkerHandler;
+  onRemoveMarker: MarkerEventHandler;
+  onEditMarker: MarkerEventHandler;
 }
 
 export default function LocationMarkers(props: ILocationMarkerProps) {
   const { location, onRemoveMarker } = props;
-  const [userContext] = useContext(UserContext);
 
   const onMarkerEdit = () => {
-    console.log(`Editing ${location._id}`);
+    props.onEditMarker(location._id!);
   };
 
   const onMarkerDelete = () => {
-    axios
-      .delete(new URL(`locations/${location._id}`, serverUrl).toString(), {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${userContext.token}`,
-        },
-      })
-      .then(() => {
-        console.log(`Successfully deleted ${location._id} from the database`);
-        onRemoveMarker(location._id);
-      })
-      .catch((err) => {
-        console.log(
-          `Unable to delete ${location._id} from the database: ${err}`
-        );
-      });
+    onRemoveMarker(location._id!);
   };
 
   return (
     <Marker
-      position={[location.latitude, location.longitude]}
-      key={location._id.toString()}
+      position={[location.latitude!, location.longitude!]}
+      key={location._id!.toString()}
     >
       <Popup>
         <Box>
@@ -58,7 +40,7 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
           </Typography>
           <Typography variant="body2" component="p">
             <i>
-              Last modified by {location.modifiedByFirstName} on{" "}
+              Last modified by {(location.modifiedBy as IUser)?.firstName} on{" "}
               {location.lastModified?.toISOString().slice(0, 10)}
             </i>
           </Typography>

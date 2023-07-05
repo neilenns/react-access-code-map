@@ -1,114 +1,190 @@
 import axios from "axios";
-import React, { useContext } from "react";
-import ILocation from '../interfaces/ILocation.mjs';
-import { serverUrl } from "../configs/accessCodeServer";
-import LocationMarker from './LocationMarker';
-import { useMapEvent } from "react-leaflet";
 import { LatLng, LeafletMouseEvent } from "leaflet";
-import { UserContext } from "../context/UserContext";
 import { Types } from "mongoose";
-import { MarkerEditDialog } from "./MarkerEditDialog";
+import React, { useContext } from "react";
+import { useMapEvent } from "react-leaflet";
+import { UserContext } from "../context/UserContext";
+import ILocation from "../interfaces/ILocation.mjs";
 import INominatimReverseResponse from "../interfaces/INominatimReverseResponse.mjs";
+import {
+  addLocation,
+  getLocations,
+  removeLocation,
+  updateLocation,
+} from "../markerApi";
+import LocationMarker from "./LocationMarker";
+import { MarkerEditDialog } from "./MarkerEditDialog";
 
-export interface ILocationMarkerProps {
-}
+export interface ILocationMarkerProps {}
 
 export default function LocationMarkers(props: ILocationMarkerProps) {
-	const [ locations, setLocations ] = React.useState<ILocation[]>([]);
-	const [ isOpen, setIsOpen ] = React.useState<boolean>(false);
-	const [ selectedLocation, setSelectedLocation ] = React.useState<Partial<ILocation>>({});
-	const [ userContext ] = useContext(UserContext)
+  const [locations, setLocations] = React.useState<ILocation[]>([]);
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+  const [selectedLocation, setSelectedLocation] = React.useState<ILocation>({});
+  const [userContext] = useContext(UserContext);
 
-	function onRemoveMarker(_id: Types.ObjectId)
-	{
-		console.log(`Removing ${_id}`);
-	}
+  /**
+   * Helper function to reverse geocode a map location.
+   * @param latlng - The latitude and longitude of the location to be reverse geocoded.
+   * @returns {Promise<INominatimReverseResponse | null>} A promise that resolves to the reverse geocoded location.
+   */
+  async function reverseGeocode(
+    latlng: LatLng
+  ): Promise<INominatimReverseResponse | null> {
+    return axios
+      .get<INominatimReverseResponse>(
+        `https://nominatim.openstreetmap.org/reverse?lat=${latlng.lat}&lon=${latlng.lng}&format=json`
+      )
+      .then((response) => response.data)
+      .catch((error) => {
+        console.error("Error during reverse geocoding:", error);
+        return null;
+      });
+  }
 
-	function onMarkerEditCancel()
-	{
-		setIsOpen(false);
-	}
+  /**
+   * Adds a marker to the map.
+   * @param {ILocation} location - The location object representing the marker to be added.
+   * @returns {void} Returns nothing.
+   * @group Marker Management
+   */
+  function addMarkerToMap(location: ILocation): void {
+    setLocations((prevValue) => [...prevValue, location]);
+  }
 
-	function onMarkerEditSave(location: Partial<ILocation>)
-	{
-		console.log(location);
-		axios.post<ILocation>(new URL("locations", serverUrl).toString(),
-		location,
-		{
-			withCredentials: true,
-			headers: {
-				Authorization: `Bearer ${userContext.token}`
-			}
-		})
-		.then(response => {
-			setLocations((prevValue) => [...prevValue, {
-				...response.data,
-				lastModified: new Date(response.data.lastModified),
-				created: new Date(response.data.created)
-			}]);
-		})
-		.catch(err =>{
-			console.log(`Unable to create new marker: ${err}`);
-		});
+  /**
+   * Removes a marker from the map.
+   * @param {Types.ObjectId} _id - The ID of the marker to be removed.
+   * @returns {void} Returns nothing.
+   * @group Marker Management
+   */
+  function removeMarkerFromMap(_id: Types.ObjectId): void {
+    setLocations((prevValue) =>
+      prevValue.filter((location) => location._id !== _id)
+    );
+  }
 
-		setIsOpen(false);
-	}
+  /**
+   * Handles the edit action for a marker. Opens the edit dialog with the marker's data.
+   * @param {Types.ObjectId} _id - The ID of the marker to be edited.
+   * @returns {void} Returns nothing.
+   * @group Event Handlers
+   */
+  function onEditMarker(_id: Types.ObjectId): void {
+    const location = locations.find((location) => location._id === _id);
 
-	async function reverseGeocode(latlng: LatLng): Promise<INominatimReverseResponse | null> {
-		return axios
-			.get<INominatimReverseResponse>(`https://nominatim.openstreetmap.org/reverse?lat=${latlng.lat}&lon=${latlng.lng}&format=json`)
-			.then(response => response.data)
-			.catch(error => {
-				console.error('Error during reverse geocoding:', error);
-				return null;
-			})
-	};
+    if (location) {
+      setSelectedLocation(location);
+      setIsOpen(true);
+    }
+  }
 
-	useMapEvent('contextmenu', async (e: LeafletMouseEvent) => {
-		const geoDetails = await reverseGeocode(e.latlng);
+  /**
+   * Handles the removal of a marker. Removes the marker from the map and the database.
+   * @param _id - The ID of the marker to be removed.
+   * @returns {void} Returns nothing.
+   * @group Event Handlers
+   */
+  function onRemoveMarker(_id: Types.ObjectId): void {
+    console.log(`Removing ${_id}`);
 
-		const newLocation = {
-			title: geoDetails ? `${geoDetails.address?.house_number ?? ""} ${geoDetails.address?.road ?? ""}`.trim() : "",
-			latitude: e.latlng.lat,
-			longitude: e.latlng.lng,
-			note: "",
-		};
+    removeLocation(_id, userContext.token)
+      .then(() => {
+        console.log(`Successfully removed ${_id} from the database`);
+        removeMarkerFromMap(_id);
+      })
+      .catch((error) => {
+        console.log(`Unable to removed ${_id} from the database: ${error}`);
+      });
+  }
 
-		setSelectedLocation(newLocation);
-		setIsOpen(true);
-});
-		
-	React.useEffect(() => {
-		axios.get<ILocation[]>(new URL("locations", serverUrl).toString(), {
-				withCredentials: true,
-				headers: {
-					Authorization: `Bearer ${userContext.token}`
-				}
-		})
-		.then(response => {
-			const locations = response.data.map(location => ({
-				...location,
-				lastModified: new Date(location.lastModified),
-				created: new Date(location.created)
-			}))
-			setLocations(locations);
-		})
-		.catch(function (error) {
-			console.log(error);
-		})
-		.finally(() =>
-		{
-		});
-	}, [userContext.token]);
+  /**
+   * Handles the cancel action for the marker edit. Closes the edit dialog.
+   * @returns {void} Returns nothing.
+   * @group Event Handlers
+   */
+  function onMarkerEditCancel(): void {
+    setIsOpen(false);
+  }
 
-	return (
-			<>
-				{
-					locations?.map(location => (
-						<LocationMarker location={location} key={location._id.toString()} onRemoveMarker={onRemoveMarker}/>
-					))
-				}
-				<MarkerEditDialog	isOpen={isOpen} location={selectedLocation} onSave={onMarkerEditSave} onCancel={onMarkerEditCancel}/>
-			</>
-	);
+  /**
+   * Handles the save action for the marker edit. If the marker has an ID, it is updated. Otherwise, it is created.
+   * @param location - The location object representing the marker to be saved.
+   * @returns {void} Returns nothing.
+   */
+  function onMarkerEditSave(location: ILocation): void {
+    if (location._id) {
+      updateLocation(location, userContext.token)
+        .then((updatedLocation) => {
+          removeMarkerFromMap(location._id!);
+          addMarkerToMap(updatedLocation);
+        })
+        .catch((err) => {
+          console.log(`Unable to update location: ${err}`);
+        })
+        .finally(() => {
+          setIsOpen(false);
+        });
+    } else {
+      addLocation(location, userContext.token)
+        .then((newLocation) => {
+          setLocations((prevValue) => [...prevValue, newLocation]);
+        })
+        .catch((err) => {
+          console.log(`Unable to create new marker: ${err}`);
+        })
+        .finally(() => {
+          setIsOpen(false);
+        });
+    }
+  }
+
+  // Adds a marker to the map when the user clicks on the map.
+  useMapEvent("contextmenu", async (e: LeafletMouseEvent) => {
+    const geoDetails = await reverseGeocode(e.latlng);
+
+    const newLocation = {
+      title: geoDetails
+        ? `${geoDetails.address?.house_number ?? ""} ${
+            geoDetails.address?.road ?? ""
+          }`.trim()
+        : "",
+      latitude: e.latlng.lat,
+      longitude: e.latlng.lng,
+      note: "",
+    };
+
+    setSelectedLocation(newLocation);
+    setIsOpen(true);
+  });
+
+  // Gets the locations from the database when the component is mounted.
+  React.useEffect(() => {
+    getLocations(userContext.token)
+      .then((locations) => {
+        setLocations(locations);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [userContext.token]);
+
+  return (
+    <>
+      {locations?.map((location) => (
+        <LocationMarker
+          location={location}
+          key={location._id!.toString()}
+          onRemoveMarker={onRemoveMarker}
+          onEditMarker={onEditMarker}
+        />
+      ))}
+      <MarkerEditDialog
+        isOpen={isOpen}
+        location={selectedLocation}
+        onSave={onMarkerEditSave}
+        onCancel={onMarkerEditCancel}
+      />
+    </>
+  );
 }

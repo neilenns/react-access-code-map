@@ -10,33 +10,9 @@ router.get(
   verifyUser,
   async (req: express.Request, res: express.Response): Promise<void> => {
     try {
-      var result = await Location.aggregate([
-        {
-          $lookup: {
-            from: "users",
-            localField: "modifiedBy",
-            foreignField: "_id",
-            as: "user",
-          },
-        },
-        {
-          $unwind: "$user",
-        },
-        {
-          $addFields: {
-            modifiedByFirstName: "$user.firstName",
-            modifiedByLastName: "$user.lastName",
-          },
-        },
-        {
-          $project: {
-            user: 0,
-          },
-        },
-      ]);
+      const locations = await Location.find();
 
-      // const locations = await Location.find();
-      res.json(result);
+      res.json(locations);
     } catch (err) {
       console.error("Error fetching locations:", err);
       res.status(500).json({ error: "Internal server error" });
@@ -51,6 +27,7 @@ router.put(
     try {
       const locationId = req.params.id;
       const updatedData = {
+        title: req.body.title,
         note: req.body.note,
         lastModified: new Date(),
         modifiedBy: req.user?._id,
@@ -88,8 +65,6 @@ router.post(
         modifiedBy: req.user?._id,
         lastModified: date,
       } as ILocation);
-
-      // const savedLocation = await newLocation.save();
 
       res.status(201).json(newLocation);
     } catch (err) {
