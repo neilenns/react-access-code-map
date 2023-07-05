@@ -20,29 +20,23 @@ function App() {
     axios.post(new URL("users/refreshToken", serverUrl).toString(),
     {},
     {
-      withCredentials: true
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${userContext.token}`
+      }
     }).then(async response => {
-      if (response.status === 200)
-      {
         setUserContext(oldValues => {
           return { ...oldValues, token: response.data.token }});
-      }
-      else
-      {
-        setUserContext(oldValues => {
-          return { ...oldValues, token: null }
-        })
-      }
-
       setTimeout(verifyUser, 5 * 60 * 1000)
     })
     .catch(err => {
+      console.log(`Error: ${err}`);
       setUserContext(oldValues => {
         return { ...oldValues, token: null }
       })
     })
     .finally(() => setLoading(false));
-  }, [setUserContext])
+  }, [setUserContext, userContext.token])
 
   useEffect(() => {
     verifyUser()
