@@ -9,7 +9,6 @@ import { UserContext } from "../context/UserContext";
 import { Types } from "mongoose";
 import { MarkerEditDialog } from "./MarkerEditDialog";
 import INominatimReverseResponse from "../interfaces/INominatimReverseResponse.mjs";
-import { resolve } from "path";
 
 export interface ILocationMarkerProps {
 }
@@ -61,7 +60,7 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
 			.then(response => response.data)
 			.catch(error => {
 				console.error('Error during reverse geocoding:', error);
-				throw error;
+				return null;
 			})
 	};
 
