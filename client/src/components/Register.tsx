@@ -31,32 +31,22 @@ const Register = () => {
       withCredentials: true
     })
     .then(async response => {
-      setIsSubmitting(false);
-      if (response.status === 400)
-      {
-        setError("Fill all the fields in correctly.");
-      }
-      else if (response.status === 401)
-      {
-        setError("Invalid email or password.");
-      }
-      else if (response.status !== 200)
-      {
-        setError(genericErrorMessage);
-      }
-      else
-      {
-        // Any hack for now
-        setUserContext((oldValues: any) => {
-          return { ...oldValues, token: response.data.token }
-        })
-        console.log(userContext);
-      }
+      // Any hack for now
+      setUserContext((oldValues: any) => {
+        return { ...oldValues, token: response.data.token }
+      })
+      console.log(userContext);
     })
     .catch(error => {
-      setIsSubmitting(false);
-      setError(genericErrorMessage);
+      if (error.response.status === 500)
+      {
+        setError(error.response.data.message);
+      }
+      else {
+        setError(genericErrorMessage);
+      }
     })
+    .finally(() => setIsSubmitting(false));
   }
 
   return (
