@@ -24,6 +24,8 @@ services:
       # This must be set to the domain and port of the *client*.
       - WHITELISTED_DOMAINS=http://tom:3000
       - PORT=3001
+    volumes:
+      - ./certs:/etc/nginx/ssl
     depends_on:
       - mongodb
 
