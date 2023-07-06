@@ -1,9 +1,14 @@
 version: '3.8'
 
+name: access-code-map
+
 services:
   mongodb:
     image: mongo:latest
+    container_name: access-code-mongodb
     restart: always
+    volumes:
+      - ./data:/data/db
     ports:
       - 27017:27017
 
@@ -18,21 +23,29 @@ services:
       - REFRESH_TOKEN_SECRET=f2f8c61e-d08b-4df2-9be9-8507a3d4a8ca
       - SESSION_EXPIRY=900
       - REFRESH_TOKEN_EXPIRY=2592000
-      - MONGO_DB_CONNECTION_STRING=mongodb://mongodb:27017/
+      - MONGO_DB_CONNECTION_STRING=mongodb://access-code-mongodb:27017
       - MONGO_DB_NAME=access-code-map
       - COOKIE_SECRET=a5b6e1f7-3be7-4d8a-9c9f-2e86d2f1b7bc
       # This must be set to the domain and port of the *client*.
-      - WHITELISTED_DOMAINS=http://tom:3000
+      - WHITELISTED_DOMAINS=https://danecreekphoto.duckdns.org:3000
       - PORT=3001
+    volumes:
+      - ./certs:/certs
     depends_on:
       - mongodb
 
   client:
-    image: ghcr.io/neilenns/access-code-map-client:latest
+    build:
+      context: .
     ports:
-      - 3000:80
+      - 3000:443
     environment:
-      # This must be set to the domain and port of the *server*.
-      - REACT_APP_SERVER_URL=http://localhost:3001/
+      # This must be set to the domain and port of the *server*. Note https in front
+      # to ensure it uses SSL when making server calls. Without this there will be
+      # errors in the browser attempting to call the server via HTTP when the
+      # client is HTTPS.
+      - REACT_APP_SERVER_URL=https://danecreekphoto.duckdns.org:3001/
+    volumes:
+      - ./certs:/etc/nginx/ssl
     depends_on:
       - server

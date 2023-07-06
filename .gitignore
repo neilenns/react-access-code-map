@@ -5,6 +5,8 @@ client/node_modules
 server/node_modules
 /.pnp
 .pnp.js
+certs/
+data/
 
 # testing
 /coverage

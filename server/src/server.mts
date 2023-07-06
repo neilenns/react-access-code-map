@@ -11,6 +11,8 @@ import cookieParser from "cookie-parser";
 import userRouter from "./routes/user.mjs";
 import defaultRouter from "./routes/default.mjs";
 import locationsRouter from "./routes/locations.mjs";
+import fs from "fs";
+import https from "https";
 
 // Authentication
 import "./strategies/jwtStrategy.mjs";
@@ -22,9 +24,25 @@ const port = process.env.PORT || 3001;
 async function startServer() {
   await connectToDatabase();
 
-  app.listen(port, () => {
-    console.log(`Server started on port ${port}`);
-  });
+  const certFilesExist =
+    fs.existsSync("/certs/privkey.pem") &&
+    fs.existsSync("/certs/fullchain.pem");
+
+  if (certFilesExist) {
+    const options = {
+      key: fs.readFileSync("/certs/privkey.pem"),
+      cert: fs.readFileSync("/certs/fullchain.pem"),
+    };
+
+    const server = https.createServer(options, app);
+    server.listen(port, () => {
+      console.log(`Server running on port ${port}`);
+    });
+  } else {
+    app.listen(port, () => {
+      console.log(`Server started on port ${port}`);
+    });
+  }
 }
 
 const app = express();
