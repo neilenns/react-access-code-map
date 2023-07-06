@@ -1,5 +1,5 @@
 // React component that takes in an ILocation as initial state,
-// shows a BlueprintJS dialog with text fields for the ILocation title and note fields,
+// shows a MUI dialog with text fields for the ILocation title and note fields,
 // then provides the updated ILocation to the parent component.
 
 import React, { useEffect, useState } from "react";

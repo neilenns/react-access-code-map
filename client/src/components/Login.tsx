@@ -1,16 +1,16 @@
-import { Button, Callout, FormGroup, InputGroup } from "@blueprintjs/core"
-import { useContext, useState } from "react"
-import { UserContext } from "../context/UserContext"
+import { TextField, Button, Typography } from "@mui/material";
+import { useContext, useState } from "react";
+import { UserContext } from "../context/UserContext";
 
 import { serverUrl } from "../configs/accessCodeServer";
 import axios from "axios";
 
 const Login = () => {
-  const [username, setUsername] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState("")
-  const [password, setPassword] = useState("")
-  const [ userContext, setUserContext ] = useContext(UserContext)
+  const [username, setUsername] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [password, setPassword] = useState("");
+  const [userContext, setUserContext] = useContext(UserContext);
 
   const formSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,70 +19,73 @@ const Login = () => {
 
     const genericErrorMessage = "Something went wrong, try again later.";
 
-    axios.post(new URL("users/login", serverUrl).toString(),
-    {
-      username,
-      password  
-    },
-    {
-      withCredentials: true
-    })
-    .then(async response => {
+    axios
+      .post(
+        new URL("users/login", serverUrl).toString(),
+        {
+          username,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .then(async (response) => {
         // Any hack for now
         setUserContext((oldValues: any) => {
-          return { ...oldValues, token: response.data.token }
-        })
+          return { ...oldValues, token: response.data.token };
+        });
         console.log(userContext);
-    })
-    .catch(error => {
-      if (error.response.status === 400)
-      {
-        setError("Fill all the fields in correctly.");
-      }
-      else if (error.response.status === 401)
-      {
-        setError("Invalid email or password.");
-      }
-      else
-      {
-        setError(genericErrorMessage);
-      }
-    })
-    .finally(() => setIsSubmitting(false));
-  }
+      })
+      .catch((error) => {
+        if (error.response.status === 400) {
+          setError("Fill all the fields in correctly.");
+        } else if (error.response.status === 401) {
+          setError("Invalid email or password.");
+        } else {
+          setError(genericErrorMessage);
+        }
+      })
+      .finally(() => setIsSubmitting(false));
+  };
 
   return (
     <>
-      {error && <Callout intent="danger">{error}</Callout>}
+      {error && <Typography color="error">{error}</Typography>}
       <form className="auth-form" onSubmit={formSubmitHandler}>
-        <FormGroup label="Username" labelFor="username">
-          <InputGroup
-            id="username"
-            placeholder="Username"
-            type="text"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-          />
-        </FormGroup>
-        <FormGroup label="Password" labelFor="password">
-          <InputGroup
-            id="password"
-            placeholder="Password"
-            type="password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-          />
-        </FormGroup>
-        <Button
-          intent="primary"
-          disabled={isSubmitting}
-          text={`${isSubmitting ? "Signing In" : "Sign In"}`}
-          fill
-          type="submit"
+        <TextField
+          label="Username"
+          variant="outlined"
+          margin="normal"
+          fullWidth
+          value={username}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setUsername(e.target.value)
+          }
         />
+        <TextField
+          label="Password"
+          variant="outlined"
+          margin="normal"
+          fullWidth
+          type="password"
+          value={password}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setPassword(e.target.value)
+          }
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          disabled={isSubmitting}
+          fullWidth
+          type="submit"
+        >
+          {isSubmitting ? "Signing In" : "Sign In"}
+        </Button>
       </form>
     </>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
