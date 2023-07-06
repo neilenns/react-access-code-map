@@ -14,12 +14,15 @@ import {
 } from "../markerApi";
 import LocationMarker from "./LocationMarker";
 import { MarkerEditDialog } from "./MarkerEditDialog";
+import ConfirmationDialog from "./DeleteLocationConfirmationDialog";
 
 export interface ILocationMarkerProps {}
 
 export default function LocationMarkers(props: ILocationMarkerProps) {
   const [locations, setLocations] = React.useState<ILocation[]>([]);
-  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+  const [isEditOpen, setIsEditOpen] = React.useState<boolean>(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] =
+    React.useState<boolean>(false);
   const [selectedLocation, setSelectedLocation] = React.useState<ILocation>({});
   const [userContext] = useContext(UserContext);
 
@@ -75,7 +78,7 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
 
     if (location) {
       setSelectedLocation(location);
-      setIsOpen(true);
+      setIsEditOpen(true);
     }
   }
 
@@ -86,16 +89,30 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
    * @group Event Handlers
    */
   function onRemoveMarker(_id: Types.ObjectId): void {
-    console.log(`Removing ${_id}`);
+    const location = locations.find((location) => location._id === _id);
 
-    removeLocation(_id, userContext.token)
-      .then(() => {
-        console.log(`Successfully removed ${_id} from the database`);
-        removeMarkerFromMap(_id);
-      })
-      .catch((error) => {
-        console.log(`Unable to removed ${_id} from the database: ${error}`);
-      });
+    if (location) {
+      setSelectedLocation(location);
+      setIsDeleteConfirmOpen(true);
+    }
+  }
+
+  function onDeleteConfirmClosed(confirmed: boolean) {
+    setIsDeleteConfirmOpen(false);
+    if (confirmed) {
+      removeLocation(selectedLocation._id!, userContext.token)
+        .then(() => {
+          console.log(
+            `Successfully removed ${selectedLocation._id} from the database`
+          );
+          removeMarkerFromMap(selectedLocation._id!);
+        })
+        .catch((error) => {
+          console.log(
+            `Unable to remove ${selectedLocation._id} from the database: ${error}`
+          );
+        });
+    }
   }
 
   /**
@@ -104,7 +121,7 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
    * @group Event Handlers
    */
   function onMarkerEditCancel(): void {
-    setIsOpen(false);
+    setIsEditOpen(false);
   }
 
   /**
@@ -123,7 +140,7 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
           console.log(`Unable to update location: ${err}`);
         })
         .finally(() => {
-          setIsOpen(false);
+          setIsEditOpen(false);
         });
     } else {
       addLocation(location, userContext.token)
@@ -134,7 +151,7 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
           console.log(`Unable to create new marker: ${err}`);
         })
         .finally(() => {
-          setIsOpen(false);
+          setIsEditOpen(false);
         });
     }
   }
@@ -155,7 +172,7 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
     };
 
     setSelectedLocation(newLocation);
-    setIsOpen(true);
+    setIsEditOpen(true);
   });
 
   // Gets the locations from the database when the component is mounted.
@@ -180,10 +197,14 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
         />
       ))}
       <MarkerEditDialog
-        isOpen={isOpen}
+        isOpen={isEditOpen}
         location={selectedLocation}
         onSave={onMarkerEditSave}
         onCancel={onMarkerEditCancel}
+      />
+      <ConfirmationDialog
+        open={isDeleteConfirmOpen}
+        onClose={onDeleteConfirmClosed}
       />
     </>
   );
