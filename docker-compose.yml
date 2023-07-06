@@ -8,8 +8,7 @@ services:
       - 27017:27017
 
   server:
-    build:
-      context: ./server
+    image: ghcr.io/neilenns/access-code-map-server:latest
     links:
       - mongodb
     ports:
@@ -28,8 +27,7 @@ services:
       - mongodb
 
   client:
-    build:
-      context: ./client
+    image: ghcr.io/neilenns/access-code-map-client:latest
     ports:
       - 3000:80
     environment:
