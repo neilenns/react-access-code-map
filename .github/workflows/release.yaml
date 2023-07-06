@@ -41,7 +41,7 @@ jobs:
           push: true
           tags: ${{ steps.meta-client.outputs.tags }}
           labels: ${{ steps.meta-client.outputs.labels }}
-          cache-from: type=registry,ref=user/access-code-map-server:latest
+          cache-from: type=registry,ref=user/access-code-map-client:latest
           cache-to: type=inline
       - name: Generate Docker metadata for server build
         id: meta-server
@@ -67,5 +67,5 @@ jobs:
           push: true
           tags: ${{ steps.meta-server.outputs.tags }}
           labels: ${{ steps.meta-server.outputs.labels }}
-          cache-from: type=registry,ref=user/access-code-map:latest
+          cache-from: type=registry,ref=user/access-code-map-server:latest
           cache-to: type=inline
