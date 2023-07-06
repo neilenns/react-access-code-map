@@ -1,12 +1,11 @@
-import { Spinner } from "@blueprintjs/core"
-import React from "react"
+import { CircularProgress } from "@mui/material";
 
 const Loader = () => {
   return (
     <div className="loader">
-      <Spinner size={50} />
+      <CircularProgress />
     </div>
-  )
-}
+  );
+};
 
-export default Loader
+export default Loader;
