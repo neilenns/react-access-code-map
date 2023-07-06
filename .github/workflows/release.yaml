@@ -12,13 +12,13 @@ jobs:
         uses: actions/checkout@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      - name: Generate Docker metadata
-        id: meta
+      - name: Generate Docker metadata for client build
+        id: meta-client
         uses: docker/metadata-action@v4
         with:
           # list of Docker images to use as base name for tags
           images: |
-            ghcr.io/neilenns/access-code-map
+            ghcr.io/neilenns/access-code-map-client
           # generate Docker tags based on the following events/attributes
           tags: |
             type=schedule
@@ -39,16 +39,33 @@ jobs:
         with:
           context: client
           push: true
-          tags: ghcr.io/neilenns/access-code-map-client:${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=ghcr.io/neilenns/access-code-map-client:latest
+          tags: ${{ steps.meta-client.outputs.tags }}
+          labels: ${{ steps.meta-client.outputs.labels }}
+          cache-from: type=registry,ref=user/access-code-map-server:latest
           cache-to: type=inline
+      - name: Generate Docker metadata for server build
+        id: meta-server
+        uses: docker/metadata-action@v4
+        with:
+          # list of Docker images to use as base name for tags
+          images: |
+            ghcr.io/neilenns/access-code-map-server
+          # generate Docker tags based on the following events/attributes
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+
       - name: Build and push server
         uses: docker/build-push-action@v4
         with:
           context: server
           push: true
-          tags: ghcr.io/neilenns/access-code-map-server:${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=ghcr.io/neilenns/access-code-map-server:latest
+          tags: ${{ steps.meta-server.outputs.tags }}
+          labels: ${{ steps.meta-server.outputs.labels }}
+          cache-from: type=registry,ref=user/access-code-map:latest
           cache-to: type=inline
