@@ -15,10 +15,10 @@ export interface ILocationMarkerProps {
 }
 
 export default function LocationMarkers(props: ILocationMarkerProps) {
-  const { location, onRemoveMarker } = props;
+  const { location, onEditMarker, onRemoveMarker } = props;
 
   const onMarkerEdit = () => {
-    props.onEditMarker(location._id!);
+    onEditMarker(location._id!);
   };
 
   const onMarkerDelete = () => {
