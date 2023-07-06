@@ -40,8 +40,9 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
           </Typography>
           <Typography variant="body2" component="p">
             <i>
-              Last modified by {(location.modifiedBy as IUser)?.firstName} on{" "}
-              {location.lastModified?.toISOString().slice(0, 10)}
+              Last modified by{" "}
+              {(location.modifiedBy as IUser).firstName ?? "unknown"} on{" "}
+              {location.lastModified?.toISOString().slice(0, 10) ?? "unknown"}
             </i>
           </Typography>
           <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
