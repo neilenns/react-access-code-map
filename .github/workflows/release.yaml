@@ -39,16 +39,16 @@ jobs:
         with:
           context: client
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ghcr.io/neilenns/access-code-map-client:${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=user/access-code-map:latest
+          cache-from: type=registry,ref=ghcr.io/neilenns/access-code-map-client:latest
           cache-to: type=inline
       - name: Build and push server
         uses: docker/build-push-action@v4
         with:
           context: server
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ghcr.io/neilenns/access-code-map-server:${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=user/access-code-map:latest
+          cache-from: type=registry,ref=ghcr.io/neilenns/access-code-map-server:latest
           cache-to: type=inline
