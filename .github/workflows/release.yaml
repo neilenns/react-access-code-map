@@ -28,21 +28,6 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=sha
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and push client
-        uses: docker/build-push-action@v4
-        with:
-          context: client
-          push: true
-          tags: ${{ steps.meta-client.outputs.tags }}
-          labels: ${{ steps.meta-client.outputs.labels }}
-          cache-from: type=registry,ref=user/access-code-map-client:latest
-          cache-to: type=inline
       - name: Generate Docker metadata for server build
         id: meta-server
         uses: docker/metadata-action@v4
@@ -59,7 +44,21 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=sha
-
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push client
+        uses: docker/build-push-action@v4
+        with:
+          context: client
+          push: true
+          tags: ${{ steps.meta-client.outputs.tags }}
+          labels: ${{ steps.meta-client.outputs.labels }}
+          cache-from: type=registry,ref=neilenns/access-code-map-client:latest
+          cache-to: type=inline
       - name: Build and push server
         uses: docker/build-push-action@v4
         with:
@@ -67,5 +66,5 @@ jobs:
           push: true
           tags: ${{ steps.meta-server.outputs.tags }}
           labels: ${{ steps.meta-server.outputs.labels }}
-          cache-from: type=registry,ref=user/access-code-map-server:latest
+          cache-from: type=registry,ref=neilenns/access-code-map-server:latest
           cache-to: type=inline
