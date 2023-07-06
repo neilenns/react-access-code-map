@@ -30,6 +30,9 @@
       integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
       crossorigin=""
     />
+    <!-- Used to populate environment variables at runtime in the Docker container. -->
+    <!-- Based on https://jakobzanker.de/blog/inject-environment-variables-into-a-react-app-docker-on-runtime/ -->
+    <script type="text/javascript" src="%PUBLIC_URL%/env_vars.js"></script>
     <title>Access code map</title>
   </head>
   <body>

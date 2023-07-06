@@ -21,6 +21,12 @@ The solution is to inject them into a small .js file when the Docker container s
 There are several blog posts around that show ways to do this, but for the moment
 I'm using the [example shown here][env-docker-runtime].
 
+While this does work it is *super sensitive* to paths. Make sure the Dockerfile
+creates the folder where the docker-entrypoint.sh file will live in the final image.
+Make sure the script writes the env_vars.js file to the same folder where the Dockerfile
+put the compiled React app. I lost a lot of time getting this working due to
+mismatched file locations.
+
 ## Setting up react-leaflet
 
 The core map is rendered using react-leaflet. Honestly it was one of the easiest parts

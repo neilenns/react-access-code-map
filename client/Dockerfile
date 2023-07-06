@@ -6,13 +6,6 @@ COPY package.json package.json
 COPY package-lock.json package-lock.json
 RUN npm ci
 
-# Set the REACT_APP_SERVER_URL value at build time, since React
-# apps have environment variables compiled in at build time. This
-# means the only way to change the server URL is to rebuild the image.
-# Solution from https://stackoverflow.com/a/52194018.
-ARG REACT_APP_SERVER_URL
-ENV REACT_APP_SERVER_URL $REACT_APP_SERVER_URL
-
 # Copy the app source code to the working directory
 COPY . ./
 RUN npm run build
@@ -24,10 +17,16 @@ FROM nginx:alpine
 # for the website
 WORKDIR /usr/share/nginx/html
 
+# Create the folder where the docker-entrypoint.sh file will live
+RUN mkdir -p /usr/src/app
+
 # Delete any default static HTML files that come with the image
 RUN rm -rf ./*
+
+# Copy the app
 COPY --from=build /app/build/ .
+COPY --from=build /app/docker-entrypoint.sh /usr/src/app/docker-entrypoint.sh
 
 EXPOSE 80
 
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/usr/src/app/docker-entrypoint.sh"]

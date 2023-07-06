@@ -1,2 +1,8 @@
+declare global {
+  interface Window {
+    REACT_APP_SERVER_URL: string;
+  }
+}
+
 export const serverUrl =
-  process.env.REACT_APP_SERVER_URL ?? "http://localhost:3001/";
+  window.REACT_APP_SERVER_URL ?? "http://localhost:3001/";
