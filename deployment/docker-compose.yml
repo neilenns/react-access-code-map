@@ -29,6 +29,8 @@ services:
       # This must be set to the domain and port of the *client*.
       - WHITELISTED_DOMAINS=http://tom:3000
       - PORT=3001
+    volumes:
+      - ./certs:/certs
     depends_on:
       - mongodb
 
@@ -39,7 +41,7 @@ services:
       - 3000:443
     environment:
       # This must be set to the domain and port of the *server*.
-      - REACT_APP_SERVER_URL=http://tom:3001/
+      - REACT_APP_SERVER_URL=https://tom:3001/
     volumes:
       - ./certs:/etc/nginx/ssl
     depends_on:
