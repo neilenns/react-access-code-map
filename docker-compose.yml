@@ -21,7 +21,8 @@ services:
       - MONGO_DB_CONNECTION_STRING=mongodb://mongodb:27017/
       - MONGO_DB_NAME=access-code-map
       - COOKIE_SECRET=a5b6e1f7-3be7-4d8a-9c9f-2e86d2f1b7bc
-      - WHITELISTED_DOMAINS=http://localhost:3000
+      # This must be set to the domain and port of the *client*.
+      - WHITELISTED_DOMAINS=http://tom:3000
       - PORT=3001
     depends_on:
       - mongodb
@@ -31,6 +32,7 @@ services:
     ports:
       - 3000:80
     environment:
+      # This must be set to the domain and port of the *server*.
       - REACT_APP_SERVER_URL=http://localhost:3001/
     depends_on:
       - server
