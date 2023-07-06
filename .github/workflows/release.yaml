@@ -38,7 +38,17 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: client
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=user/access-code-map:latest
+          cache-to: type=inline
       - name: Build and push server
         uses: docker/build-push-action@v4
         with:
           context: server
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=user/access-code-map:latest
+          cache-to: type=inline
