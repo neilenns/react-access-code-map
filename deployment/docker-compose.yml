@@ -36,11 +36,11 @@ services:
     build:
       context: .
     ports:
-      - 3000:80
+      - 3000:443
     environment:
       # This must be set to the domain and port of the *server*.
       - REACT_APP_SERVER_URL=http://tom:3001/
     volumes:
-      - h:\:/etc/nginx/ssl
+      - ./certs:/etc/nginx/ssl
     depends_on:
       - server
