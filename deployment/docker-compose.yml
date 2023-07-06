@@ -35,7 +35,8 @@ services:
       - mongodb
 
   client:
-    image: ghcr.io/neilenns/access-code-map-client:latest
+    build:
+      context: .
     ports:
       - 3000:80
     environment:
