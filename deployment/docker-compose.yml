@@ -27,7 +27,7 @@ services:
       - MONGO_DB_NAME=access-code-map
       - COOKIE_SECRET=a5b6e1f7-3be7-4d8a-9c9f-2e86d2f1b7bc
       # This must be set to the domain and port of the *client*.
-      - WHITELISTED_DOMAINS=http://tom:3000
+      - WHITELISTED_DOMAINS=https://danecreekphoto.duckdns.org:3000
       - PORT=3001
     volumes:
       - ./certs:/certs
@@ -40,8 +40,11 @@ services:
     ports:
       - 3000:443
     environment:
-      # This must be set to the domain and port of the *server*.
-      - REACT_APP_SERVER_URL=https://tom:3001/
+      # This must be set to the domain and port of the *server*. Note https in front
+      # to ensure it uses SSL when making server calls. Without this there will be
+      # errors in the browser attempting to call the server via HTTP when the
+      # client is HTTPS.
+      - REACT_APP_SERVER_URL=https://danecreekphoto.duckdns.org:3001/
     volumes:
       - ./certs:/etc/nginx/ssl
     depends_on:
