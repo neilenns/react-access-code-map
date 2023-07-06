@@ -30,7 +30,7 @@ services:
       - WHITELISTED_DOMAINS=http://tom:3000
       - PORT=3001
     volumes:
-      - ./certs:/etc/nginx/ssl
+      - h:\:/etc/nginx/ssl
     depends_on:
       - mongodb
 
