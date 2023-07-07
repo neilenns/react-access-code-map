@@ -16,6 +16,7 @@ services:
     image: ghcr.io/neilenns/access-code-map-server:latest
     links:
       - mongodb
+    restart: always      
     ports:
       - 3001:3001
     environment:
@@ -37,6 +38,7 @@ services:
   client:
     build:
       context: .
+    restart: always
     ports:
       - 3000:443
     environment:
