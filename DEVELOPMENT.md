@@ -17,6 +17,7 @@ those things so future me doesn't go through all that pain again.
   - [Setting up react-leaflet](#setting-up-react-leaflet)
   - [Developing with Visual Studio Code](#developing-with-visual-studio-code)
   - [Hiding folders that shouldn't be shown in the file explorer](#hiding-folders-that-shouldnt-be-shown-in-the-file-explorer)
+  - [Showing folders that shouldn't be hidden in the file explorer](#showing-folders-that-shouldnt-be-hidden-in-the-file-explorer)
     - [Debugging client and server at the same time](#debugging-client-and-server-at-the-same-time)
 
 ## Runtime environment variables with ReactJS and Docker images
@@ -116,6 +117,15 @@ To hide files in a workspace add them to the workspace settings block, _not_ a s
 block inside each of the `folders` section. The paths to the files to hide are _relative
 to the workspace root, not the location of the `.vscode/access-code-map.code-workspace`.
 This took me forever to figure out. For example using `../server/node_modules` will not work. It has to be `server/node_modules` instead.
+
+## Showing folders that shouldn't be hidden in the file explorer
+
+By default VSCode hides `.gitattributes` files. This is normally fine but given the
+pain I had with `docker-entrypoint.sh` (see above) it seems important to see that file
+in VSCode.
+
+To make it appear it can also be added to the `files.exclude` setting for the workspace.
+Simply set the value to `false` to make it show, overriding the VSCode default.
 
 ### Debugging client and server at the same time
 
