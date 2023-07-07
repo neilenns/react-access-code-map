@@ -43,10 +43,10 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
       <Popup>
         <Box>
           <Typography variant="subtitle2">{location.title}</Typography>
-          <Typography variant="body2" component="p">
+          <Typography variant="body2">
             <MultiLineText>{location.note}</MultiLineText>
           </Typography>
-          <Typography variant="body2" component="p">
+          <Typography variant="caption">
             <i>
               Last modified by{" "}
               {(location.modifiedBy as IUser)?.firstName ?? "unknown"} on{" "}
