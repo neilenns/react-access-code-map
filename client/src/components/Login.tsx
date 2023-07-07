@@ -10,7 +10,7 @@ const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [password, setPassword] = useState("");
-  const [userContext, setUserContext] = useContext(UserContext);
+  const [, setUserContext] = useContext(UserContext);
 
   const formSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,7 +35,6 @@ const Login = () => {
         setUserContext((oldValues: any) => {
           return { ...oldValues, token: response.data.token };
         });
-        console.log(userContext);
       })
       .catch((error) => {
         if (error.response.status === 400) {

@@ -17,11 +17,6 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   const verifyUser = useCallback(() => {
-    if (!userContext.token) {
-      setLoading(false);
-      return;
-    }
-
     axios
       .post(
         new URL("users/refreshToken", serverUrl).toString(),
@@ -40,7 +35,6 @@ function App() {
         setTimeout(verifyUser, 5 * 60 * 1000);
       })
       .catch((err) => {
-        console.log(`Error: ${err}`);
         setUserContext((oldValues) => {
           return { ...oldValues, token: null };
         });
