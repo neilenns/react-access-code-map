@@ -21,6 +21,7 @@ export interface ILocationMarkerProps {}
 export default function LocationMarkers(props: ILocationMarkerProps) {
   const [locations, setLocations] = React.useState<ILocation[]>([]);
   const [isEditOpen, setIsEditOpen] = React.useState<boolean>(false);
+  const [isEdit, setIsEdit] = React.useState<boolean>(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] =
     React.useState<boolean>(false);
   const [selectedLocation, setSelectedLocation] = React.useState<ILocation>({});
@@ -78,6 +79,7 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
 
     if (location) {
       setSelectedLocation(location);
+      setIsEdit(true);
       setIsEditOpen(true);
     }
   }
@@ -176,6 +178,7 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
     };
 
     setSelectedLocation(newLocation);
+    setIsEdit(false);
     setIsEditOpen(true);
   });
 
@@ -202,6 +205,7 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
       ))}
       <MarkerEditDialog
         isOpen={isEditOpen}
+        isEdit={isEdit}
         location={selectedLocation}
         onSave={onMarkerEditSave}
         onCancel={onMarkerEditCancel}
