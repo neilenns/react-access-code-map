@@ -9,7 +9,7 @@ const Register = () => {
   const [error, setError] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [registerSuccess, setRegisterSuccess] = useState(false);
 
@@ -26,7 +26,7 @@ const Register = () => {
         {
           firstName,
           lastName,
-          username,
+          username: email,
           password,
         },
         {
@@ -60,6 +60,7 @@ const Register = () => {
           <TextField
             label="First Name"
             variant="outlined"
+            required={true}
             margin="normal"
             fullWidth
             value={firstName}
@@ -70,6 +71,7 @@ const Register = () => {
           <TextField
             label="Last Name"
             variant="outlined"
+            required={true}
             margin="normal"
             fullWidth
             value={lastName}
@@ -78,18 +80,21 @@ const Register = () => {
             }
           />
           <TextField
-            label="Username"
+            label="Email"
             variant="outlined"
+            required={true}
+            type="email"
             margin="normal"
             fullWidth
-            value={username}
+            value={email}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setUsername(e.target.value)
+              setEmail(e.target.value)
             }
           />
           <TextField
             label="Password"
             variant="outlined"
+            required={true}
             margin="normal"
             fullWidth
             type="password"
