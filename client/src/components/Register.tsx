@@ -13,7 +13,6 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [registerSuccess, setRegisterSuccess] = useState(false);
-  const [userContext, setUserContext] = useContext(UserContext);
 
   const formSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

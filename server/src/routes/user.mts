@@ -40,14 +40,10 @@ router.post("/signup", function (req, res) {
       } else {
         user.firstName = req.body.firstName || "";
         user.lastName = req.body.lastName || "";
-        const authToken = getAuthToken({ _id: user._id });
-        const refreshToken = getRefreshToken({ _id: user._id });
-        user.refreshToken.push({ refreshToken });
         user
           .save()
           .then(() => {
-            res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS);
-            res.send({ success: true, token: authToken });
+            res.send({ success: true });
           })
           .catch((err: MongooseError) => {
             res.statusCode = 500;
