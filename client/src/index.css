@@ -19,7 +19,7 @@ html, body, #root, #root>div {
   margin-top: 10px;
 }
 
-/* Basic centering on the page styling from https://stackoverflow.com/a/70634721/9206264
+/* Basic centering on the page styling from https://stackoverflow.com/a/70634721/9206264 */
 .loader {
   display: flex;
   justify-content: center;
