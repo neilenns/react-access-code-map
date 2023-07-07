@@ -1,7 +1,7 @@
 import { Marker, Popup } from "react-leaflet";
 import ILocation from "../interfaces/ILocation.mjs";
 import { Types } from "mongoose";
-import { Typography, Box, IconButton } from "@mui/material";
+import { Typography, Box, IconButton, styled } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IUser } from "../interfaces/IUser.mjs";
@@ -15,6 +15,13 @@ export interface ILocationMarkerProps {
   onRemoveMarker: MarkerEventHandler;
   onEditMarker: MarkerEventHandler;
 }
+
+// Used to maintain line breaks in multi-line text when displaying it in a dialog
+// Comes from https://stackoverflow.com/a/57392914/9206264, but turned in to a
+// styled component to avoid inline CSS linting errors.
+const MultiLineText = styled("pre")(({ theme }) => ({
+  fontFamily: "inherit",
+}));
 
 export default function LocationMarkers(props: ILocationMarkerProps) {
   const { location, onEditMarker, onRemoveMarker } = props;
@@ -34,14 +41,14 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
       key={location._id!.toString()}
     >
       <Popup>
-        <Box>
-          <Typography variant="h6" component="h1">
+        <Box aria-labelledby="marker-title">
+          <Typography id="marker-title" variant="subtitle2">
             {location.title}
           </Typography>
-          <Typography variant="body2" component="p">
-            {location.note}
+          <Typography variant="body2">
+            <MultiLineText>{location.note}</MultiLineText>
           </Typography>
-          <Typography variant="body2" component="p">
+          <Typography variant="caption">
             <i>
               Last modified by{" "}
               {(location.modifiedBy as IUser)?.firstName ?? "unknown"} on{" "}
