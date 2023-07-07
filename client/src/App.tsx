@@ -17,6 +17,11 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   const verifyUser = useCallback(() => {
+    if (!userContext.token) {
+      setLoading(false);
+      return;
+    }
+
     axios
       .post(
         new URL("users/refreshToken", serverUrl).toString(),
@@ -105,7 +110,7 @@ function App() {
       })
       .finally(() => {
         setUserContext((oldValues) => {
-          return { ...oldValues, token: null };
+          return { token: null, userDetails: null };
         });
         window.localStorage.setItem("logout", Date.now().toString());
       });
