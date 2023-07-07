@@ -53,7 +53,6 @@ const Login = () => {
 
   return (
     <>
-      {error && <Typography color="error">{error}</Typography>}
       <form className="auth-form" onSubmit={formSubmitHandler}>
         <TextField
           label="Username"
@@ -61,6 +60,8 @@ const Login = () => {
           margin="normal"
           fullWidth
           value={username}
+          error={error !== ""}
+          helperText={error}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setUsername(e.target.value)
           }

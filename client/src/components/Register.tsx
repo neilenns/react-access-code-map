@@ -1,4 +1,4 @@
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, FormHelperText, TextField, Typography } from "@mui/material";
 
 import React, { useState } from "react";
 import { serverUrl } from "../configs/accessCodeServer";
@@ -56,7 +56,7 @@ const Register = () => {
       )}
       {!registerSuccess && (
         <form onSubmit={formSubmitHandler}>
-          {error && <Typography color="error">{error}</Typography>}
+          <FormHelperText error={error !== ""}>{error}</FormHelperText>
           <TextField
             label="First Name"
             variant="outlined"
