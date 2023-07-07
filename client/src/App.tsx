@@ -12,6 +12,18 @@ import axios from "axios";
 import Loader from "./components/Loader";
 
 function App() {
+  // Set the viewport size so the page doesn't have parts cut off on mobile.
+  // From https://spacejelly.dev/posts/how-to-create-css-custom-properties-that-dynamically-update-with-react-javascript/
+  useEffect(() => {
+    function handleResize() {
+      const vh = window.innerHeight * 0.01; // This is multiplied by 100 in the CSS file
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    }
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const [currentTab, setCurrentTab] = useState<string>("login");
   const [userContext, setUserContext] = useContext(UserContext);
   const [loading, setLoading] = useState(true);

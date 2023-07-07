@@ -9,17 +9,12 @@ body {
   height: 100%
 }
 
-/* From https://dev.to/mcrowder65/how-to-center-elements-horizontally-on-a-create-react-app-project-1omn */
-/* For centering the page vertically */
-body {
-  min-height: 100vh;
-  height: -webkit-fill-available;
-}
 
-/* From https://allthingssmitty.com/2020/05/11/css-fix-for-100vh-in-mobile-webkit/ */
-/* This ensures the bottom of the webpage is visible on mobile browsers. */
-html {
-  height: -webkit-fill-available;
+/* From rom https://spacejelly.dev/posts/how-to-create-css-custom-properties-that-dynamically-update-with-react-javascript/ */
+/* The companion code that sets --vh is in App.tsx */
+html, body {
+  height: 100vh; /* Fallback for browsers that do not support Custom Properties */
+  height: calc(var(--vh, 1vh) * 100);
 }
 
 .auth-form {
