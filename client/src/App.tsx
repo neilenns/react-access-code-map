@@ -43,6 +43,35 @@ function App() {
       .finally(() => setLoading(false));
   }, [setUserContext, userContext.token]);
 
+  const fetchUserDetails = useCallback(() => {
+    setLoading(true);
+    axios
+      .get(new URL("users/me", serverUrl).toString(), {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${userContext.token}`,
+        },
+      })
+      .then(async (response) => {
+        setUserContext((oldValues) => {
+          return { ...oldValues, details: response.data };
+        });
+      })
+      .catch((err) => {
+        setUserContext((oldValues) => {
+          return { ...oldValues, details: null };
+        });
+      })
+      .finally(() => setLoading(false));
+  }, [setUserContext, userContext.token]);
+
+  useEffect(() => {
+    // fetch only when user details are not present
+    if (userContext.token && !userContext.details) {
+      fetchUserDetails();
+    }
+  }, [userContext.details, userContext.token, fetchUserDetails]);
+
   useEffect(() => {
     verifyUser();
   }, [verifyUser]);
