@@ -24,8 +24,14 @@ type IUserContext = [
 const UserContext = React.createContext<IUserContext>([{}, () => null]);
 
 const UserProvider = (props: IProviderProps) => {
-  const state = useState<IUserState>({ ...props.defaultState });
-
+  const state = useState<IUserState>(
+    props.defaultState
+      ? { ...props.defaultState }
+      : {
+          token: null,
+          details: null /* default state object */,
+        }
+  );
   return (
     <UserContext.Provider value={state}>{props.children}</UserContext.Provider>
   );
