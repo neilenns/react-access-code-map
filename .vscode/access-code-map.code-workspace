@@ -1,0 +1,33 @@
+{
+  "folders": [
+    {
+      "name": "ROOT",
+      "path": "../"
+    },
+    {
+      "name": "client",
+      "path": "../client"
+    },
+    {
+      "name": "server",
+      "path": "../server"
+    }
+  ],
+  "settings": {
+    // This is relative to the workspace root, not the .vscode folder
+    "files.exclude": {
+      "client/dist": true,
+      "client/node_modules": true,
+      "server/dist": true,
+      "server/node_modules": true,
+      "server/data": true,
+      "server/": true,
+      "client/": true
+    },
+    "sarif-viewer.connectToGithubCodeScanning": "off",
+    "debug.javascript.autoAttachFilter": "smart"
+  },
+  "extensions": {
+    "recommendations": ["yzhang.markdown-all-in-one", "esbenp.prettier-vscode"]
+  }
+}
