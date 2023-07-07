@@ -106,6 +106,14 @@ router.post("/refreshToken", (req, res, next) => {
       User.findOne({ _id: userId }).then(
         (user) => {
           if (user) {
+            // Unverified users aren't allowed to sign in.
+            if (!user.isVerified) {
+              res.statusCode = 402;
+              res.clearCookie("refreshToken", COOKIE_OPTIONS);
+              res.send("User is not verified");
+              return;
+            }
+
             // Find the refresh token against the user record in database
             const tokenIndex = user.refreshToken.findIndex(
               (item) => item.refreshToken === refreshToken
