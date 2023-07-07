@@ -12,6 +12,9 @@ export interface IUser {
   lastName: string;
   authStrategy: string;
   isVerified: boolean;
+  canCreate: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
   refreshToken: ISession[];
 }
 
@@ -29,6 +32,9 @@ const userSchema = new Schema<IUser>({
   authStrategy: { type: String, default: "local" },
   refreshToken: { type: [Session] },
   isVerified: { type: Boolean, default: false },
+  canCreate: { type: Boolean, default: true },
+  canDelete: { type: Boolean, default: true },
+  canEdit: { type: Boolean, default: true },
 });
 
 // Remove refreshToken from json responses for security

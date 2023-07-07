@@ -2,6 +2,7 @@ import express from "express";
 import { ObjectId } from "mongodb";
 import { Location, ILocation } from "../models/location.mjs";
 import { verifyUser } from "../authenticate.mjs";
+import verifyPermissions from "../middleware/permissions.mjs";
 
 const router = express.Router();
 
@@ -23,6 +24,7 @@ router.get(
 router.put(
   "/locations/:id",
   verifyUser,
+  verifyPermissions,
   async (req: express.Request, res: express.Response) => {
     try {
       const locationId = req.params.id;
@@ -49,6 +51,7 @@ router.put(
 router.post(
   "/locations",
   verifyUser,
+  verifyPermissions,
   async (req: express.Request, res: express.Response) => {
     try {
       const { title, latitude, longitude, note } = req.body;
@@ -77,6 +80,7 @@ router.post(
 router.delete(
   "/locations/:id",
   verifyUser,
+  verifyPermissions,
   async (req: express.Request, res: express.Response) => {
     try {
       const locationId = req.params.id;

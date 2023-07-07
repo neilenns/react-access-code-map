@@ -5,6 +5,8 @@ import { Typography, Box, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IUser } from "../interfaces/IUser.mjs";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
 
 export type MarkerEventHandler = (_id: Types.ObjectId) => void;
 
@@ -16,6 +18,7 @@ export interface ILocationMarkerProps {
 
 export default function LocationMarkers(props: ILocationMarkerProps) {
   const { location, onEditMarker, onRemoveMarker } = props;
+  const [userContext] = useContext(UserContext);
 
   const onMarkerEdit = () => {
     onEditMarker(location._id!);
@@ -45,14 +48,22 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
               {location.lastModified?.toISOString().slice(0, 10) ?? "unknown"}
             </i>
           </Typography>
-          <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
-            <IconButton onClick={onMarkerEdit}>
-              <EditIcon />
-            </IconButton>
-            <IconButton onClick={onMarkerDelete}>
-              <DeleteIcon />
-            </IconButton>
-          </Box>
+          {(userContext.details?.canEdit || userContext.details?.canDelete) && (
+            <Box
+              sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}
+            >
+              {userContext.details?.canEdit && (
+                <IconButton onClick={onMarkerEdit}>
+                  <EditIcon />
+                </IconButton>
+              )}
+              {userContext.details?.canDelete && (
+                <IconButton onClick={onMarkerDelete}>
+                  <DeleteIcon />
+                </IconButton>
+              )}
+            </Box>
+          )}
         </Box>
       </Popup>
     </Marker>
