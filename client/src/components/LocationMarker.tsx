@@ -41,7 +41,7 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
           <Typography variant="body2" component="p">
             <i>
               Last modified by{" "}
-              {(location.modifiedBy as IUser).firstName ?? "unknown"} on{" "}
+              {(location.modifiedBy as IUser)?.firstName ?? "unknown"} on{" "}
               {location.lastModified?.toISOString().slice(0, 10) ?? "unknown"}
             </i>
           </Typography>
