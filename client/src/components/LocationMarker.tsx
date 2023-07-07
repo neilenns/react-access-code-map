@@ -41,8 +41,10 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
       key={location._id!.toString()}
     >
       <Popup>
-        <Box>
-          <Typography variant="subtitle2">{location.title}</Typography>
+        <Box aria-labelledby="marker-title">
+          <Typography id="marker-title" variant="subtitle2">
+            {location.title}
+          </Typography>
           <Typography variant="body2">
             <MultiLineText>{location.note}</MultiLineText>
           </Typography>
