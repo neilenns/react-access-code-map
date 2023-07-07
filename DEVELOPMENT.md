@@ -15,6 +15,10 @@ those things so future me doesn't go through all that pain again.
     - [The server](#the-server)
     - [The client](#the-client)
   - [Setting up react-leaflet](#setting-up-react-leaflet)
+  - [Developing with Visual Studio Code](#developing-with-visual-studio-code)
+  - [Hiding folders that shouldn't be shown in the file explorer](#hiding-folders-that-shouldnt-be-shown-in-the-file-explorer)
+  - [Showing folders that shouldn't be hidden in the file explorer](#showing-folders-that-shouldnt-be-hidden-in-the-file-explorer)
+    - [Debugging client and server at the same time](#debugging-client-and-server-at-the-same-time)
 
 ## Runtime environment variables with ReactJS and Docker images
 
@@ -42,7 +46,7 @@ and referencing it as the `ENTRYPOINT` in your Dockerfile. Why? Because of line 
 Seriously.
 
 If you get an error starting up the image saying the .sh file can't be found, even though
-it is *clearly* in the image, it's because the line endings are Windows-style (CRLF) and
+it is _clearly_ in the image, it's because the line endings are Windows-style (CRLF) and
 simply won't work. They have to be Unix-style (LF).
 
 To fix this in Visual Studio Code open the .sh file and in the bottom right of the
@@ -100,3 +104,50 @@ of this project. I used the [example shown here][react-leaflet-app-demo] to get 
 
 [env-docker-runtime]: https://github.com/githubjakob/react-inject-env-docker-runtime
 [react-leaflet-app-demo]: https://github.com/ugwutotheeshoes/react-leaflet-app-demo
+
+## Developing with Visual Studio Code
+
+This repo is an example of a (small) monorepo and using VSCode workspaces. The workspace
+file in `.vscode/access-code-map.code-workspace` defines the project hierarchy to display
+in VSCode and hides folders that aren't useful in the editor.
+
+## Hiding folders that shouldn't be shown in the file explorer
+
+To hide files in a workspace add them to the workspace settings block, _not_ a settings
+block inside each of the `folders` section. The paths to the files to hide are _relative
+to the workspace root, not the location of the `.vscode/access-code-map.code-workspace`.
+This took me forever to figure out. For example using `../server/node_modules` will not work. It has to be `server/node_modules` instead.
+
+## Showing folders that shouldn't be hidden in the file explorer
+
+By default VSCode hides `.gitattributes` files. This is normally fine but given the
+pain I had with `docker-entrypoint.sh` (see above) it seems important to see that file
+in VSCode.
+
+To make it appear it can also be added to the `files.exclude` setting for the workspace.
+Simply set the value to `false` to make it show, overriding the VSCode default.
+
+### Debugging client and server at the same time
+
+There is a workspace-wide `launch.json` that contains the single launch configuration
+to start up Microsoft Edge pointed to the client URL. The way to force it to use the
+Edge Dev install instead of production Edge is adding `"runtimeExecutable": "dev"`
+to the configuration.
+
+The launch config references two tasks in the project-wide `tasks.json` file to
+build and run the client and server code. The client requires custom problem matchers,
+based on the existing `$ts-checker-webpack-watch` problem matcher, to detect the
+start and end of build and eslint verification. Without that VSCode doesn't know when
+the build finished. The server build task can simply use `$tsc-watch` since there's no
+webpack involved. Another reason to hate webpack...
+
+Even with the above I was still having trouble getting debugging to work. Things would build
+but I couldn't figure out how to get the debugger to attach. The magic is to tell vscode
+to auto-attach the debugger, which is specified in the workspace file:
+
+```javascript
+    "debug.javascript.autoAttachFilter": "smart"
+```
+
+I'm sure there's a way to explicitly make attaching work in the launch.json config but
+it wasn't worth trying to figure out when auto attach works fine.
