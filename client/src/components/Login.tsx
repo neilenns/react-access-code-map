@@ -42,6 +42,8 @@ const Login = () => {
           setError("Fill all the fields in correctly.");
         } else if (error.response.status === 401) {
           setError("Invalid email or password.");
+        } else if (error.response.status === 402) {
+          setError("Your account is not approved yet.");
         } else {
           setError(genericErrorMessage);
         }

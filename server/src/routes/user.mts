@@ -67,6 +67,14 @@ router.post(
         if (!user) {
           throw new Error("User not found"); // Throw an error if user is null
         }
+
+        // Unverified users aren't allowed to sign in.
+        if (!user.isVerified) {
+          res.statusCode = 402;
+          res.send("User is not verified");
+          return;
+        }
+
         user.refreshToken.push({ refreshToken });
         user
           .save()
