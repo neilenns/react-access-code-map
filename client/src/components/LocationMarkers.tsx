@@ -158,6 +158,10 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
 
   // Adds a marker to the map when the user clicks on the map.
   useMapEvent("contextmenu", async (e: LeafletMouseEvent) => {
+    if (!userContext.details?.canCreate) {
+      return;
+    }
+
     const geoDetails = await reverseGeocode(e.latlng);
 
     const newLocation = {
