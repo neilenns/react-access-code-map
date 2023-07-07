@@ -11,11 +11,15 @@ body {
 
 /* From https://dev.to/mcrowder65/how-to-center-elements-horizontally-on-a-create-react-app-project-1omn */
 /* For centering the page vertically */
-html, body, #root, #root>div {
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  margin: 0;
+body {
+  min-height: 100vh;
+  height: -webkit-fill-available;
+}
+
+/* From https://allthingssmitty.com/2020/05/11/css-fix-for-100vh-in-mobile-webkit/ */
+/* This ensures the bottom of the webpage is visible on mobile browsers. */
+html {
+  height: -webkit-fill-available;
 }
 
 .auth-form {
@@ -30,4 +34,5 @@ html, body, #root, #root>div {
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100vh;
 }
