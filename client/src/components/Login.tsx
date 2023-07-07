@@ -6,7 +6,7 @@ import { serverUrl } from "../configs/accessCodeServer";
 import axios from "axios";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [password, setPassword] = useState("");
@@ -23,7 +23,7 @@ const Login = () => {
       .post(
         new URL("users/login", serverUrl).toString(),
         {
-          username,
+          username: email,
           password,
         },
         {
@@ -54,19 +54,22 @@ const Login = () => {
     <>
       <form className="auth-form" onSubmit={formSubmitHandler}>
         <TextField
-          label="Username"
+          label="Email"
+          required={true}
           variant="outlined"
+          type="email"
           margin="normal"
           fullWidth
-          value={username}
+          value={email}
           error={error !== ""}
           helperText={error}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setUsername(e.target.value)
+            setEmail(e.target.value)
           }
         />
         <TextField
           label="Password"
+          required={true}
           variant="outlined"
           margin="normal"
           fullWidth
