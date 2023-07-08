@@ -41,7 +41,16 @@ export default function AccessCodeMap(props: IAccessCodeMapProps) {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <GeocodeControl />
-      <LocateControl position="topright" ref={handleRef} />
+      <LocateControl
+        position="topright"
+        ref={handleRef}
+        options={{
+          setView: "always",
+          locateOptions: {
+            enableHighAccuracy: true,
+          },
+        }}
+      />
       <LocationMarkers />
       <Control position="bottomleft">
         <ButtonGroup orientation="vertical" variant="contained">
