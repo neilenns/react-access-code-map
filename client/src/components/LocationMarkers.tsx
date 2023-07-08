@@ -1,8 +1,8 @@
 import axios from "axios";
 import { LatLng, LeafletMouseEvent } from "leaflet";
 import { Types } from "mongoose";
-import React, { useContext } from "react";
-import { useMapEvent } from "react-leaflet";
+import React, { useContext, useState } from "react";
+import { LayerGroup, useMapEvent } from "react-leaflet";
 import { UserContext } from "../context/UserContext";
 import ILocation from "../interfaces/ILocation.mjs";
 import INominatimReverseResponse from "../interfaces/INominatimReverseResponse.mjs";
@@ -26,6 +26,7 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
     React.useState<boolean>(false);
   const [selectedLocation, setSelectedLocation] = React.useState<ILocation>({});
   const [userContext] = useContext(UserContext);
+  const [zoom, setZoom] = useState(11);
 
   /**
    * Helper function to reverse geocode a map location.
@@ -158,6 +159,10 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
     }
   }
 
+  useMapEvent("zoomend", (e) => {
+    setZoom(e.target.getZoom());
+  });
+
   // Adds a marker to the map when the user clicks on the map.
   useMapEvent("contextmenu", async (e: LeafletMouseEvent) => {
     if (!userContext.details?.canCreate) {
@@ -199,14 +204,22 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
 
   return (
     <>
-      {locations?.map((location) => (
-        <LocationMarker
-          location={location}
-          key={location._id!.toString()}
-          onRemoveMarker={onRemoveMarker}
-          onEditMarker={onEditMarker}
-        />
-      ))}
+      {
+        // This method of hiding the layer group using a zoom state comes from... GitHub Copilot!
+        // Amazing.
+        zoom >= 12 && (
+          <LayerGroup>
+            {locations?.map((location) => (
+              <LocationMarker
+                location={location}
+                key={location._id!.toString()}
+                onRemoveMarker={onRemoveMarker}
+                onEditMarker={onEditMarker}
+              />
+            ))}
+          </LayerGroup>
+        )
+      }
       <MarkerEditDialog
         isOpen={isEditOpen}
         isEdit={isEdit}
