@@ -72,6 +72,12 @@ export const MarkerEditDialog: React.FC<IMarkerEditDialogProps> = (props) => {
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
             setLocation({ ...location, title: e.target.value });
           }}
+          // Since this field is often pre-populated with a value that needs
+          // to be changed, auto-select the text when it is focused so the
+          // user doesn't have to backspace everything.
+          onFocus={(e: React.FocusEvent<HTMLTextAreaElement>) => {
+            e.target.select();
+          }}
         />
         <TextField
           autoFocus
