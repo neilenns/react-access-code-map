@@ -6,7 +6,7 @@ import Control from "react-leaflet-custom-control";
 import { Button, ButtonGroup, Tooltip } from "@mui/material";
 import { ExitToApp } from "@mui/icons-material";
 import * as L from "leaflet";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface IAccessCodeMapProps {
   onSignOutClick: React.MouseEventHandler;
@@ -15,6 +15,7 @@ export interface IAccessCodeMapProps {
 export default function AccessCodeMap(props: IAccessCodeMapProps) {
   const { onSignOutClick } = props;
   const [autoLocate] = useState(true);
+  const [map, setMap] = useState<L.Map | null>(null);
 
   // Getting this type definition right was a *pain*. I kept getting errors about MutableRefObject
   // type not matching. Fix is from here: https://stackoverflow.com/a/58033283. The key is to specify
@@ -30,11 +31,26 @@ export default function AccessCodeMap(props: IAccessCodeMapProps) {
     }
   };
 
+  const storeMapRef = (ref: L.Map | null) => {
+    if (ref) {
+      setMap(ref);
+    }
+  };
+
+  // Hide the zoom control on mobile devices. Code from
+  // https://gis.stackexchange.com/a/259718.
+  useEffect(() => {
+    if (L.Browser.mobile && map) {
+      map.removeControl(map?.zoomControl);
+    }
+  }, [map]);
+
   return (
     <MapContainer
       center={[47.65496185820956, -122.25201847353225]}
       zoom={11}
       scrollWheelZoom={true}
+      ref={storeMapRef}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
