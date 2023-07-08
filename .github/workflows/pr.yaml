@@ -21,6 +21,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-${{ matrix.builds }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ matrix.builds }}-
+
       - name: Use Node.js 18.x
         uses: actions/setup-node@v2
         with:
