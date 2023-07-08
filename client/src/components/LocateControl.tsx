@@ -5,6 +5,7 @@ import "leaflet.locatecontrol/dist/L.Control.Locate.css";
 
 // This code comes directly from https://stackoverflow.com/a/75567918
 interface P extends L.ControlOptions {
+  position?: L.ControlPosition;
   options?: L.Control.LocateOptions;
 }
 
@@ -12,6 +13,7 @@ const { Locate } = L.Control;
 
 function createLocateInstance(props: P) {
   const instance = new Locate({
+    position: props.position,
     ...props.options,
     //    ...props,
   });
