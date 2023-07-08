@@ -2,7 +2,7 @@ import axios from "axios";
 import { LatLng, LeafletMouseEvent } from "leaflet";
 import { Types } from "mongoose";
 import React, { useContext } from "react";
-import { useMapEvent } from "react-leaflet";
+import { LayerGroup, LayersControl, useMapEvent } from "react-leaflet";
 import { UserContext } from "../context/UserContext";
 import ILocation from "../interfaces/ILocation.mjs";
 import INominatimReverseResponse from "../interfaces/INominatimReverseResponse.mjs";
@@ -199,14 +199,18 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
 
   return (
     <>
-      {locations?.map((location) => (
-        <LocationMarker
-          location={location}
-          key={location._id!.toString()}
-          onRemoveMarker={onRemoveMarker}
-          onEditMarker={onEditMarker}
-        />
-      ))}
+      <LayersControl.Overlay checked name="Access codes">
+        <LayerGroup>
+          {locations?.map((location) => (
+            <LocationMarker
+              location={location}
+              key={location._id!.toString()}
+              onRemoveMarker={onRemoveMarker}
+              onEditMarker={onEditMarker}
+            />
+          ))}
+        </LayerGroup>
+      </LayersControl.Overlay>
       <MarkerEditDialog
         isOpen={isEditOpen}
         isEdit={isEdit}
