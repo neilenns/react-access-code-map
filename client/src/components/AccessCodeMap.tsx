@@ -14,8 +14,19 @@ export interface IAccessCodeMapProps {
 
 export default function AccessCodeMap(props: IAccessCodeMapProps) {
   const { onSignOutClick } = props;
-  const [autoLocate] = useState(true);
+  const [autoLocate] = useState(() => {
+    const storedValue = sessionStorage.getItem("autoLocate");
+    if (!storedValue) {
+      return true;
+    } else {
+      return sessionStorage.getItem("autoLocate") === "true";
+    }
+  });
   const [map, setMap] = useState<L.Map | null>(null);
+
+  useEffect(() => {
+    sessionStorage.setItem("autoLocate", autoLocate.toString());
+  }, [autoLocate]);
 
   // Getting this type definition right was a *pain*. I kept getting errors about MutableRefObject
   // type not matching. Fix is from here: https://stackoverflow.com/a/58033283. The key is to specify
