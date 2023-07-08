@@ -14,8 +14,19 @@ export interface IAccessCodeMapProps {
 
 export default function AccessCodeMap(props: IAccessCodeMapProps) {
   const { onSignOutClick } = props;
-  const [autoLocate] = useState(true);
+  const [autoLocate] = useState(() => {
+    const storedValue = sessionStorage.getItem("autoLocate");
+    if (!storedValue) {
+      return true;
+    } else {
+      return sessionStorage.getItem("autoLocate") === "true";
+    }
+  });
   const [map, setMap] = useState<L.Map | null>(null);
+
+  useEffect(() => {
+    sessionStorage.setItem("autoLocate", autoLocate.toString());
+  }, [autoLocate]);
 
   // Getting this type definition right was a *pain*. I kept getting errors about MutableRefObject
   // type not matching. Fix is from here: https://stackoverflow.com/a/58033283. The key is to specify
@@ -34,6 +45,17 @@ export default function AccessCodeMap(props: IAccessCodeMapProps) {
   const storeMapRef = (ref: L.Map | null) => {
     if (ref) {
       setMap(ref);
+
+      // Add listeners for the locateactivate and locatedeactivate events so we can
+      // persist the setting in storage and restore it when the map is reloaded.
+      // I'd normally use useMapEvents() for this but it isn't accessible at any
+      // level other than *inside* the MapContainer.
+      map?.addEventListener("locateactivate", (e) => {
+        sessionStorage.setItem("autoLocate", "true");
+      });
+      map?.addEventListener("locatedeactivate", (e) => {
+        sessionStorage.setItem("autoLocate", "false");
+      });
     }
   };
 
