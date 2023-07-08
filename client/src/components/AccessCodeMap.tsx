@@ -45,6 +45,17 @@ export default function AccessCodeMap(props: IAccessCodeMapProps) {
   const storeMapRef = (ref: L.Map | null) => {
     if (ref) {
       setMap(ref);
+
+      // Add listeners for the locateactivate and locatedeactivate events so we can
+      // persist the setting in storage and restore it when the map is reloaded.
+      // I'd normally use useMapEvents() for this but it isn't accessible at any
+      // level other than *inside* the MapContainer.
+      map?.addEventListener("locateactivate", (e) => {
+        sessionStorage.setItem("autoLocate", "true");
+      });
+      map?.addEventListener("locatedeactivate", (e) => {
+        sessionStorage.setItem("autoLocate", "false");
+      });
     }
   };
 
