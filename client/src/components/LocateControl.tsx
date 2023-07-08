@@ -1,15 +1,20 @@
-import { createControlComponent } from '@react-leaflet/core';
-import * as L from 'leaflet';
-import 'leaflet.locatecontrol';
-import 'leaflet.locatecontrol/dist/L.Control.Locate.css';
+import { createControlComponent } from "@react-leaflet/core";
+import * as L from "leaflet";
+import "leaflet.locatecontrol";
+import "leaflet.locatecontrol/dist/L.Control.Locate.css";
 
 // This code comes directly from https://stackoverflow.com/a/75567918
-interface P extends L.ControlOptions {}
+interface P extends L.ControlOptions {
+  options?: L.Control.LocateOptions;
+}
 
 const { Locate } = L.Control;
 
 function createLocateInstance(props: P) {
-  const instance = new Locate(props);
+  const instance = new Locate({
+    ...props.options,
+    //    ...props,
+  });
 
   return instance;
 }
