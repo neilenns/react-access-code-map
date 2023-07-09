@@ -18,7 +18,7 @@ function createGeocodeInstance(props: P) {
       },
     }),
     style: "bar",
-    showMarker: false,
+    showMarker: true,
     autoClose: true,
     keepResult: true,
     ...props,
