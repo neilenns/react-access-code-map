@@ -84,8 +84,11 @@ export default function AccessCodeMap(props: IAccessCodeMapProps) {
         ref={handleRef}
         options={{
           setView: "always",
+          // Issue 101: High accuracy causes the dot to jump around too much when using on a mobile
+          // device so disable it. Leaving the code here with it as false so in the future I remember
+          // how to turn it on if I want to.
           locateOptions: {
-            enableHighAccuracy: true,
+            enableHighAccuracy: false,
           },
         }}
       />
