@@ -44,8 +44,8 @@ export const MarkerEditDialog: React.FC<IMarkerEditDialogProps> = (props) => {
     props.onSave({
       ...location,
       // Issue 102: Trim whitespace and remove newlines from title and note
-      title: location.title?.trim().replace(/\n/g, ""),
-      note: location.note?.trim().replace(/\n/g, ""),
+      title: location.title?.trim().replace(/^\n+|\n+$/g, ""),
+      note: location.note?.trim().replace(/^\n+|\n+$/g, ""),
     });
   };
 
