@@ -1,30 +1,52 @@
-import { createControlComponent } from "@react-leaflet/core";
-import "leaflet-geosearch/dist/geosearch.css";
+import { useEffect } from "react";
 import { GeoSearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
+import { useMap } from "react-leaflet";
+import "leaflet-geosearch/dist/geosearch.css";
+import { SearchResult } from "leaflet-geosearch/dist/providers/provider";
 
-// This code is based on https://stackoverflow.com/a/75567918.
-// Accessing the control is from https://github.com/perliedman/leaflet-control-geocoder/issues/260#issuecomment-1272343753
-interface P extends L.ControlOptions {}
-
-function createGeocodeInstance(props: P) {
-  // Unfortunate to have to add this ignore but otherwise typescript doesn't like the control.
-  // I found a sample on the leaflet-geosearch page that did this too so I guess
-  // that's how it has to be done.
-  // @ts-ignore
-  const instance = new GeoSearchControl({
-    provider: new OpenStreetMapProvider({
-      params: {
-        countrycodes: "us",
-      },
-    }),
-    style: "bar",
-    showMarker: true,
-    autoClose: true,
-    keepResult: true,
-    ...props,
-  });
-
-  return instance;
+interface IGeoSearchControlProps extends L.ControlOptions {
+  setSelectedSearchItem: (result: SearchResult) => void;
+  options?: L.LocateOptions;
 }
 
-export const GeocodeControl = createControlComponent(createGeocodeInstance);
+// Most of the code from this comes from https://github.com/smeijer/leaflet-geosearch/issues/310
+export const GeocodeControl = (props: IGeoSearchControlProps) => {
+  const { options, setSelectedSearchItem } = props;
+  const provider = new OpenStreetMapProvider({
+    params: {
+      countrycodes: "us",
+    },
+  });
+
+  // @ts-ignore
+  const searchControl = new GeoSearchControl({
+    provider: provider,
+    style: "bar",
+    showMarker: false,
+    autoClose: false,
+    keepResult: true,
+    ...options,
+  });
+
+  const handleResult = (result: any) => {
+    if (result) {
+      setSelectedSearchItem(result.location);
+    }
+  };
+
+  const map = useMap();
+
+  // @ts-ignore
+  useEffect(() => {
+    map.addControl(searchControl);
+    // Typescript doesn't know this is a custom event added by
+    // the geosearch control that returns a different type for the
+    // function parameter than the standard map events.
+    // @ts-ignore
+    map.on("geosearch/showlocation", handleResult);
+
+    return () => map.removeControl(searchControl);
+  });
+
+  return null;
+};

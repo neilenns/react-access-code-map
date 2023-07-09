@@ -67,6 +67,10 @@ export default function AccessCodeMap(props: IAccessCodeMapProps) {
     }
   }, [map]);
 
+  function handleGeocodeResult(result: any) {
+    console.log(JSON.stringify(result));
+  }
+
   return (
     <MapContainer
       center={[47.65496185820956, -122.25201847353225]}
@@ -78,7 +82,7 @@ export default function AccessCodeMap(props: IAccessCodeMapProps) {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <GeocodeControl />
+      <GeocodeControl setSelectedSearchItem={handleGeocodeResult} />
       <LocateControl
         position="topright"
         ref={handleRef}
