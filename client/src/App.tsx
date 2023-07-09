@@ -40,7 +40,13 @@ function App() {
         });
       })
       .finally(() => setLoading(false));
-  }, [setUserContext, userContext.token]);
+    // ESLint really really really wants userContext.token here, but that
+    // causes the page to reload every time the user token is updated.
+    // It's completely unnecessary because none of the components use the
+    // token directly, they all use the context. So disable the eslint
+    // warning for just this line.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setUserContext]);
 
   const fetchUserDetails = useCallback(() => {
     setLoading(true);
