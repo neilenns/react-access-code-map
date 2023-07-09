@@ -1,5 +1,10 @@
 # General flow from https://www.howtogeek.com/devops/how-to-dockerise-a-react-app/.
 FROM node:18-alpine AS build
+
+LABEL org.opencontainers.image.source=https://github.com/neilenns/react-access-code-map
+LABEL org.opencontainers.image.description="Website for the Access Code Map project."
+LABEL org.opencontainers.image.licenses=MIT
+
 WORKDIR /app
 
 COPY package.json package.json
