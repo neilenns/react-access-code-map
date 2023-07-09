@@ -41,7 +41,12 @@ export const MarkerEditDialog: React.FC<IMarkerEditDialogProps> = (props) => {
   }, [props.location, props.isEdit]);
 
   const onDialogSave: React.MouseEventHandler<HTMLButtonElement> = (event) => {
-    props.onSave(location);
+    props.onSave({
+      ...location,
+      // Issue 102: Trim whitespace and remove newlines from title and note
+      title: location.title?.trim().replace(/\n/g, ""),
+      note: location.note?.trim().replace(/\n/g, ""),
+    });
   };
 
   const onDialogClose: React.MouseEventHandler<HTMLButtonElement> = (event) => {
