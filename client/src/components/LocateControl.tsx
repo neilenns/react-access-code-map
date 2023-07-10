@@ -15,6 +15,8 @@ function createLocateInstance(props: P) {
   const instance = new Locate({
     position: props.position,
     initialZoomLevel: 16,
+    keepCurrentZoomLevel: true,
+    showPopup: false,
     ...props.options,
     //    ...props,
   });
