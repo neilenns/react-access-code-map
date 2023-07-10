@@ -42,7 +42,7 @@ jobs:
             org.opencontainers.image.licenses=MIT
           # generate Docker tags based on the following events/attributes
           tags: |
-            dev
+            ${{ github.ref }}
 
       - name: Build and push image
         uses: docker/build-push-action@v4
