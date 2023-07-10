@@ -39,6 +39,8 @@ jobs:
           labels: |
             org.opencontainers.image.title=Access Code Map ${{ matrix.context }}
             org.opencontainers.image.description=${{ matrix.context }} for Access Code Map
+            org.opencontainers.image.source=https://github.com/neilenns/react-access-code-map
+            org.opencontainers.image.licenses=MIT
           # generate Docker tags based on the following events/attributes
           tags: |
             type=schedule
