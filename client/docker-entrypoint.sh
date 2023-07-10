@@ -7,10 +7,10 @@ set -o nounset
 ## is made accessible to typescript via index.html
 
 echo "Injecting env vars into react app..."
-echo "REACT_APP_SERVER_URL=$REACT_APP_SERVER_URL"
+echo "SERVER_URL=$SERVER_URL"
 
 cat <<EOF > /usr/share/nginx/html/env_vars.js
-window.REACT_APP_SERVER_URL="$REACT_APP_SERVER_URL";
+window.SERVER_URL="$SERVER_URL";
 EOF
 
 echo "Starting nginx..."
