@@ -1,5 +1,6 @@
 import { createControlComponent } from "@react-leaflet/core";
 import "leaflet-geosearch/dist/geosearch.css";
+// @ts-ignore: https://github.com/smeijer/leaflet-geosearch/issues/370
 import { GeoSearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
 
 // This code is based on https://stackoverflow.com/a/75567918.
