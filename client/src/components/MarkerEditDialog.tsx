@@ -25,7 +25,7 @@ interface IMarkerEditDialogProps {
 // This method of making a top-aligned styled MUI dialog comes from
 // https://stackoverflow.com/a/73745188/9206264. Any other method that
 // mention using makeStyles doesn't work with MUI v5 and React 18 or later.
-const TopAlignedDialog = styled(Dialog)(({ theme }) => ({
+const TopAlignedDialog = styled(Dialog)(({}) => ({
   "& .MuiDialog-container": {
     alignItems: "flex-start",
   },
