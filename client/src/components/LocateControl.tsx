@@ -14,6 +14,7 @@ const { Locate } = L.Control;
 function createLocateInstance(props: P) {
   const instance = new Locate({
     position: props.position,
+    initialZoomLevel: 16,
     ...props.options,
     //    ...props,
   });
