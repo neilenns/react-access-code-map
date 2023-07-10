@@ -19,7 +19,7 @@ export interface ILocationMarkerProps {
 // Used to maintain line breaks in multi-line text when displaying it in a dialog
 // Comes from https://stackoverflow.com/a/57392914/9206264, but turned in to a
 // styled component to avoid inline CSS linting errors.
-const MultiLineText = styled("div")(({ theme }) => ({
+const MultiLineText = styled("div")(({}) => ({
   whiteSpace: "pre-wrap",
 }));
 
