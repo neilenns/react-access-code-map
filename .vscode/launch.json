@@ -7,8 +7,8 @@
       "runtimeExecutable": "dev",
       "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}/client/src",
-      "preLaunchTask": "run server and client",
-      }
+      "skipFiles": ["${workspaceFolder}/src/node_modules/**/*.js"],
+      "preLaunchTask": "run server and client"
     }
   ]
 }

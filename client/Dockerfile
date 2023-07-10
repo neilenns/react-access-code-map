@@ -29,7 +29,7 @@ RUN mkdir -p /usr/src/app
 RUN rm -rf ./*
 
 # Copy the app
-COPY --from=build /app/build/ .
+COPY --from=build /app/dist/ .
 COPY --from=build /app/docker-entrypoint.sh /usr/src/app/docker-entrypoint.sh
 RUN chmod +x /usr/src/app/docker-entrypoint.sh
 

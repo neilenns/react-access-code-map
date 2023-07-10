@@ -16,7 +16,7 @@
   "settings": {
     // This is relative to the workspace root, not the .vscode folder
     "files.exclude": {
-      "client/dist": true,
+      "client/build": true,
       "client/node_modules": true,
       "server/dist": true,
       "server/node_modules": true,
@@ -32,6 +32,10 @@
     "debug.javascript.autoAttachFilter": "smart"
   },
   "extensions": {
-    "recommendations": ["yzhang.markdown-all-in-one", "esbenp.prettier-vscode"]
+    "recommendations": [
+      "yzhang.markdown-all-in-one",
+      "esbenp.prettier-vscode",
+      "krysenlo.vite-plugin-eslint-problemmatcher"
+    ]
   }
 }

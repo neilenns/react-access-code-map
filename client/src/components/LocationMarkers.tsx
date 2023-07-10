@@ -18,7 +18,7 @@ import ConfirmationDialog from "./DeleteLocationConfirmationDialog";
 
 export interface ILocationMarkerProps {}
 
-export default function LocationMarkers(props: ILocationMarkerProps) {
+export default function LocationMarkers(_props: ILocationMarkerProps) {
   const [locations, setLocations] = React.useState<ILocation[]>([]);
   const [isEditOpen, setIsEditOpen] = React.useState<boolean>(false);
   const [isEdit, setIsEdit] = React.useState<boolean>(false);

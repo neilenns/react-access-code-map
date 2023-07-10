@@ -1,6 +1,5 @@
 import "./App.css";
 import { Card, Tabs, Tab, Box, Container } from "@mui/material";
-// import AccessCodeMap from "./components/AccessCodeMap";
 import { useCallback, useContext, useEffect, useState } from "react";
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -34,7 +33,7 @@ function App() {
         });
         setTimeout(verifyUser, 5 * 60 * 1000);
       })
-      .catch((err) => {
+      .catch((_err) => {
         setUserContext((oldValues) => {
           return { ...oldValues, token: null };
         });
@@ -62,7 +61,7 @@ function App() {
           return { ...oldValues, details: response.data };
         });
       })
-      .catch((err) => {
+      .catch((_err) => {
         setUserContext((oldValues) => {
           return { ...oldValues, details: null };
         });
@@ -109,14 +108,14 @@ function App() {
         },
       })
       .finally(() => {
-        setUserContext((oldValues) => {
+        setUserContext((_oldValues) => {
           return { token: null, userDetails: null };
         });
         window.localStorage.setItem("logout", Date.now().toString());
       });
   };
 
-  function handleTabChange(event: React.ChangeEvent<{}>, newValue: string) {
+  function handleTabChange(_event: React.ChangeEvent<{}>, newValue: string) {
     setCurrentTab(newValue);
   }
 

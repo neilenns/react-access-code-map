@@ -1,0 +1,27 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "lint",
+      "label": "lint client",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": ["$vite-eslint-visualstudio", "$vite-esbuild"]
+    },
+    {
+      "type": "npm",
+      "script": "build",
+      "label": "run production build",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$vite-esbuild", "$vite-eslint-visualstudio"]
+    }
+  ]
+}
