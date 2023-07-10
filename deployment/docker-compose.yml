@@ -46,7 +46,7 @@ services:
       # to ensure it uses SSL when making server calls. Without this there will be
       # errors in the browser attempting to call the server via HTTP when the
       # client is HTTPS.
-      - REACT_APP_SERVER_URL=https://danecreekphoto.duckdns.org:3001/
+      - SERVER_URL=https://danecreekphoto.duckdns.org:3001/
     volumes:
       - ./certs:/etc/nginx/ssl
     depends_on:
