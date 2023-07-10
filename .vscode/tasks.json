@@ -15,19 +15,11 @@
       "isBackground": true,
       "problemMatcher": [
         {
-          "base": "$ts-checker-webpack-watch",
+          "base": "$vite-esbuild",
           "background": {
             "activeOnStart": true,
             "beginsPattern": "> vite",
-            "endsPattern": "VITE v\\d+\\.\\d+\\.\\d+  ready in \\d+ ms$"
-          }
-        },
-        {
-          "base": "$ts-checker-eslint-webpack-watch",
-          "background": {
-            "activeOnStart": true,
-            "beginsPattern": "Issues checking in progress...",
-            "endsPattern": ".* issues found."
+            "endsPattern": "ready"
           }
         }
       ]
