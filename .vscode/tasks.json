@@ -3,7 +3,7 @@
   "tasks": [
     {
       "type": "npm",
-      "script": "start",
+      "script": "dev",
       "label": "run client",
       "options": {
         "cwd": "${workspaceFolder}/client"
@@ -18,8 +18,8 @@
           "base": "$ts-checker-webpack-watch",
           "background": {
             "activeOnStart": true,
-            "beginsPattern": "Compiling...",
-            "endsPattern": "webpack compiled .*"
+            "beginsPattern": "> vite",
+            "endsPattern": "VITE v\\d+\\.\\d+\\.\\d+  ready in \\d+ ms$"
           }
         },
         {

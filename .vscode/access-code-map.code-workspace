@@ -32,6 +32,10 @@
     "debug.javascript.autoAttachFilter": "smart"
   },
   "extensions": {
-    "recommendations": ["yzhang.markdown-all-in-one", "esbenp.prettier-vscode"]
+    "recommendations": [
+      "yzhang.markdown-all-in-one",
+      "esbenp.prettier-vscode",
+      "krysenlo.vite-plugin-eslint-problemmatcher"
+    ]
   }
 }

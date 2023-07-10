@@ -33,7 +33,7 @@ const Register = () => {
           withCredentials: true,
         }
       )
-      .then(async (response) => {
+      .then(async (_response) => {
         setRegisterSuccess(true);
       })
       .catch((error) => {
