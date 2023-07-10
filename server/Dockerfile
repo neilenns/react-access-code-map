@@ -19,10 +19,6 @@ RUN npm run build
 # Use a lightweight base image
 FROM node:18-alpine
 
-LABEL org.opencontainers.image.source=https://github.com/neilenns/react-access-code-map
-LABEL org.opencontainers.image.description="Backend server for the Access Code Map project."
-LABEL org.opencontainers.image.licenses=MIT
-
 # Set the working directory in the container
 WORKDIR /app
 

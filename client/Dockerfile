@@ -14,10 +14,6 @@ RUN npm run build
 # From https://typeofnan.dev/how-to-serve-a-react-app-with-nginx-in-docker/
 FROM nginx:alpine
 
-LABEL org.opencontainers.image.source=https://github.com/neilenns/react-access-code-map
-LABEL org.opencontainers.image.description="Website for the Access Code Map project."
-LABEL org.opencontainers.image.licenses=MIT
-
 # This is key, it's the location that nginx expects to find the source files
 # for the website
 WORKDIR /usr/share/nginx/html
