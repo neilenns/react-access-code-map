@@ -16,7 +16,7 @@ services:
     image: ghcr.io/neilenns/access-code-map-server:latest
     links:
       - mongodb
-    restart: always      
+    restart: always
     ports:
       - 3001:3001
     environment:
@@ -30,6 +30,9 @@ services:
       # This must be set to the domain and port of the *client*.
       - WHITELISTED_DOMAINS=https://danecreekphoto.duckdns.org:3000
       - PORT=3001
+      # Required for SSL certificate change detection on Windows machines
+      - CHOKIDAR_USEPOLLING=true
+
     volumes:
       - ./certs:/certs
     depends_on:

@@ -6,6 +6,11 @@ import connectToDatabase from "./util/connectdb.mjs";
 import passport from "passport";
 import cors, { CorsOptions } from "cors";
 import cookieParser from "cookie-parser";
+import * as chokidar from "chokidar";
+
+// Workaround for lodash being a CommonJS module
+import pkg from "lodash";
+const { debounce } = pkg;
 
 // Routes
 import userRouter from "./routes/user.mjs";
@@ -23,25 +28,58 @@ import { Server } from "http";
 
 const logger = debug("access-code-map:server");
 const port = process.env.PORT || 3001;
+
+var watcher: chokidar.FSWatcher;
 var server: https.Server | Server;
 
+const privateKeyPath = "/certs/privkey.pem";
+const fullChainPath = "/certs/fullchain.pem";
+
+function readCertsSync() {
+  return {
+    key: fs.readFileSync(privateKeyPath),
+    cert: fs.readFileSync(fullChainPath),
+  };
+}
+
+const certFilesExist =
+  fs.existsSync(privateKeyPath) && fs.existsSync(fullChainPath);
+
+function reloadSSL() {
+  console.log("Certificate changed!");
+  if (server instanceof https.Server) {
+    console.log("Reloading SSL...");
+    server.setSecureContext(readCertsSync());
+    console.log("SSL reload complete!");
+  }
+}
+
+// From https://stackoverflow.com/a/42455876/9206264
+const debouncedReloadSSL = debounce(reloadSSL, 1000);
+
 async function startServer() {
+  console.log(`Private key path: ${privateKeyPath}`);
+  console.log(`Full chain path: ${fullChainPath}`);
+
   await connectToDatabase();
 
-  const certFilesExist =
-    fs.existsSync("/certs/privkey.pem") &&
-    fs.existsSync("/certs/fullchain.pem");
-
   if (certFilesExist) {
-    const options = {
-      key: fs.readFileSync("/certs/privkey.pem"),
-      cert: fs.readFileSync("/certs/fullchain.pem"),
-    };
-
-    server = https.createServer(options, app);
+    server = https.createServer(readCertsSync(), app);
     server.listen(port, () => {
-      console.log(`Server running on port ${port}`);
+      console.log(`Server running on port ${port} (SSL)`);
     });
+
+    // Watch for changes to the certificate files. If they change, reload the SSL.
+    // The debounced method is used to wait for changes to happen to both files
+    // and only restart SSL once.
+    watcher = chokidar
+      .watch([fullChainPath, privateKeyPath], {
+        awaitWriteFinish: true,
+      })
+      .on("change", debouncedReloadSSL);
+    console.log(
+      `Watching for changes to ${fullChainPath} and ${privateKeyPath}`
+    );
   } else {
     server = app.listen(port, () => {
       console.log(`Listening on port ${port}`);
@@ -50,8 +88,9 @@ async function startServer() {
   }
 }
 
-function stopServer() {
+async function stopServer() {
   console.log("Shutting down...");
+  await watcher?.close();
   server.close(() => {
     console.log("Server shutdown complete!");
     process.exit(0);
