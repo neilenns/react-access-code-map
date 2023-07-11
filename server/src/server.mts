@@ -74,7 +74,9 @@ async function startServer() {
         awaitWriteFinish: true,
       })
       .on("change", debouncedReloadSSL);
-    console.log(`Watching for changes to ${fullChainPath}`);
+    console.log(
+      `Watching for changes to ${fullChainPath} and ${privateKeyPath}`
+    );
   } else {
     server = app.listen(port, () => {
       console.log(`Server started on port ${port}`);
