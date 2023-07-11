@@ -27,6 +27,13 @@ those things so future me doesn't go through all that pain again.
 To launch the client and server at the same time for debugging purposes use the `Launch Edge (ROOT)`
 launch configuration.
 
+The workspace is also set up to support debugging the server code within Docker containers running locally.
+The tasks and launch configurations are based on the [VSCode documentation][vscode-docker-extension] for
+the Docker extension. The server Docker image assumes there is an existing mongodb instance running
+somewhere that it can talk to. The URL can be modified in the `server/.vscode/tasks.json` file.
+There are no equivalent tasks or launch configs for the client since the Docker image isn't running
+node.js.
+
 To verify Docker images prior to pushing to main use the [Publish dev Docker image action][devDockerImage].
 Select the branch to build from the dropdown then run the action. The resulting images will be published
 to Github with a tag that matches the branch name. A `docker-compose.yml` file to spin up the images
@@ -170,3 +177,4 @@ it wasn't worth trying to figure out when auto attach works fine.
 [devDockerImage]: https://github.com/neilenns/react-access-code-map/actions/workflows/dev_release.yaml
 [env-docker-runtime]: https://github.com/githubjakob/react-inject-env-docker-runtime
 [react-leaflet-app-demo]: https://github.com/ugwutotheeshoes/react-leaflet-app-demo
+[vscode-docker-extension]: https://code.visualstudio.com/docs/containers/overview

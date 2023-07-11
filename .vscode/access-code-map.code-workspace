@@ -35,7 +35,8 @@
     "recommendations": [
       "yzhang.markdown-all-in-one",
       "esbenp.prettier-vscode",
-      "krysenlo.vite-plugin-eslint-problemmatcher"
+      "krysenlo.vite-plugin-eslint-problemmatcher",
+      "ms-azuretools.vscode-docker"
     ]
   }
 }

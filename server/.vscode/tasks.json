@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Build",
+      "label": "Build production (server)",
       "type": "shell",
       "command": "npm",
       "args": ["run", "build"],
@@ -12,6 +12,44 @@
         "clear": true
       },
       "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "docker-build: server",
+      "type": "docker-build",
+      "platform": "node",
+      "dockerBuild": {
+        "context": ".",
+        "dockerfile": "Dockerfile"
+      }
+    },
+    {
+      "label": "docker-run: server",
+      "type": "docker-run",
+      "dependsOn": ["docker-build: server"],
+      "dockerRun": {
+        "env": {
+          "DEBUG": "*",
+          "JWT_SECRET": "d8c8e9f7-4d8c-4b2a-9c5f-3d9c8e7a1c6f",
+          "REFRESH_TOKEN_SECRET": "b7e6f5d3-6b2c-4c3d-9c8a-1d2e3f4c5b6a",
+          "SESSION_EXPIRY": "900",
+          "REFRESH_TOKEN_EXPIRY": "2592000",
+          "MONGO_DB_CONNECTION_STRING": "mongodb://tom:28018",
+          "MONGO_DB_NAME": "access-code-map",
+          "COOKIE_SECRET": "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
+          "WHITELISTED_DOMAINS": "http://localhost:3000",
+          "PORT": "3001",
+          "CHOKIDAR_USEPOLLING": "true"
+        },
+        "ports": [
+          {
+            "containerPort": 3001,
+            "hostPort": 3001
+          }
+        ]
+      },
+      "node": {
+        "enableDebugging": true
+      }
     }
   ]
 }
