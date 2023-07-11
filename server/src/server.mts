@@ -28,6 +28,7 @@ import { Server } from "http";
 
 const logger = debug("access-code-map:server");
 const port = process.env.PORT || 3001;
+
 var watcher: chokidar.FSWatcher;
 var server: https.Server | Server;
 
