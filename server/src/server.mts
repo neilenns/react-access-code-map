@@ -18,6 +18,7 @@ import defaultRouter from "./routes/default.mjs";
 import locationsRouter from "./routes/locations.mjs";
 import fs from "fs";
 import https from "https";
+import debug from "debug";
 
 // Authentication
 import "./strategies/jwtStrategy.mjs";
@@ -25,6 +26,7 @@ import "./strategies/LocalStrategy.mjs";
 import "./authenticate.mjs";
 import { Server } from "http";
 
+const logger = debug("access-code-map:server");
 const port = process.env.PORT || 3001;
 var watcher: chokidar.FSWatcher;
 var server: https.Server | Server;
@@ -79,7 +81,8 @@ async function startServer() {
     );
   } else {
     server = app.listen(port, () => {
-      console.log(`Server started on port ${port}`);
+      console.log(`Listening on port ${port}`);
+      logger(`Listening on port ${port}`);
     });
   }
 }

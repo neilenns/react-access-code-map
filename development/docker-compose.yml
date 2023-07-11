@@ -13,10 +13,10 @@ services:
       - 27017:27017
 
   server:
-    image: ghcr.io/neilenns/access-code-map-server:neilenns-issue117
+    image: access-code-map-server:localdev
     links:
       - mongodb
-    restart: always      
+    restart: always
     ports:
       - 3001:3001
     environment:
@@ -30,11 +30,14 @@ services:
       # This must be set to the domain and port of the *client*.
       - WHITELISTED_DOMAINS=http://localhost:3000
       - PORT=3001
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./certs:/certs
     depends_on:
       - mongodb
 
   client:
-    image: ghcr.io/neilenns/access-code-map-client:neilenns-issue117
+    image: access-code-map-client:localdev
     restart: always
     ports:
       - 3000:80

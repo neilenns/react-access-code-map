@@ -4,7 +4,7 @@
     {
       "type": "npm",
       "script": "lint",
-      "label": "lint client",
+      "label": "Lint (client)",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -13,7 +13,7 @@
     {
       "type": "npm",
       "script": "build",
-      "label": "run production build",
+      "label": "Run production build (client)",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -22,6 +22,16 @@
         "isDefault": true
       },
       "problemMatcher": ["$vite-esbuild", "$vite-eslint-visualstudio"]
+    },
+    {
+      "label": "Build Docker image (client)",
+      "type": "docker-build",
+      "platform": "node",
+      "dockerBuild": {
+        "context": ".",
+        "dockerfile": "Dockerfile",
+        "tag": "access-code-map-client:localdev"
+      }
     }
   ]
 }
