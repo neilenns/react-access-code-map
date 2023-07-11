@@ -7,7 +7,10 @@ import passport from "passport";
 import cors, { CorsOptions } from "cors";
 import cookieParser from "cookie-parser";
 import * as chokidar from "chokidar";
-import debounce from "lodash/debounce";
+
+// Workaround for lodash being a CommonJS module
+import pkg from "lodash";
+const { debounce } = pkg;
 
 // Routes
 import userRouter from "./routes/user.mjs";
@@ -44,8 +47,12 @@ function reloadSSL() {
   if (server instanceof https.Server) {
     console.log("Reloading SSL...");
     server.setSecureContext(readCertsSync());
+    console.log("SSL reload complete!");
   }
 }
+
+// From https://stackoverflow.com/a/42455876/9206264
+const debouncedReloadSSL = debounce(reloadSSL, 1000);
 
 async function startServer() {
   await connectToDatabase();
@@ -53,15 +60,17 @@ async function startServer() {
   if (certFilesExist) {
     server = https.createServer(readCertsSync(), app);
     server.listen(port, () => {
-      console.log(`Server running on port ${port}`);
+      console.log(`Server running on port ${port} (SSL)`);
     });
 
     // Watch for changes to the certificate files. If they change, reload the SSL.
+    // The debounced method is used to wait for changes to happen to both files
+    // and only restart SSL once.
     watcher = chokidar
-      .watch([fullChainPath, privateKeyPath], { awaitWriteFinish: true })
-      .on("change", () => {
-        debounce(reloadSSL, 1000);
-      });
+      .watch([fullChainPath, privateKeyPath], {
+        awaitWriteFinish: true,
+      })
+      .on("change", debouncedReloadSSL);
     console.log(`Watching for changes to ${fullChainPath}`);
   } else {
     server = app.listen(port, () => {
