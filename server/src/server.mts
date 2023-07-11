@@ -23,22 +23,35 @@ import { Server } from "http";
 const port = process.env.PORT || 3001;
 var server: https.Server | Server;
 
+function readCertsSync() {
+  return {
+    key: fs.readFileSync("/certs/privkey.pem"),
+    cert: fs.readFileSync("/certs/fullchain.pem"),
+  };
+}
+
+const certFilesExist =
+  fs.existsSync("/certs/privkey.pem") && fs.existsSync("/certs/fullchain.pem");
+
 async function startServer() {
   await connectToDatabase();
 
-  const certFilesExist =
-    fs.existsSync("/certs/privkey.pem") &&
-    fs.existsSync("/certs/fullchain.pem");
-
   if (certFilesExist) {
-    const options = {
-      key: fs.readFileSync("/certs/privkey.pem"),
-      cert: fs.readFileSync("/certs/fullchain.pem"),
-    };
-
-    server = https.createServer(options, app);
+    server = https.createServer(readCertsSync(), app);
     server.listen(port, () => {
       console.log(`Server running on port ${port}`);
+    });
+
+    // Register for cert updates
+    var waitForCertAndFullChainUpdates: NodeJS.Timeout;
+
+    fs.watch("/certs/fullchain.pem", (event, filename) => {
+      console.log("SSL cert updated, reloading...");
+      waitForCertAndFullChainUpdates = setTimeout(() => {
+        if (server instanceof https.Server) {
+          server.setSecureContext(readCertsSync());
+        }
+      }, 1000);
     });
   } else {
     server = app.listen(port, () => {
