@@ -24,7 +24,7 @@ LABEL org.opencontainers.image.description="Backend server for the Access Code M
 LABEL org.opencontainers.image.licenses=MIT
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /usr/src/app
 
 # Copy the built distribution files from the previous build stage
 COPY --from=build /app/dist ./dist
@@ -34,7 +34,7 @@ COPY --from=build /app/package*.json ./
 RUN npm ci --only=production
 
 # Expose the port on which your Express.js app listens
-EXPOSE 3000
+EXPOSE 3001
 
 # Set the entrypoint file
 CMD ["node", "dist/server.mjs"]
