@@ -47,6 +47,13 @@ async function startServer() {
   }
 }
 
+function stopServer() {
+  console.log("Shutting down...");
+  server.close();
+  console.log("Shutdown complete!");
+  process.exit();
+}
+
 const app = express();
 
 // Configure the server
@@ -80,11 +87,8 @@ app.use("/users", userRouter);
 app.use(locationsRouter);
 app.use(defaultRouter);
 
-process.on("SIGINT", function () {
-  console.log("Shutting down...");
-  server.close();
-  console.log("Shutdown complete!");
-});
+process.on("SIGINT", stopServer);
+process.on("SIGTERM", stopServer);
 
 // Run it!
 startServer();
