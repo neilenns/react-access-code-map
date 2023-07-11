@@ -49,9 +49,10 @@ async function startServer() {
 
 function stopServer() {
   console.log("Shutting down...");
-  server.close();
-  console.log("Shutdown complete!");
-  process.exit();
+  server.close(() => {
+    console.log("Server shutdown complete!");
+    process.exit(0);
+  });
 }
 
 const app = express();
