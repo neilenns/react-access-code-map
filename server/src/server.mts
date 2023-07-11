@@ -55,6 +55,9 @@ function reloadSSL() {
 const debouncedReloadSSL = debounce(reloadSSL, 1000);
 
 async function startServer() {
+  console.log(`Private key path: ${privateKeyPath}`);
+  console.log(`Full chain path: ${fullChainPath}`);
+
   await connectToDatabase();
 
   if (certFilesExist) {
