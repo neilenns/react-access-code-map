@@ -81,7 +81,7 @@ async function startServer() {
 
 async function stopServer() {
   console.log("Shutting down...");
-  await watcher.close();
+  await watcher?.close();
   server.close(() => {
     console.log("Server shutdown complete!");
     process.exit(0);
