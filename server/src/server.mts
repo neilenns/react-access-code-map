@@ -18,8 +18,10 @@ import https from "https";
 import "./strategies/jwtStrategy.mjs";
 import "./strategies/LocalStrategy.mjs";
 import "./authenticate.mjs";
+import { Server } from "http";
 
 const port = process.env.PORT || 3001;
+var server: https.Server | Server;
 
 async function startServer() {
   await connectToDatabase();
@@ -34,15 +36,23 @@ async function startServer() {
       cert: fs.readFileSync("/certs/fullchain.pem"),
     };
 
-    const server = https.createServer(options, app);
+    server = https.createServer(options, app);
     server.listen(port, () => {
       console.log(`Server running on port ${port}`);
     });
   } else {
-    app.listen(port, () => {
+    server = app.listen(port, () => {
       console.log(`Server started on port ${port}`);
     });
   }
+}
+
+function stopServer() {
+  console.log("Shutting down...");
+  server.close(() => {
+    console.log("Server shutdown complete!");
+    process.exit(0);
+  });
 }
 
 const app = express();
@@ -77,6 +87,9 @@ app.use(passport.initialize());
 app.use("/users", userRouter);
 app.use(locationsRouter);
 app.use(defaultRouter);
+
+process.on("SIGINT", stopServer);
+process.on("SIGTERM", stopServer);
 
 // Run it!
 startServer();
