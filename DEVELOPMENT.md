@@ -27,12 +27,12 @@ those things so future me doesn't go through all that pain again.
 To launch the client and server at the same time for debugging purposes use the `Launch Edge (ROOT)`
 launch configuration.
 
-The workspace is also set up to support debugging the code within Docker containers running locally.
+The workspace is also set up to support debugging the server code within Docker containers running locally.
 The tasks and launch configurations are based on the [VSCode documentation][vscode-docker-extension] for
-the Docker extension. There are build and launch tasks for both client and server, as well as launch
-configurations for both client and server that will auto-attach to the node.js code running inside
-the container. The server Docker image assumes there is an existing mongodb instance running
+the Docker extension. The server Docker image assumes there is an existing mongodb instance running
 somewhere that it can talk to. The URL can be modified in the `server/.vscode/tasks.json` file.
+There are no equivalent tasks or launch configs for the client since the Docker image isn't running
+node.js.
 
 To verify Docker images prior to pushing to main use the [Publish dev Docker image action][devDockerImage].
 Select the branch to build from the dropdown then run the action. The resulting images will be published
