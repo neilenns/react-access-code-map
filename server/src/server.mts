@@ -6,6 +6,8 @@ import connectToDatabase from "./util/connectdb.mjs";
 import passport from "passport";
 import cors, { CorsOptions } from "cors";
 import cookieParser from "cookie-parser";
+import * as chokidar from "chokidar";
+import debounce from "lodash/debounce";
 
 // Routes
 import userRouter from "./routes/user.mjs";
@@ -21,17 +23,29 @@ import "./authenticate.mjs";
 import { Server } from "http";
 
 const port = process.env.PORT || 3001;
+var watcher: chokidar.FSWatcher;
 var server: https.Server | Server;
+
+const privateKeyPath = "/certs/privkey.pem";
+const fullChainPath = "/certs/fullchain.pem";
 
 function readCertsSync() {
   return {
-    key: fs.readFileSync("/certs/privkey.pem"),
-    cert: fs.readFileSync("/certs/fullchain.pem"),
+    key: fs.readFileSync(privateKeyPath),
+    cert: fs.readFileSync(fullChainPath),
   };
 }
 
 const certFilesExist =
-  fs.existsSync("/certs/privkey.pem") && fs.existsSync("/certs/fullchain.pem");
+  fs.existsSync(privateKeyPath) && fs.existsSync(fullChainPath);
+
+function reloadSSL() {
+  console.log("Certificate changed!");
+  if (server instanceof https.Server) {
+    console.log("Reloading SSL...");
+    server.setSecureContext(readCertsSync());
+  }
+}
 
 async function startServer() {
   await connectToDatabase();
@@ -42,17 +56,13 @@ async function startServer() {
       console.log(`Server running on port ${port}`);
     });
 
-    // Register for cert updates
-    var waitForCertAndFullChainUpdates: NodeJS.Timeout;
-
-    fs.watch("/certs/fullchain.pem", (event, filename) => {
-      console.log("SSL cert updated, reloading...");
-      waitForCertAndFullChainUpdates = setTimeout(() => {
-        if (server instanceof https.Server) {
-          server.setSecureContext(readCertsSync());
-        }
-      }, 1000);
-    });
+    // Watch for changes to the certificate files. If they change, reload the SSL.
+    watcher = chokidar
+      .watch([fullChainPath, privateKeyPath], { awaitWriteFinish: true })
+      .on("change", () => {
+        debounce(reloadSSL, 1000);
+      });
+    console.log(`Watching for changes to ${fullChainPath}`);
   } else {
     server = app.listen(port, () => {
       console.log(`Server started on port ${port}`);
@@ -60,8 +70,9 @@ async function startServer() {
   }
 }
 
-function stopServer() {
+async function stopServer() {
   console.log("Shutting down...");
+  await watcher.close();
   server.close(() => {
     console.log("Server shutdown complete!");
     process.exit(0);
