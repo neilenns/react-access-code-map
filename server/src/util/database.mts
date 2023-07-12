@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export default async function connectToDatabase() {
+export async function connectToDatabase() {
   const url = process.env.MONGO_DB_CONNECTION_STRING;
 
   if (!url) {
@@ -29,4 +29,9 @@ export default async function connectToDatabase() {
       );
       setTimeout(connectToDatabase, 5000);
     });
+}
+
+export async function disconnectFromDatabase() {
+  console.log("Disconnecting from the database...");
+  await mongoose.disconnect();
 }

@@ -37,4 +37,4 @@ RUN npm ci --only=production
 EXPOSE 3001
 
 # Set the entrypoint file
-CMD ["node", "dist/server.mjs"]
+CMD ["node", "dist/main.mjs"]
