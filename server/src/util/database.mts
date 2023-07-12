@@ -10,8 +10,6 @@ export async function connectToDatabase() {
     return;
   }
 
-  mongoose.set("bufferCommands", false);
-
   console.log(`Connecting to database at ${url}...`);
   const connect = mongoose.connect(url, {
     dbName: process.env.MONGO_DB_NAME,
