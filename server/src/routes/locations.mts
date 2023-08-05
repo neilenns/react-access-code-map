@@ -31,6 +31,7 @@ router.put(
       const updatedData = {
         title: req.body.title,
         note: req.body.note,
+        hasToilet: req.body.hasToilet,
         lastModified: new Date(),
         modifiedBy: req.user?._id,
       };
@@ -63,6 +64,7 @@ router.post(
         latitude: parseFloat(latitude),
         longitude: parseFloat(longitude),
         note,
+        hasToilet: req.body.hasToilet,
         createdBy: req.user?._id,
         created: date,
         modifiedBy: req.user?._id,

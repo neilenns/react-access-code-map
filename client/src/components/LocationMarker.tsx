@@ -7,6 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { IUser } from "../interfaces/IUser.mjs";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
+import { YellowMarker, BlueMarker } from "./CustomMarkers";
 
 export type MarkerEventHandler = (_id: Types.ObjectId) => void;
 
@@ -39,6 +40,7 @@ export default function LocationMarkers(props: ILocationMarkerProps) {
     <Marker
       position={[location.latitude!, location.longitude!]}
       key={location._id!.toString()}
+      icon={location.hasToilet ? YellowMarker : BlueMarker}
     >
       <Popup>
         <Box aria-labelledby="marker-title">
