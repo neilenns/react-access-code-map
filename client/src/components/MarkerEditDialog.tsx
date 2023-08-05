@@ -11,6 +11,8 @@ import {
   DialogActions,
   Dialog,
   Button,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import styled from "@mui/system/styled";
 
@@ -53,6 +55,12 @@ export const MarkerEditDialog: React.FC<IMarkerEditDialogProps> = (props) => {
     _event
   ) => {
     props.onCancel();
+  };
+
+  const handleToiletCheckboxChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setLocation({ ...location, hasToilet: event.target.checked });
   };
 
   return (
@@ -99,6 +107,16 @@ export const MarkerEditDialog: React.FC<IMarkerEditDialogProps> = (props) => {
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
             setLocation({ ...location, note: e.target.value });
           }}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={location.hasToilet}
+              onChange={handleToiletCheckboxChange}
+              name="Domain"
+            />
+          }
+          label="Has a toilet"
         />
       </DialogContent>
       <DialogActions>

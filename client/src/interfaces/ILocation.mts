@@ -13,4 +13,5 @@ export default interface ILocation {
   modifiedByFirstName?: string;
   modifiedByLastName?: string;
   _id?: Types.ObjectId;
+  hasToilet?: boolean;
 }

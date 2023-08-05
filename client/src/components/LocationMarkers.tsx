@@ -100,6 +100,8 @@ export default function LocationMarkers(_props: ILocationMarkerProps) {
   }
 
   function onDeleteConfirmClosed(confirmed: boolean) {
+    if (!selectedLocation) return;
+
     setIsDeleteConfirmOpen(false);
     if (confirmed) {
       removeLocation(selectedLocation._id!, userContext.token)
@@ -179,6 +181,7 @@ export default function LocationMarkers(_props: ILocationMarkerProps) {
       latitude: e.latlng.lat,
       longitude: e.latlng.lng,
       note: "",
+      hasToilet: false,
     };
 
     setSelectedLocation(newLocation);

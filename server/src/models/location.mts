@@ -12,6 +12,7 @@ export interface ILocation {
   created: Date;
   modifiedBy: Types.ObjectId | IUser;
   lastModified: Date;
+  hasToilet: boolean;
 }
 
 const locationSchema = new Schema<ILocation>({
@@ -19,6 +20,7 @@ const locationSchema = new Schema<ILocation>({
   latitude: { type: Number, required: true },
   longitude: { type: Number, required: true },
   note: { type: String },
+  hasToilet: { type: Boolean, default: false },
   createdBy: {
     type: Schema.Types.ObjectId,
     ref: "User",
