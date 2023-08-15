@@ -32,6 +32,7 @@ router.put(
         title: req.body.title,
         note: req.body.note,
         hasToilet: req.body.hasToilet,
+        hasCodes: req.body.hasCodes,
         lastModified: new Date(),
         modifiedBy: req.user?._id,
       };
@@ -65,6 +66,7 @@ router.post(
         longitude: parseFloat(longitude),
         note,
         hasToilet: req.body.hasToilet,
+        hasCodes: req.body.hasCodes,
         createdBy: req.user?._id,
         created: date,
         modifiedBy: req.user?._id,

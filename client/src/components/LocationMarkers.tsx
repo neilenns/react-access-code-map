@@ -16,10 +16,11 @@ import LocationMarker from "./LocationMarker";
 import { MarkerEditDialog } from "./MarkerEditDialog";
 import ConfirmationDialog from "./DeleteLocationConfirmationDialog";
 
-export interface ILocationMarkerProps {}
+export interface ILocationMarkerProps {
+  locations: ILocation[];
+}
 
-export default function LocationMarkers(_props: ILocationMarkerProps) {
-  const [locations, setLocations] = React.useState<ILocation[]>([]);
+export default function LocationMarkers({ locations }: ILocationMarkerProps) {
   const [isEditOpen, setIsEditOpen] = React.useState<boolean>(false);
   const [isEdit, setIsEdit] = React.useState<boolean>(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] =
@@ -52,9 +53,9 @@ export default function LocationMarkers(_props: ILocationMarkerProps) {
    * @returns {void} Returns nothing.
    * @group Marker Management
    */
-  function addMarkerToMap(location: ILocation): void {
-    setLocations((prevValue) => [...prevValue, location]);
-  }
+  // function addMarkerToMap(location: ILocation): void {
+  //   setLocations((prevValue) => [...prevValue, location]);
+  // }
 
   /**
    * Removes a marker from the map.
@@ -62,11 +63,11 @@ export default function LocationMarkers(_props: ILocationMarkerProps) {
    * @returns {void} Returns nothing.
    * @group Marker Management
    */
-  function removeMarkerFromMap(_id: Types.ObjectId): void {
-    setLocations((prevValue) =>
-      prevValue.filter((location) => location._id !== _id)
-    );
-  }
+  // function removeMarkerFromMap(_id: Types.ObjectId): void {
+  //   setLocations((prevValue) =>
+  //     prevValue.filter((location) => location._id !== _id)
+  //   );
+  // }
 
   /**
    * Handles the edit action for a marker. Opens the edit dialog with the marker's data.
@@ -109,7 +110,7 @@ export default function LocationMarkers(_props: ILocationMarkerProps) {
           console.log(
             `Successfully removed ${selectedLocation._id} from the database`
           );
-          removeMarkerFromMap(selectedLocation._id!);
+          //          removeMarkerFromMap(selectedLocation._id!);
         })
         .catch((error) => {
           console.log(
@@ -137,8 +138,8 @@ export default function LocationMarkers(_props: ILocationMarkerProps) {
     if (location._id) {
       updateLocation(location, userContext.token)
         .then((updatedLocation) => {
-          removeMarkerFromMap(location._id!);
-          addMarkerToMap(updatedLocation);
+          // removeMarkerFromMap(location._id!);
+          // addMarkerToMap(updatedLocation);
         })
         .catch((err) => {
           console.log(`Unable to update location: ${err}`);
@@ -149,7 +150,7 @@ export default function LocationMarkers(_props: ILocationMarkerProps) {
     } else {
       addLocation(location, userContext.token)
         .then((newLocation) => {
-          setLocations((prevValue) => [...prevValue, newLocation]);
+          // setLocations((prevValue) => [...prevValue, newLocation]);
         })
         .catch((err) => {
           console.log(`Unable to create new marker: ${err}`);
@@ -189,20 +190,9 @@ export default function LocationMarkers(_props: ILocationMarkerProps) {
     setIsEditOpen(true);
   });
 
-  // Gets the locations from the database when the component is mounted.
-  React.useEffect(() => {
-    getLocations(userContext.token)
-      .then((locations) => {
-        setLocations(locations);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [userContext.token]);
-
   return (
     <>
-      {locations?.map((location) => (
+      {locations.map((location) => (
         <LocationMarker
           location={location}
           key={location._id!.toString()}

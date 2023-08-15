@@ -24,8 +24,11 @@ const MultiLineText = styled("div")(({}) => ({
   whiteSpace: "pre-wrap",
 }));
 
-export default function LocationMarkers(props: ILocationMarkerProps) {
-  const { location, onEditMarker, onRemoveMarker } = props;
+export default function LocationMarkers({
+  location,
+  onEditMarker,
+  onRemoveMarker,
+}: ILocationMarkerProps) {
   const [userContext] = useContext(UserContext);
 
   const onMarkerEdit = () => {

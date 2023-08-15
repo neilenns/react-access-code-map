@@ -13,6 +13,7 @@ export interface ILocation {
   modifiedBy: Types.ObjectId | IUser;
   lastModified: Date;
   hasToilet: boolean;
+  hasCodes: boolean;
 }
 
 const locationSchema = new Schema<ILocation>({
@@ -21,6 +22,7 @@ const locationSchema = new Schema<ILocation>({
   longitude: { type: Number, required: true },
   note: { type: String },
   hasToilet: { type: Boolean, default: false },
+  hasCodes: { type: Boolean, default: true },
   createdBy: {
     type: Schema.Types.ObjectId,
     ref: "User",

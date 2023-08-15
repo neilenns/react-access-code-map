@@ -1,4 +1,9 @@
-import { LayersControl, MapContainer, TileLayer } from "react-leaflet";
+import {
+  LayerGroup,
+  LayersControl,
+  MapContainer,
+  TileLayer,
+} from "react-leaflet";
 import { LocateControl } from "./LocateControl";
 import { GeocodeControl } from "./GeocodeControl";
 import LocationMarkers from "./LocationMarkers";
@@ -6,13 +11,17 @@ import Control from "react-leaflet-custom-control";
 import { Button, ButtonGroup, Tooltip } from "@mui/material";
 import { ExitToApp } from "@mui/icons-material";
 import * as L from "leaflet";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import ILocation from "../interfaces/ILocation.mts";
+import { getLocations } from "../markerApi";
+import { UserContext } from "../context/UserContext";
 
 export interface IAccessCodeMapProps {
   onSignOutClick: React.MouseEventHandler;
 }
 
 export default function AccessCodeMap(props: IAccessCodeMapProps) {
+  const [locations, setLocations] = useState<ILocation[]>([]);
   const { onSignOutClick } = props;
   const [autoLocate] = useState(() => {
     const storedValue = sessionStorage.getItem("autoLocate");
@@ -23,6 +32,18 @@ export default function AccessCodeMap(props: IAccessCodeMapProps) {
     }
   });
   const [map, setMap] = useState<L.Map | null>(null);
+  const [userContext] = useContext(UserContext);
+
+  // Gets the locations from the database when the component is mounted.
+  useEffect(() => {
+    getLocations(userContext.token)
+      .then((locations) => {
+        setLocations(locations);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [userContext.token]);
 
   useEffect(() => {
     sessionStorage.setItem("autoLocate", autoLocate.toString());
@@ -87,6 +108,22 @@ export default function AccessCodeMap(props: IAccessCodeMapProps) {
             url="https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}"
           />
         </LayersControl.BaseLayer>
+        <LayersControl.Overlay checked name="Access codes">
+          <LayerGroup>
+            <LocationMarkers
+              locations={locations.filter((location) => location.hasCodes)}
+            />
+          </LayerGroup>
+        </LayersControl.Overlay>
+        <LayersControl.Overlay checked name="Toilets">
+          <LayerGroup>
+            <LocationMarkers
+              locations={locations.filter(
+                (location) => !location.hasCodes && location.hasToilet
+              )}
+            />
+          </LayerGroup>
+        </LayersControl.Overlay>
       </LayersControl>
 
       <GeocodeControl />
@@ -103,7 +140,6 @@ export default function AccessCodeMap(props: IAccessCodeMapProps) {
           },
         }}
       />
-      <LocationMarkers />
       <Control position="bottomleft">
         <ButtonGroup orientation="vertical" variant="contained">
           <Tooltip placement="right" title="Sign Out">

@@ -63,6 +63,12 @@ export const MarkerEditDialog: React.FC<IMarkerEditDialogProps> = (props) => {
     setLocation({ ...location, hasToilet: event.target.checked });
   };
 
+  const handleHasCodesCheckboxChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setLocation({ ...location, hasCodes: event.target.checked });
+  };
+
   return (
     // disableRestoreFocus is required due to a bug in MUI that prevents autoFocus
     // on the text field from working when React strict mode is enabled. See
@@ -111,9 +117,19 @@ export const MarkerEditDialog: React.FC<IMarkerEditDialogProps> = (props) => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={location.hasToilet}
+              checked={location.hasCodes}
+              onChange={handleHasCodesCheckboxChange}
+              name="hasCodes"
+            />
+          }
+          label="Note includes access codes"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={location.hasToilet ?? true}
               onChange={handleToiletCheckboxChange}
-              name="Domain"
+              name="hasToilet"
             />
           }
           label="Has a toilet"
