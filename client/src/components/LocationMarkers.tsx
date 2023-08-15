@@ -1,26 +1,28 @@
 import axios from "axios";
 import { LatLng, LeafletMouseEvent } from "leaflet";
-import { Types } from "mongoose";
 import React, { useContext } from "react";
 import { useMapEvent } from "react-leaflet";
 import { UserContext } from "../context/UserContext";
 import ILocation from "../interfaces/ILocation.mjs";
 import INominatimReverseResponse from "../interfaces/INominatimReverseResponse.mjs";
-import {
-  addLocation,
-  getLocations,
-  removeLocation,
-  updateLocation,
-} from "../markerApi";
-import LocationMarker from "./LocationMarker";
+import { addLocation, removeLocation, updateLocation } from "../markerApi";
+import LocationMarker, { MarkerEventHandler } from "./LocationMarker";
 import { MarkerEditDialog } from "./MarkerEditDialog";
 import ConfirmationDialog from "./DeleteLocationConfirmationDialog";
 
 export interface ILocationMarkerProps {
   locations: ILocation[];
+  onDeleteMarker: MarkerEventHandler;
+  onEditMarker: (location: ILocation, updatedLocation: ILocation) => void;
+  onAddMarker: MarkerEventHandler;
 }
 
-export default function LocationMarkers({ locations }: ILocationMarkerProps) {
+export default function LocationMarkers({
+  locations,
+  onDeleteMarker,
+  onEditMarker,
+  onAddMarker,
+}: ILocationMarkerProps) {
   const [isEditOpen, setIsEditOpen] = React.useState<boolean>(false);
   const [isEdit, setIsEdit] = React.useState<boolean>(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] =
@@ -48,35 +50,13 @@ export default function LocationMarkers({ locations }: ILocationMarkerProps) {
   }
 
   /**
-   * Adds a marker to the map.
-   * @param {ILocation} location - The location object representing the marker to be added.
-   * @returns {void} Returns nothing.
-   * @group Marker Management
-   */
-  // function addMarkerToMap(location: ILocation): void {
-  //   setLocations((prevValue) => [...prevValue, location]);
-  // }
-
-  /**
-   * Removes a marker from the map.
-   * @param {Types.ObjectId} _id - The ID of the marker to be removed.
-   * @returns {void} Returns nothing.
-   * @group Marker Management
-   */
-  // function removeMarkerFromMap(_id: Types.ObjectId): void {
-  //   setLocations((prevValue) =>
-  //     prevValue.filter((location) => location._id !== _id)
-  //   );
-  // }
-
-  /**
    * Handles the edit action for a marker. Opens the edit dialog with the marker's data.
    * @param {Types.ObjectId} _id - The ID of the marker to be edited.
    * @returns {void} Returns nothing.
    * @group Event Handlers
    */
-  function onEditMarker(_id: Types.ObjectId): void {
-    const location = locations.find((location) => location._id === _id);
+  function handleEditMarker(marker: ILocation): void {
+    const location = locations.find((location) => location._id === marker._id!);
 
     if (location) {
       setSelectedLocation(location);
@@ -91,8 +71,8 @@ export default function LocationMarkers({ locations }: ILocationMarkerProps) {
    * @returns {void} Returns nothing.
    * @group Event Handlers
    */
-  function onRemoveMarker(_id: Types.ObjectId): void {
-    const location = locations.find((location) => location._id === _id);
+  function handleDeleteMarker(marker: ILocation): void {
+    const location = locations.find((location) => location._id === marker._id!);
 
     if (location) {
       setSelectedLocation(location);
@@ -110,7 +90,7 @@ export default function LocationMarkers({ locations }: ILocationMarkerProps) {
           console.log(
             `Successfully removed ${selectedLocation._id} from the database`
           );
-          //          removeMarkerFromMap(selectedLocation._id!);
+          onDeleteMarker(selectedLocation);
         })
         .catch((error) => {
           console.log(
@@ -138,8 +118,7 @@ export default function LocationMarkers({ locations }: ILocationMarkerProps) {
     if (location._id) {
       updateLocation(location, userContext.token)
         .then((updatedLocation) => {
-          // removeMarkerFromMap(location._id!);
-          // addMarkerToMap(updatedLocation);
+          onEditMarker(location, updatedLocation);
         })
         .catch((err) => {
           console.log(`Unable to update location: ${err}`);
@@ -150,7 +129,7 @@ export default function LocationMarkers({ locations }: ILocationMarkerProps) {
     } else {
       addLocation(location, userContext.token)
         .then((newLocation) => {
-          // setLocations((prevValue) => [...prevValue, newLocation]);
+          onAddMarker(newLocation);
         })
         .catch((err) => {
           console.log(`Unable to create new marker: ${err}`);
@@ -183,6 +162,7 @@ export default function LocationMarkers({ locations }: ILocationMarkerProps) {
       longitude: e.latlng.lng,
       note: "",
       hasToilet: false,
+      hasCodes: true,
     };
 
     setSelectedLocation(newLocation);
@@ -196,8 +176,8 @@ export default function LocationMarkers({ locations }: ILocationMarkerProps) {
         <LocationMarker
           location={location}
           key={location._id!.toString()}
-          onRemoveMarker={onRemoveMarker}
-          onEditMarker={onEditMarker}
+          onRemoveMarker={handleDeleteMarker}
+          onEditMarker={handleEditMarker}
         />
       ))}
       <MarkerEditDialog

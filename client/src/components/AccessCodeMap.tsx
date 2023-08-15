@@ -34,6 +34,44 @@ export default function AccessCodeMap(props: IAccessCodeMapProps) {
   const [map, setMap] = useState<L.Map | null>(null);
   const [userContext] = useContext(UserContext);
 
+  /**
+   * Adds a marker to the map.
+   * @param {ILocation} location - The location object representing the marker to be added.
+   * @returns {void} Returns nothing.
+   * @group Marker Management
+   */
+  function addMarkerToMap(location: ILocation): void {
+    setLocations((prevValue) => [...prevValue, location]);
+  }
+
+  /**
+   * Removes a marker from the map.
+   * @param {Types.ObjectId} _id - The ID of the marker to be removed.
+   * @returns {void} Returns nothing.
+   * @group Marker Management
+   */
+  function removeMarkerFromMap(marker: ILocation): void {
+    setLocations((prevValue) =>
+      prevValue.filter((location) => location._id !== marker._id!)
+    );
+  }
+
+  function handleAddMarker(location: ILocation): void {
+    addMarkerToMap(location);
+  }
+
+  function handleEditMarker(
+    location: ILocation,
+    updatedLocation: ILocation
+  ): void {
+    removeMarkerFromMap(location);
+    addMarkerToMap(updatedLocation);
+  }
+
+  function handleDeleteMarker(location: ILocation): void {
+    removeMarkerFromMap(location);
+  }
+
   // Gets the locations from the database when the component is mounted.
   useEffect(() => {
     getLocations(userContext.token)
@@ -112,6 +150,9 @@ export default function AccessCodeMap(props: IAccessCodeMapProps) {
           <LayerGroup>
             <LocationMarkers
               locations={locations.filter((location) => location.hasCodes)}
+              onAddMarker={handleAddMarker}
+              onEditMarker={handleEditMarker}
+              onDeleteMarker={handleDeleteMarker}
             />
           </LayerGroup>
         </LayersControl.Overlay>
@@ -121,6 +162,9 @@ export default function AccessCodeMap(props: IAccessCodeMapProps) {
               locations={locations.filter(
                 (location) => !location.hasCodes && location.hasToilet
               )}
+              onAddMarker={handleAddMarker}
+              onEditMarker={handleEditMarker}
+              onDeleteMarker={handleDeleteMarker}
             />
           </LayerGroup>
         </LayersControl.Overlay>

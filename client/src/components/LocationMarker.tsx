@@ -1,6 +1,5 @@
 import { Marker, Popup } from "react-leaflet";
 import ILocation from "../interfaces/ILocation.mjs";
-import { Types } from "mongoose";
 import { Typography, Box, IconButton, styled } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -9,7 +8,7 @@ import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { YellowMarker, BlueMarker } from "./CustomMarkers";
 
-export type MarkerEventHandler = (_id: Types.ObjectId) => void;
+export type MarkerEventHandler = (location: ILocation) => void;
 
 export interface ILocationMarkerProps {
   location: ILocation;
@@ -32,11 +31,11 @@ export default function LocationMarkers({
   const [userContext] = useContext(UserContext);
 
   const onMarkerEdit = () => {
-    onEditMarker(location._id!);
+    onEditMarker(location);
   };
 
   const onMarkerDelete = () => {
-    onRemoveMarker(location._id!);
+    onRemoveMarker(location);
   };
 
   return (
