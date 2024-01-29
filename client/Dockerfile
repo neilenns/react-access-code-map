@@ -18,6 +18,9 @@ LABEL org.opencontainers.image.source=https://github.com/neilenns/react-access-c
 LABEL org.opencontainers.image.description="Website for the Access Code Map project."
 LABEL org.opencontainers.image.licenses=MIT
 
+# Install curl for the healthcheck
+RUN apk --no-cache add curl
+
 # This is key, it's the location that nginx expects to find the source files
 # for the website
 WORKDIR /usr/share/nginx/html

@@ -23,6 +23,9 @@ LABEL org.opencontainers.image.source=https://github.com/neilenns/react-access-c
 LABEL org.opencontainers.image.description="Backend server for the Access Code Map project."
 LABEL org.opencontainers.image.licenses=MIT
 
+# Install curl for the healthcheck
+RUN apk --no-cache add curl
+
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
