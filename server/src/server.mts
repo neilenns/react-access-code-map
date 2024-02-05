@@ -35,6 +35,10 @@ const port = process.env.PORT || 3001;
 const privateKeyPath = "/certs/privkey.pem";
 const fullChainPath = "/certs/fullchain.pem";
 
+const whitelist = process.env.WHITELISTED_DOMAINS
+  ? process.env.WHITELISTED_DOMAINS.split(",")
+  : [];
+
 const certFilesExist =
   fs.existsSync(privateKeyPath) && fs.existsSync(fullChainPath);
 
@@ -45,18 +49,26 @@ function readCertsSync() {
   };
 }
 
+// Function to check if the origin matches any of the whitelisted domains
+function isOriginAllowed(origin: string): boolean {
+  return whitelist.some((domain) => {
+    if (domain.includes("*")) {
+      const regex = new RegExp("^" + domain.replace(/\*/g, "[^.]+") + "$");
+      return regex.test(origin);
+    } else {
+      return origin === domain;
+    }
+  });
+}
+
 export function startServer(): void {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
   app.use(cookieParser(process.env.COOKIE_SECRET));
 
-  const whitelist = process.env.WHITELISTED_DOMAINS
-    ? process.env.WHITELISTED_DOMAINS.split(",")
-    : [];
-
   const corsOptions = {
     origin: function (origin, callback) {
-      if (!origin || whitelist.indexOf(origin) !== -1) {
+      if (!origin || isOriginAllowed(origin)) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));

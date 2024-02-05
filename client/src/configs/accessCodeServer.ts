@@ -1,7 +1,2 @@
-declare global {
-  interface Window {
-    SERVER_URL: string;
-  }
-}
-
-export const serverUrl = window.SERVER_URL ?? "http://localhost:3001/";
+export const serverUrl =
+  import.meta.env.VITE_SERVER_URL ?? "http://localhost:3001/";
