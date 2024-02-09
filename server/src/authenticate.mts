@@ -1,15 +1,15 @@
-import passport from "passport";
-import jwt from "jsonwebtoken";
 import { CookieOptions } from "express";
+import jwt from "jsonwebtoken";
+import passport from "passport";
 
 const dev = process.env.NODE_ENV !== "production";
 
 export const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: !dev,
+  secure: true,
   signed: true,
   maxAge: eval(process.env.REFRESH_TOKEN_EXPIRY) * 1000,
-  sameSite: dev ? false : "none",
+  sameSite: dev ? "none" : "strict",
 } as CookieOptions;
 
 export const getAuthToken = (user: any): string => {
