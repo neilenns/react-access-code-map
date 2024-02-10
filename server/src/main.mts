@@ -1,7 +1,10 @@
 import "dotenv/config";
 
-import * as db from "./util/database.mjs";
+import mainLogger from "./logger.mjs";
 import * as WebServer from "./server.mjs";
+import * as db from "./util/database.mjs";
+
+const logger = mainLogger.child({ service: "main" });
 
 // If startup fails restart is reattempted 5 times every 30 seconds.
 const restartAttemptWaitTime = 30 * 1000;
@@ -19,7 +22,7 @@ async function startup() {
     // restarts.
     restartAttemptCount = 0;
   } catch (err) {
-    console.log(`Error starting server: ${err}`);
+    logger.error(`Error starting server: ${err}`);
 
     // Shutdown things that may have spun up successfully.
     await shutdown();
@@ -28,25 +31,25 @@ async function startup() {
 
     // Try starting again in a little bit.
     if (restartAttemptCount < maxRestartAttempts) {
-      console.log(
+      logger.info(
         `Startup reattempt ${restartAttemptCount} of ${maxRestartAttempts} in ${
           restartAttemptWaitTime / 1000
         } seconds.`
       );
       restartTimer = setTimeout(startup, restartAttemptWaitTime);
     } else {
-      console.log(`Startup failed ${maxRestartAttempts} times. Giving up.`);
+      logger.error(`Startup failed ${maxRestartAttempts} times. Giving up.`);
       return;
     }
   }
 }
 
 async function shutdown() {
-  console.log("Shutting down...");
+  logger.debug("Shutting down...");
   clearTimeout(restartTimer);
   await WebServer.stopServer();
   await db.disconnectFromDatabase();
-  console.log("Shutdown complete.");
+  logger.debug("Shutdown complete.");
 }
 
 async function handleDeath() {
