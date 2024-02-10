@@ -8,6 +8,7 @@ import passport from "passport";
 import { ENV } from "./env.mjs";
 import mainLogger from "./logger.mjs";
 import morgan from "./middleware/morgan.mjs";
+import { isOriginAllowed } from "./util/cors.mjs";
 
 const logger = mainLogger.child({ service: "server" });
 
@@ -48,18 +49,6 @@ function readCertsSync() {
     key: fs.readFileSync(privateKeyPath),
     cert: fs.readFileSync(fullChainPath),
   };
-}
-
-// Function to check if the origin matches any of the whitelisted domains
-function isOriginAllowed(origin: string): boolean {
-  return whitelist.some((domain) => {
-    if (domain.includes("*")) {
-      const regex = new RegExp("^" + domain.replace(/\*/g, "[^.]+") + "$");
-      return regex.test(origin);
-    } else {
-      return origin === domain;
-    }
-  });
 }
 
 export function startServer(): void {
