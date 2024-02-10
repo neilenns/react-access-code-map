@@ -1,5 +1,6 @@
 import "dotenv/config";
 
+import { ENV } from "./env.mjs";
 import mainLogger from "./logger.mjs";
 import * as WebServer from "./server.mjs";
 import * as db from "./util/database.mjs";
@@ -14,6 +15,7 @@ var restartTimer: NodeJS.Timeout;
 
 async function startup() {
   try {
+    logger.info(`Server version ${ENV.VERSION} starting`);
     await db.connectToDatabase();
     WebServer.startServer();
 

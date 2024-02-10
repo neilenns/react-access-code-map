@@ -5,6 +5,7 @@ import cors, { CorsOptions } from "cors";
 import express from "express";
 import { createHttpTerminator, HttpTerminator } from "http-terminator";
 import passport from "passport";
+import { ENV } from "./env.mjs";
 import mainLogger from "./logger.mjs";
 import morgan from "./middleware/morgan.mjs";
 
@@ -32,13 +33,11 @@ var server: https.Server | Server;
 var httpTerminator: HttpTerminator;
 var watcher: chokidar.FSWatcher;
 
-const port = process.env.PORT || 3001;
+const privateKeyPath = ENV.SSL_PRIVATE_KEY_PATH;
+const fullChainPath = ENV.SSL_FULL_CHAIN_PATH;
 
-const privateKeyPath = "/certs/privkey.pem";
-const fullChainPath = "/certs/fullchain.pem";
-
-const whitelist = process.env.WHITELISTED_DOMAINS
-  ? process.env.WHITELISTED_DOMAINS.split(",")
+const whitelist = ENV.WHITELISTED_DOMAINS
+  ? ENV.WHITELISTED_DOMAINS.split(",")
   : [];
 
 const certFilesExist =
@@ -64,9 +63,10 @@ function isOriginAllowed(origin: string): boolean {
 }
 
 export function startServer(): void {
+  app.set("trust proxy", ENV.TRUST_PROXY);
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
-  app.use(cookieParser(process.env.COOKIE_SECRET));
+  app.use(cookieParser(ENV.COOKIE_SECRET));
   app.use(morgan);
 
   const corsOptions = {
@@ -94,13 +94,13 @@ export function startServer(): void {
   // Start up the server
   if (certFilesExist) {
     server = https.createServer(readCertsSync(), app);
-    server.listen(port, () => {
+    server.listen(ENV.PORT, () => {
       logger.info("Certificate files exist, using HTTPS");
-      logger.info(`Listening on port ${port}`);
+      logger.info(`Listening on port ${ENV.PORT}`);
     });
   } else {
-    server = app.listen(port, () => {
-      logger.info(`Listening on port ${port}`);
+    server = app.listen(ENV.PORT, () => {
+      logger.info(`Listening on port ${ENV.PORT}`);
     });
   }
 

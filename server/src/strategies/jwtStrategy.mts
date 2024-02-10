@@ -1,11 +1,11 @@
 import passport from "passport";
-import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
-import { IUser, User } from "../models/user.mjs";
-import { Error as MongooseError } from "mongoose";
+import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
+import { ENV } from "../env.mjs";
+import { User } from "../models/user.mjs";
 
 const opts: any = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opts.secretOrKey = process.env.JWT_SECRET;
+opts.secretOrKey = ENV.JWT_SECRET;
 
 // Used by the authenticated requests to deserialize the user,
 // i.e., to fetch user details from the JWT.
