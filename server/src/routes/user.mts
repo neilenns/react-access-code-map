@@ -1,14 +1,15 @@
 import express from "express";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { Error as MongooseError } from "mongoose";
 import passport from "passport";
-import { User } from "../models/user.mjs";
 import {
-  getAuthToken,
   COOKIE_OPTIONS,
+  getAuthToken,
   getRefreshToken,
   verifyUser,
 } from "../authenticate.mjs";
-import { Error as MongooseError } from "mongoose";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import { ENV } from "../env.mjs";
+import { User } from "../models/user.mjs";
 
 const router = express.Router();
 
@@ -98,10 +99,7 @@ router.post("/refreshToken", (req, res, next) => {
 
   if (refreshToken) {
     try {
-      const payload = jwt.verify(
-        refreshToken,
-        process.env.REFRESH_TOKEN_SECRET
-      );
+      const payload = jwt.verify(refreshToken, ENV.REFRESH_TOKEN_SECRET);
       const userId = (payload as JwtPayload)._id;
       User.findOne({ _id: userId }).then(
         (user) => {

@@ -2,6 +2,7 @@
 import { Logtail } from "@logtail/node";
 import { LogtailTransport } from "@logtail/winston";
 import winston from "winston";
+import { ENV } from "./env.mjs";
 
 let logtail: Logtail;
 
@@ -21,11 +22,11 @@ const levels = {
 };
 
 const level = () => {
-  if (process.env.LOG_LEVEL) {
-    return process.env.LOG_LEVEL;
+  if (ENV.LOG_LEVEL) {
+    return ENV.LOG_LEVEL;
   }
 
-  return process.env.NODE_ENV === "development" ? "debug" : "warn";
+  return ENV.NODE_ENV === "development" ? "debug" : "warn";
 };
 
 const colors = {
@@ -72,9 +73,9 @@ const Logger = winston.createLogger({
 }) as CustomLevelsLogger;
 
 // If logtail was configured add it as a transport
-if (process.env.LOGTAIL_TOKEN) {
+if (ENV.LOGTAIL_TOKEN) {
   Logger.debug(`Enabling logging to Logtail`, { service: "logging" });
-  logtail = new Logtail(process.env.LOGTAIL_TOKEN);
+  logtail = new Logtail(ENV.LOGTAIL_TOKEN);
   Logger.add(new LogtailTransport(logtail, { format: winston.format.json() }));
 } else {
   Logger.warn(`Logtail logging not configured`, { service: "logging" });

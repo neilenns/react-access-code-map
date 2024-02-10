@@ -1,11 +1,12 @@
 import { IncomingMessage } from "http";
 import morgan from "morgan";
+import { ENV } from "../env.mjs";
 import mainLogger from "../logger.mjs";
 
 const logger = mainLogger.child({ service: "server" });
 
 const morganMiddleware = morgan(
-  process.env.NODE_ENV === "production"
+  ENV.NODE_ENV === "production"
     ? "common"
     : // In non-production environments use the 'dev' format with the userid prepended.
       ":userid :method :url :status :response-time ms - :res[content-length]",

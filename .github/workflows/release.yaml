@@ -60,3 +60,5 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=registry,ref=neilenns/access-code-map-${{ matrix.context }}:latest
           cache-to: type=inline
+          build-args: |
+            VERSION=${{ github.event.release.tag_name }}

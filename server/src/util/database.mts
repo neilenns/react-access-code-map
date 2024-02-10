@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
+import { ENV } from "../env.mjs";
 import mainLogger from "../logger.mjs";
 
 const logger = mainLogger.child({ service: "database" });
 
 export async function connectToDatabase() {
-  const url = process.env.MONGO_DB_CONNECTION_STRING;
+  const url = ENV.MONGO_DB_CONNECTION_STRING;
 
-  if (process.env.MONGOOSE_DEBUG) {
+  if (ENV.MONGOOSE_DEBUG) {
     mongoose.set("debug", (collectionName, method, query, doc) => {
       logger.log(`trace`, `${collectionName}.${method}`, {
         query,
@@ -27,7 +28,7 @@ export async function connectToDatabase() {
   });
 
   const connect = mongoose.connect(url, {
-    dbName: process.env.MONGO_DB_NAME,
+    dbName: ENV.MONGO_DB_NAME,
   });
 
   await connect
