@@ -6,4 +6,8 @@ declare namespace Express {
     firstName?: string;
     lastName?: string;
   }
+
+  export interface CustomRequest extends Request {
+    user?: User;
+  }
 }

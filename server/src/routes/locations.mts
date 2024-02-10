@@ -1,8 +1,11 @@
 import express from "express";
 import { ObjectId } from "mongodb";
-import { Location, ILocation } from "../models/location.mjs";
 import { verifyUser } from "../authenticate.mjs";
+import mainLogger from "../logger.mjs";
 import verifyPermissions from "../middleware/permissions.mjs";
+import { ILocation, Location } from "../models/location.mjs";
+
+const logger = mainLogger.child({ service: "locations" });
 
 const router = express.Router();
 
@@ -15,7 +18,7 @@ router.get(
 
       res.json(locations);
     } catch (err) {
-      console.error("Error fetching locations:", err);
+      logger.error("Error fetching locations:", err);
       res.status(500).json({ error: "Internal server error" });
     }
   }
@@ -72,8 +75,9 @@ router.post(
       } as ILocation);
 
       res.status(201).json(newLocation);
-    } catch (err) {
-      console.error("Error creating location:", err);
+    } catch (error) {
+      const err = error as Error;
+      logger.error(`Error creating location: ${err.message}`);
       res.status(500).json({ error: "Internal server error" });
     }
   }
@@ -90,14 +94,15 @@ router.delete(
       const result = await Location.findByIdAndDelete(new ObjectId(locationId));
 
       if (result) {
-        console.log("Location deleted successfully");
+        logger.debug("Location deleted successfully");
         res.sendStatus(204); // Send a success status code (No Content)
       } else {
-        console.log("Location not found");
+        logger.debug("Location not found");
         res.sendStatus(404); // Send a not found status code
       }
-    } catch (err) {
-      console.error("Error deleting Location:", err);
+    } catch (error) {
+      const err = error as Error;
+      logger.error(`Error deleting location: ${err.message}`);
       res.status(500).json({ error: "Internal server error" });
     }
   }

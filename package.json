@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@logtail/node": "^0.4.19",
+    "@logtail/winston": "^0.4.19",
+    "morgan": "^1.10.0",
+    "winston": "^3.11.0"
+  }
+}

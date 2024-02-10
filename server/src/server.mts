@@ -1,35 +1,37 @@
-import express from "express";
 import bodyParser from "body-parser";
-import passport from "passport";
-import cors, { CorsOptions } from "cors";
-import cookieParser from "cookie-parser";
 import * as chokidar from "chokidar";
+import cookieParser from "cookie-parser";
+import cors, { CorsOptions } from "cors";
+import express from "express";
 import { createHttpTerminator, HttpTerminator } from "http-terminator";
+import passport from "passport";
+import mainLogger from "./logger.mjs";
+import morgan from "./middleware/morgan.mjs";
+
+const logger = mainLogger.child({ service: "server" });
 
 // Workaround for lodash being a CommonJS module
 import pkg from "lodash";
 const { debounce } = pkg;
 
 // Routes
-import userRouter from "./routes/user.mjs";
-import defaultRouter from "./routes/default.mjs";
-import locationsRouter from "./routes/locations.mjs";
 import fs from "fs";
 import https from "https";
-import debug from "debug";
+import defaultRouter from "./routes/default.mjs";
+import locationsRouter from "./routes/locations.mjs";
+import userRouter from "./routes/user.mjs";
 
 // Authentication
+import { Server } from "http";
+import "./authenticate.mjs";
 import "./strategies/jwtStrategy.mjs";
 import "./strategies/LocalStrategy.mjs";
-import "./authenticate.mjs";
-import { Server } from "http";
 
 const app = express();
 var server: https.Server | Server;
 var httpTerminator: HttpTerminator;
 var watcher: chokidar.FSWatcher;
 
-const logger = debug("access-code-map:server");
 const port = process.env.PORT || 3001;
 
 const privateKeyPath = "/certs/privkey.pem";
@@ -65,6 +67,7 @@ export function startServer(): void {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
   app.use(cookieParser(process.env.COOKIE_SECRET));
+  app.use(morgan);
 
   const corsOptions = {
     origin: function (origin, callback) {
@@ -92,14 +95,12 @@ export function startServer(): void {
   if (certFilesExist) {
     server = https.createServer(readCertsSync(), app);
     server.listen(port, () => {
-      console.log("Certificate files exist, using HTTPS");
-      console.log(`Listening on port ${port}`);
-      logger(`Listening on port ${port}`);
+      logger.info("Certificate files exist, using HTTPS");
+      logger.info(`Listening on port ${port}`);
     });
   } else {
     server = app.listen(port, () => {
-      console.log(`Listening on port ${port}`);
-      logger(`Listening on port ${port}`);
+      logger.info(`Listening on port ${port}`);
     });
   }
 
@@ -114,7 +115,7 @@ export function startServer(): void {
 
 export async function stopServer() {
   if (server) {
-    console.log("Stopping web server...");
+    logger.debug("Stopping web server...");
     await httpTerminator.terminate();
   }
   await stopWatching();
@@ -124,11 +125,11 @@ export async function stopServer() {
 const debouncedReloadSSL = debounce(reloadCertificates, 1000);
 
 function reloadCertificates() {
-  console.log("Certificate files changed");
+  logger.debug("Certificate files changed");
   if (server instanceof https.Server) {
-    console.log("Reloading SSL...");
+    logger.debug("Reloading SSL...");
     server.setSecureContext(readCertsSync());
-    console.log("SSL reload complete!");
+    logger.debug("SSL reload complete!");
   }
 }
 
@@ -145,7 +146,9 @@ function startWatching() {
       awaitWriteFinish: true,
     })
     .on("change", debouncedReloadSSL);
-  console.log(`Watching for changes to ${fullChainPath} and ${privateKeyPath}`);
+  logger.debug(
+    `Watching for changes to ${fullChainPath} and ${privateKeyPath}`
+  );
 }
 
 async function stopWatching() {
