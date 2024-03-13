@@ -26,5 +26,6 @@ yarn-debug.log*
 yarn-error.log*
 
 dist/
+dev-dist/
 **/*.map
 node_modules
