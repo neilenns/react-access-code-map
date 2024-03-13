@@ -37,10 +37,6 @@ var watcher: chokidar.FSWatcher;
 const privateKeyPath = ENV.SSL_PRIVATE_KEY_PATH;
 const fullChainPath = ENV.SSL_FULL_CHAIN_PATH;
 
-const whitelist = ENV.WHITELISTED_DOMAINS
-  ? ENV.WHITELISTED_DOMAINS.split(",")
-  : [];
-
 const certFilesExist =
   fs.existsSync(privateKeyPath) && fs.existsSync(fullChainPath);
 
