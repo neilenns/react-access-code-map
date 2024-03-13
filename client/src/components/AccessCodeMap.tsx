@@ -7,6 +7,7 @@ import { Button, ButtonGroup, Tooltip } from "@mui/material";
 import { ExitToApp } from "@mui/icons-material";
 import * as L from "leaflet";
 import { useEffect, useState } from "react";
+import "leaflet.offline";
 
 export interface IAccessCodeMapProps {
   onSignOutClick: React.MouseEventHandler;
@@ -27,6 +28,27 @@ export default function AccessCodeMap(props: IAccessCodeMapProps) {
   useEffect(() => {
     sessionStorage.setItem("autoLocate", autoLocate.toString());
   }, [autoLocate]);
+
+  useEffect(() => {
+    if (map) {
+      // @ts-ignore
+      const tileLayerOffline = L.tileLayer.offline(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+          attribution:
+            '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+          minZoom: 13,
+        }
+      );
+
+      tileLayerOffline.addTo(map);
+
+      // @ts-ignore
+      const controlSaveTiles = L.control.savetiles(tileLayerOffline, {});
+
+      controlSaveTiles.addTo(map!);
+    }
+  }, [map]);
 
   // Getting this type definition right was a *pain*. I kept getting errors about MutableRefObject
   // type not matching. Fix is from here: https://stackoverflow.com/a/58033283. The key is to specify
