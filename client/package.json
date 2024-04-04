@@ -57,7 +57,7 @@
     "@vitejs/plugin-react": "^4.0.3",
     "eslint": "^8.44.0",
     "typescript": "^5.0.2",
-    "vite": "^4.5.2",
+    "vite": "^4.5.3",
     "vite-plugin-pwa": "^0.19.2",
     "vite-tsconfig-paths": "^4.2.0"
   }
