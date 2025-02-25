@@ -13,6 +13,7 @@ export default defineConfig({
       devOptions: {
         enabled: true,
       },
+
       manifest: {
         short_name: "Access code map",
         name: "Access code map",
