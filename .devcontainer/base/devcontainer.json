@@ -1,0 +1,53 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
+{
+  "build": {
+    "context": ".",
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "DavidAnson.vscode-markdownlint",
+        "houkanshan.vscode-markdown-footnote",
+        "esbenp.prettier-vscode",
+        "yzhang.markdown-all-in-one",
+        "streetsidesoftware.code-spell-checker",
+        "jock.svg",
+        "antfu.file-nesting",
+        "bradlc.vscode-tailwindcss",
+        "csstools.postcss",
+        "mongodb.mongodb-vscode",
+        "nize.oklch-preview",
+        "starbist.oklchanger",
+        "vk-l.nanoid-generator",
+        "github.vscode-github-actions",
+        "ms-vscode-remote.remote-containers",
+        "Jacano.vscode-pnpm"
+      ]
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers-extra/features/pre-commit:2": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/python:1": {},
+
+    "ghcr.io/jsburckhardt/devcontainer-features/gitleaks:1": {},
+    "ghcr.io/neilenns/devcontainer-features/oh-my-zsh": {
+      "disableAutoUpdate": false,
+      "disableUpdatePrompt": false,
+      "stripWorkspacesFromPrompt": true,
+      "theme": "agnoster"
+    },
+    "ghcr.io/stuartleeks/dev-container-features/shell-history:0": {}
+  },
+  "forwardPorts": [27017],
+  "name": "Access codes development container test",
+  "postCreateCommand": [".devcontainer/post-create.sh"]
+
+  // Configure tool-specific properties.
+  // "customizations": {},
+
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
+}

@@ -1,0 +1,17 @@
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.25.1
+    hooks:
+      - id: gitleaks
+        name: "🔒 security: Detect hardcoded secrets"
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-executables-have-shebangs
+        name: "📁 filesystem: Verify shebang presence"
+      - id: check-shebang-scripts-are-executable
+        name: "📁 filesystem: Verify script permissions"
+      - id: check-case-conflict
+        name: "📁 filesystem: Check case sensitivity"
+      - id: check-illegal-windows-names
+        name: "📁 filesystem: Validate Windows filenames"

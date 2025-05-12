@@ -1,0 +1,72 @@
+[{
+  "_id": {
+    "$oid": "64cd91c1064be9ecbed4c4ce"
+  },
+  "title": "12409 Northeast 141st Street",
+  "latitude": 47.72668080859291,
+  "longitude": -122.17450104794278,
+  "note": "",
+  "hasToilet": false,
+  "createdBy": {
+    "$oid": "64a84fdeeb90c885a0c77a5c"
+  },
+  "created": {
+    "$date": "2023-08-05T00:03:13.057Z"
+  },
+  "modifiedBy": {
+    "$oid": "64a84fdeeb90c885a0c77a5c"
+  },
+  "lastModified": {
+    "$date": "2023-08-15T11:42:49.833Z"
+  },
+  "__v": 0,
+  "hasCodes": false
+},
+{
+  "_id": {
+    "$oid": "64db67066ac54f239878b902"
+  },
+  "title": "8603 Northeast 135th Street",
+  "latitude": 47.721080158281964,
+  "longitude": -122.22670233992088,
+  "note": "",
+  "hasToilet": true,
+  "hasCodes": true,
+  "createdBy": {
+    "$oid": "64a84fdeeb90c885a0c77a5c"
+  },
+  "created": {
+    "$date": "2023-08-15T11:52:38.120Z"
+  },
+  "modifiedBy": {
+    "$oid": "64a84fdeeb90c885a0c77a5c"
+  },
+  "lastModified": {
+    "$date": "2023-08-15T11:52:38.120Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64db67096ac54f239878b918"
+  },
+  "title": "8603 Northeast 135th Street",
+  "latitude": 47.721080158281964,
+  "longitude": -122.22670233992088,
+  "note": "",
+  "hasToilet": true,
+  "hasCodes": true,
+  "createdBy": {
+    "$oid": "64a84fdeeb90c885a0c77a5c"
+  },
+  "created": {
+    "$date": "2023-08-15T11:52:41.902Z"
+  },
+  "modifiedBy": {
+    "$oid": "64a84fdeeb90c885a0c77a5c"
+  },
+  "lastModified": {
+    "$date": "2023-08-15T11:52:41.902Z"
+  },
+  "__v": 0
+}]
