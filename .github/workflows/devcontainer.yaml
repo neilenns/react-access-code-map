@@ -57,6 +57,6 @@ jobs:
         uses: devcontainers/ci@v0.3
         with:
           imageName: ghcr.io/${{ github.repository }}/accesscodes-devcontainer
-          configFile: .devcontainer/apps/devcontainer.json
+          configFile: .devcontainer/base/devcontainer.json
           refFilterForPush: refs/heads/main
           push: filter
