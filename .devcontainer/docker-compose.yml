@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/neilenns/clearancelab/accesscodes-devcontainer:latest
+    image: ghcr.io/neilenns/react-access-code-map/accesscodes-devcontainer:latest
     volumes:
       - ../..:/workspaces:cached
       - pnpm-store-devcontainer:/pnpm-store
