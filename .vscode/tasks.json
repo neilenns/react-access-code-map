@@ -39,6 +39,15 @@
       "problemMatcher": ["$tsc-watch"]
     },
     {
+      "type": "shell",
+      "label": "Initialize database",
+      "command": "${workspaceFolder}/.devcontainer/seed/init.sh",
+      "presentation": {
+        "reveal": "never"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "run server and client",
       "dependsOrder": "sequence",
       "dependsOn": ["run server", "run client"],
