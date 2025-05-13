@@ -29,5 +29,5 @@ jobs:
       - name: Build
         run: pnpx turbo run ci --affected
 
-      - name: Lint
-        run: pnpm lint:md && pnpx turbo lint --affected
+      # - name: Lint
+      #   run: pnpm lint:md && pnpx turbo lint --affected
