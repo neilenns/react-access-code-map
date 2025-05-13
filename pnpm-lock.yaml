@@ -23,6 +23,118 @@ importers:
 
   apps/api:
     dependencies:
+      '@logtail/node':
+        specifier: ^0.4.19
+        version: 0.4.21
+      '@logtail/winston':
+        specifier: ^0.4.19
+        version: 0.4.23(winston@3.17.0)
+      chokidar:
+        specifier: ^3.5.3
+        version: 3.6.0
+      connect-mongodb-session:
+        specifier: ^3.1.1
+        version: 3.1.1
+      cookie-parser:
+        specifier: ^1.4.6
+        version: 1.4.7
+      cors:
+        specifier: ^2.8.5
+        version: 2.8.5
+      dotenv:
+        specifier: ^16.3.1
+        version: 16.5.0
+      express:
+        specifier: ^4.19.2
+        version: 4.21.2
+      express-session:
+        specifier: ^1.17.3
+        version: 1.18.1
+      hono:
+        specifier: ^4.7.9
+        version: 4.7.9
+      http-terminator:
+        specifier: ^3.2.0
+        version: 3.2.0
+      jose:
+        specifier: ^6.0.11
+        version: 6.0.11
+      jsonwebtoken:
+        specifier: ^9.0.0
+        version: 9.0.2
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
+      mongoose:
+        specifier: ^7.3.3
+        version: 7.8.7(@aws-sdk/credential-providers@3.808.0)
+      mongoose-autopopulate:
+        specifier: ^1.0.1
+        version: 1.1.0(mongoose@7.8.7(@aws-sdk/credential-providers@3.808.0))
+      morgan:
+        specifier: ^1.10.0
+        version: 1.10.0
+      passport:
+        specifier: ^0.6.0
+        version: 0.6.0
+      passport-jwt:
+        specifier: ^4.0.1
+        version: 4.0.1
+      passport-local-mongoose:
+        specifier: ^8.0.0
+        version: 8.0.0
+      winston:
+        specifier: ^3.11.0
+        version: 3.17.0
+      zod:
+        specifier: ^3.22.4
+        version: 3.24.4
+    devDependencies:
+      '@types/connect-mongodb-session':
+        specifier: ^2.4.4
+        version: 2.4.8
+      '@types/cookie-parser':
+        specifier: ^1.4.3
+        version: 1.4.8(@types/express@4.17.21)
+      '@types/cors':
+        specifier: ^2.8.13
+        version: 2.8.18
+      '@types/debug':
+        specifier: ^4.1.8
+        version: 4.1.12
+      '@types/express':
+        specifier: ^4.17.17
+        version: 4.17.21
+      '@types/express-session':
+        specifier: ^1.17.7
+        version: 1.18.1
+      '@types/lodash':
+        specifier: ^4.14.195
+        version: 4.17.16
+      '@types/morgan':
+        specifier: ^1.9.9
+        version: 1.9.9
+      '@types/passport':
+        specifier: ^1.0.12
+        version: 1.0.17
+      '@types/passport-jwt':
+        specifier: ^3.0.8
+        version: 3.0.13
+      '@types/passport-local':
+        specifier: ^1.0.35
+        version: 1.0.38
+      ts-node:
+        specifier: ^10.9.1
+        version: 10.9.2(@types/node@16.18.126)(typescript@5.8.3)
+      tsc-watch:
+        specifier: ^6.0.4
+        version: 6.2.1(typescript@5.8.3)
+      typescript:
+        specifier: ^5.1.6
+        version: 5.8.3
+
+  apps/web:
+    dependencies:
       '@emotion/react':
         specifier: ^11.11.1
         version: 11.14.0(@types/react@18.3.21)(react@18.3.1)
@@ -38,6 +150,9 @@ importers:
       '@mui/material':
         specifier: ^5.13.7
         version: 5.17.1(@emotion/react@11.14.0(@types/react@18.3.21)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.21)(react@18.3.1))(@types/react@18.3.21)(react@18.3.1))(@types/react@18.3.21)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@mui/system':
+        specifier: ^7.1.0
+        version: 7.1.0(@emotion/react@11.14.0(@types/react@18.3.21)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.21)(react@18.3.1))(@types/react@18.3.21)(react@18.3.1))(@types/react@18.3.21)(react@18.3.1)
       '@types/node':
         specifier: ^16.18.38
         version: 16.18.126
@@ -117,112 +232,6 @@ importers:
       vite-tsconfig-paths:
         specifier: ^4.2.0
         version: 4.3.2(typescript@5.8.3)(vite@4.5.14(@types/node@16.18.126)(terser@5.39.0))
-
-  apps/web:
-    dependencies:
-      '@logtail/node':
-        specifier: ^0.4.19
-        version: 0.4.21
-      '@logtail/winston':
-        specifier: ^0.4.19
-        version: 0.4.23(winston@3.17.0)
-      chokidar:
-        specifier: ^3.5.3
-        version: 3.6.0
-      connect-mongodb-session:
-        specifier: ^3.1.1
-        version: 3.1.1
-      cookie-parser:
-        specifier: ^1.4.6
-        version: 1.4.7
-      cors:
-        specifier: ^2.8.5
-        version: 2.8.5
-      dotenv:
-        specifier: ^16.3.1
-        version: 16.5.0
-      express:
-        specifier: ^4.19.2
-        version: 4.21.2
-      express-session:
-        specifier: ^1.17.3
-        version: 1.18.1
-      http-terminator:
-        specifier: ^3.2.0
-        version: 3.2.0
-      jsonwebtoken:
-        specifier: ^9.0.0
-        version: 9.0.2
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
-      mongoose:
-        specifier: ^7.3.3
-        version: 7.8.7(@aws-sdk/credential-providers@3.808.0)
-      mongoose-autopopulate:
-        specifier: ^1.0.1
-        version: 1.1.0(mongoose@7.8.7(@aws-sdk/credential-providers@3.808.0))
-      morgan:
-        specifier: ^1.10.0
-        version: 1.10.0
-      passport:
-        specifier: ^0.6.0
-        version: 0.6.0
-      passport-jwt:
-        specifier: ^4.0.1
-        version: 4.0.1
-      passport-local-mongoose:
-        specifier: ^8.0.0
-        version: 8.0.0
-      winston:
-        specifier: ^3.11.0
-        version: 3.17.0
-      zod:
-        specifier: ^3.22.4
-        version: 3.24.4
-    devDependencies:
-      '@types/connect-mongodb-session':
-        specifier: ^2.4.4
-        version: 2.4.8
-      '@types/cookie-parser':
-        specifier: ^1.4.3
-        version: 1.4.8(@types/express@4.17.21)
-      '@types/cors':
-        specifier: ^2.8.13
-        version: 2.8.18
-      '@types/debug':
-        specifier: ^4.1.8
-        version: 4.1.12
-      '@types/express':
-        specifier: ^4.17.17
-        version: 4.17.21
-      '@types/express-session':
-        specifier: ^1.17.7
-        version: 1.18.1
-      '@types/lodash':
-        specifier: ^4.14.195
-        version: 4.17.16
-      '@types/morgan':
-        specifier: ^1.9.9
-        version: 1.9.9
-      '@types/passport':
-        specifier: ^1.0.12
-        version: 1.0.17
-      '@types/passport-jwt':
-        specifier: ^3.0.8
-        version: 3.0.13
-      '@types/passport-local':
-        specifier: ^1.0.35
-        version: 1.0.38
-      ts-node:
-        specifier: ^10.9.1
-        version: 10.9.2(@types/node@16.18.126)(typescript@5.8.3)
-      tsc-watch:
-        specifier: ^6.0.4
-        version: 6.2.1(typescript@5.8.3)
-      typescript:
-        specifier: ^5.1.6
-        version: 5.8.3
 
 packages:
 
@@ -1182,9 +1191,32 @@ packages:
       '@types/react':
         optional: true
 
+  '@mui/private-theming@7.1.0':
+    resolution: {integrity: sha512-4Kck4jxhqF6YxNwJdSae1WgDfXVg0lIH6JVJ7gtuFfuKcQCgomJxPvUEOySTFRPz1IZzwz5OAcToskRdffElDA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
   '@mui/styled-engine@5.16.14':
     resolution: {integrity: sha512-UAiMPZABZ7p8mUW4akDV6O7N3+4DatStpXMZwPlt+H/dA0lt67qawN021MNND+4QTpjaiMYxbhKZeQcyWCbuKw==}
     engines: {node: '>=12.0.0'}
+    peerDependencies:
+      '@emotion/react': ^11.4.1
+      '@emotion/styled': ^11.3.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@emotion/react':
+        optional: true
+      '@emotion/styled':
+        optional: true
+
+  '@mui/styled-engine@7.1.0':
+    resolution: {integrity: sha512-m0mJ0c6iRC+f9hMeRe0W7zZX1wme3oUX0+XTVHjPG7DJz6OdQ6K/ggEOq7ZdwilcpdsDUwwMfOmvO71qDkYd2w==}
+    engines: {node: '>=14.0.0'}
     peerDependencies:
       '@emotion/react': ^11.4.1
       '@emotion/styled': ^11.3.0
@@ -1211,8 +1243,32 @@ packages:
       '@types/react':
         optional: true
 
+  '@mui/system@7.1.0':
+    resolution: {integrity: sha512-iedAWgRJMCxeMHvkEhsDlbvkK+qKf9me6ofsf7twk/jfT4P1ImVf7Rwb5VubEA0sikrVL+1SkoZM41M4+LNAVA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@emotion/react': ^11.5.0
+      '@emotion/styled': ^11.3.0
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@emotion/react':
+        optional: true
+      '@emotion/styled':
+        optional: true
+      '@types/react':
+        optional: true
+
   '@mui/types@7.2.24':
     resolution: {integrity: sha512-3c8tRt/CbWZ+pEg7QpSwbdxOk36EfmhbKf6AGZsD1EcLDLTSZoxxJ86FVtcjxvjuhdyBiWKSTGZFaXCnidO2kw==}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
+  '@mui/types@7.4.2':
+    resolution: {integrity: sha512-edRc5JcLPsrlNFYyTPxds+d5oUovuUxnnDtpJUbP6WMeV4+6eaX/mqai1ZIWT62lCOe0nlrON0s9HDiv5en5bA==}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
     peerDependenciesMeta:
@@ -1222,6 +1278,16 @@ packages:
   '@mui/utils@5.17.1':
     resolution: {integrity: sha512-jEZ8FTqInt2WzxDV8bhImWBqeQRD99c/id/fq83H0ER9tFl+sfZlaAoCdznGvbSQQ9ividMxqSV2c7cC1vBcQg==}
     engines: {node: '>=12.0.0'}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
+  '@mui/utils@7.1.0':
+    resolution: {integrity: sha512-/OM3S8kSHHmWNOP+NH9xEtpYSG10upXeQ0wLZnfDgmgadTAk5F4MQfFLyZ5FCRJENB3eRzltMmaNl6UtDnPovw==}
+    engines: {node: '>=14.0.0'}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -2407,6 +2473,10 @@ packages:
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
 
+  hono@4.7.9:
+    resolution: {integrity: sha512-/EsCoR5h7N4yu01TDu9GMCCJa6ZLk5ZJIWFFGNawAXmd1Tp53+Wir4xm0D2X19bbykWUlzQG0+BvPAji6p9E8Q==}
+    engines: {node: '>=16.9.0'}
+
   http-errors@2.0.0:
     resolution: {integrity: sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==}
     engines: {node: '>= 0.8'}
@@ -2591,6 +2661,9 @@ packages:
     resolution: {integrity: sha512-2P4SQ0HrLQ+fw6llpLnOaGAvN2Zu6778SJMrCUwns4fOoG9ayrTiZk3VV8sCPkVZF8ab0zksVpS8FDY5pRCNBA==}
     engines: {node: '>=10'}
     hasBin: true
+
+  jose@6.0.11:
+    resolution: {integrity: sha512-QxG7EaliDARm1O1S8BGakqncGT9s25bKL1WSf6/oa17Tkqwi8D2ZNglqCF+DsYF88/rV66Q/Q2mFAy697E1DUg==}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -5155,10 +5228,32 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.21
 
+  '@mui/private-theming@7.1.0(@types/react@18.3.21)(react@18.3.1)':
+    dependencies:
+      '@babel/runtime': 7.27.1
+      '@mui/utils': 7.1.0(@types/react@18.3.21)(react@18.3.1)
+      prop-types: 15.8.1
+      react: 18.3.1
+    optionalDependencies:
+      '@types/react': 18.3.21
+
   '@mui/styled-engine@5.16.14(@emotion/react@11.14.0(@types/react@18.3.21)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.21)(react@18.3.1))(@types/react@18.3.21)(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.27.1
       '@emotion/cache': 11.14.0
+      csstype: 3.1.3
+      prop-types: 15.8.1
+      react: 18.3.1
+    optionalDependencies:
+      '@emotion/react': 11.14.0(@types/react@18.3.21)(react@18.3.1)
+      '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@18.3.21)(react@18.3.1))(@types/react@18.3.21)(react@18.3.1)
+
+  '@mui/styled-engine@7.1.0(@emotion/react@11.14.0(@types/react@18.3.21)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.21)(react@18.3.1))(@types/react@18.3.21)(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@babel/runtime': 7.27.1
+      '@emotion/cache': 11.14.0
+      '@emotion/serialize': 1.3.3
+      '@emotion/sheet': 1.4.0
       csstype: 3.1.3
       prop-types: 15.8.1
       react: 18.3.1
@@ -5182,7 +5277,29 @@ snapshots:
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@18.3.21)(react@18.3.1))(@types/react@18.3.21)(react@18.3.1)
       '@types/react': 18.3.21
 
+  '@mui/system@7.1.0(@emotion/react@11.14.0(@types/react@18.3.21)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.21)(react@18.3.1))(@types/react@18.3.21)(react@18.3.1))(@types/react@18.3.21)(react@18.3.1)':
+    dependencies:
+      '@babel/runtime': 7.27.1
+      '@mui/private-theming': 7.1.0(@types/react@18.3.21)(react@18.3.1)
+      '@mui/styled-engine': 7.1.0(@emotion/react@11.14.0(@types/react@18.3.21)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.21)(react@18.3.1))(@types/react@18.3.21)(react@18.3.1))(react@18.3.1)
+      '@mui/types': 7.4.2(@types/react@18.3.21)
+      '@mui/utils': 7.1.0(@types/react@18.3.21)(react@18.3.1)
+      clsx: 2.1.1
+      csstype: 3.1.3
+      prop-types: 15.8.1
+      react: 18.3.1
+    optionalDependencies:
+      '@emotion/react': 11.14.0(@types/react@18.3.21)(react@18.3.1)
+      '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@18.3.21)(react@18.3.1))(@types/react@18.3.21)(react@18.3.1)
+      '@types/react': 18.3.21
+
   '@mui/types@7.2.24(@types/react@18.3.21)':
+    optionalDependencies:
+      '@types/react': 18.3.21
+
+  '@mui/types@7.4.2(@types/react@18.3.21)':
+    dependencies:
+      '@babel/runtime': 7.27.1
     optionalDependencies:
       '@types/react': 18.3.21
 
@@ -5190,6 +5307,18 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.27.1
       '@mui/types': 7.2.24(@types/react@18.3.21)
+      '@types/prop-types': 15.7.14
+      clsx: 2.1.1
+      prop-types: 15.8.1
+      react: 18.3.1
+      react-is: 19.1.0
+    optionalDependencies:
+      '@types/react': 18.3.21
+
+  '@mui/utils@7.1.0(@types/react@18.3.21)(react@18.3.1)':
+    dependencies:
+      '@babel/runtime': 7.27.1
+      '@mui/types': 7.4.2(@types/react@18.3.21)
       '@types/prop-types': 15.7.14
       clsx: 2.1.1
       prop-types: 15.8.1
@@ -6752,6 +6881,8 @@ snapshots:
     dependencies:
       react-is: 16.13.1
 
+  hono@4.7.9: {}
+
   http-errors@2.0.0:
     dependencies:
       depd: 2.0.0
@@ -6937,6 +7068,8 @@ snapshots:
       chalk: 4.1.2
       filelist: 1.0.4
       minimatch: 3.1.2
+
+  jose@6.0.11: {}
 
   js-tokens@4.0.0: {}
 
