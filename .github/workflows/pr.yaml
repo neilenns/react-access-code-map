@@ -10,12 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ${{ matrix.builds }}
+        working-directory: apps/${{ matrix.builds }}
 
     strategy:
       fail-fast: true
       matrix:
-        builds: [client, server]
+        builds: [api, web]
 
     steps:
       - name: Checkout code
