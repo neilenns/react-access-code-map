@@ -24,9 +24,9 @@ grep -qxF 'export PATH="$PNPM_HOME:$PATH"' ~/.zshrc || \
 
 echo "⬇️  Installing pnpm packages..."
 
-# pnpm --silent add -g turbo@2.5.0
-# pnpm --silent add -g @devcontainers/cli
-# pnpm --silent install --frozen-lockfile
+pnpm --silent add -g turbo@2.5.0
+pnpm --silent add -g @devcontainers/cli
+pnpm --silent install --frozen-lockfile
 
 ### Database setup
 "${SCRIPT_DIR}/seed/init.sh"

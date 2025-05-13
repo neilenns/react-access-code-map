@@ -8,14 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/${{ matrix.builds }}
-
-    strategy:
-      fail-fast: true
-      matrix:
-        builds: [api, web]
 
     steps:
       - name: Checkout code
@@ -34,5 +26,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build ${{ matrix.builds }}
-        run: pnpm run build
+      - name: Build
+        run: pnpx turbo run ci --affected
+
+      # - name: Lint
+      #   run: pnpm lint:md && pnpx turbo lint --affected

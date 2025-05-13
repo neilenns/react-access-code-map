@@ -29,5 +29,5 @@
   ],
   "nanoid-generator.length": 21,
   "npm.packageManager": "pnpm",
-  "cSpell.words": ["nvmrc"]
+  "cSpell.words": ["autopopulate", "dotenvx", "logtail", "nvmrc"]
 }

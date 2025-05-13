@@ -1,9 +1,9 @@
 import express from "express";
 import { ObjectId } from "mongodb";
-import { verifyUser } from "../authenticate.mjs";
-import mainLogger from "../logger.mjs";
-import verifyPermissions from "../middleware/permissions.mjs";
-import { ILocation, Location } from "../models/location.mjs";
+import { verifyUser } from "../authenticate.js";
+import mainLogger from "../logger.js";
+import verifyPermissions from "../middleware/permissions.js";
+import { ILocation, Location } from "../models/location.js";
 
 const logger = mainLogger.child({ service: "locations" });
 

@@ -1,0 +1,29 @@
+{
+  "$schema": "./node_modules/turbo/schema.json",
+  "globalPassThroughEnv": ["DEPLOY_ENV", "NODE_ENV", "DISABLE_AUTH"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "env": ["API_BASE_URL"]
+    },
+    "ci": {
+      "dependsOn": ["^ci"]
+    },
+    "clean": {
+      "cache": false,
+      "dependsOn": ["^clean"]
+    },
+    "dev": {
+      "cache": false,
+      "dependsOn": ["^dev-setup"],
+      "persistent": true
+    },
+    "dev-setup": {
+      "dependsOn": ["^dev-setup"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    }
+  },
+  "ui": "tui"
+}

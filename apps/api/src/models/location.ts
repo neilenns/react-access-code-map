@@ -1,5 +1,5 @@
 import { Schema, model, Types } from "mongoose";
-import { IUser } from "./user.mjs";
+import { IUser } from "./user.js";
 import autopopulate from "mongoose-autopopulate";
 
 // Define the interface for the Location document

@@ -1,9 +1,9 @@
 import "dotenv/config";
 
-import { ENV } from "./env.mjs";
-import mainLogger from "./logger.mjs";
-import * as WebServer from "./server.mjs";
-import * as db from "./util/database.mjs";
+import { ENV } from "./env.js";
+import mainLogger from "./logger.js";
+import * as WebServer from "./server.js";
+import * as db from "./util/database.js";
 
 const logger = mainLogger.child({ service: "main" });
 

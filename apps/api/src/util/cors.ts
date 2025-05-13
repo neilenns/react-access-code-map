@@ -1,5 +1,5 @@
-import { ENV } from "../env.mjs";
-import mainLogger from "../logger.mjs";
+import { ENV } from "../env.js";
+import mainLogger from "../logger.js";
 
 const logger = mainLogger.child({ service: "cors" });
 

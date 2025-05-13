@@ -1,7 +1,7 @@
 import { CookieOptions } from "express";
 import jwt from "jsonwebtoken";
 import passport from "passport";
-import { ENV } from "./env.mjs";
+import { ENV } from "./env.js";
 
 const dev = ENV.NODE_ENV !== "production";
 

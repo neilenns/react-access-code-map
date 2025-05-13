@@ -1,16 +1,15 @@
 {
   "name": "access-code-map-server",
   "version": "1.0.0",
-  "description": "",
-  "main": "dist/main.mjs",
+  "main": "dist/index.js",
   "scripts": {
-    "start:dev": "tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node ./dist/main.mjs\"",
-    "start": "node ./dist/main.mjs",
-    "build": "tsc"
+    "dev": "dotenvx run -f .env.local -- tsup --watch --onSuccess \"node dist/index.js\"",
+    "ci": "pnpm run build",
+    "build": "tsup",
+    "clean": "rimraf dist node_modules"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "type": "module",
+  "license": "MIT",
   "dependencies": {
     "@logtail/node": "^0.4.19",
     "@logtail/winston": "^0.4.19",
@@ -39,6 +38,8 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@dotenvx/dotenvx": "^1.44.0",
+    "@tsconfig/node22": "^22.0.1",
     "@types/connect-mongodb-session": "^2.4.4",
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.13",
@@ -50,8 +51,10 @@
     "@types/passport": "^1.0.12",
     "@types/passport-jwt": "^3.0.8",
     "@types/passport-local": "^1.0.35",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.1",
     "tsc-watch": "^6.0.4",
-    "typescript": "^5.1.6"
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.3"
   }
 }
