@@ -1,41 +1,48 @@
-# General flow from https://www.howtogeek.com/devops/how-to-dockerise-a-react-app/.
-FROM node:18-alpine AS build
+# Use a Node.js base image with a specific version
+FROM node:18-alpine as build
 
+# Set the working directory in the container
 WORKDIR /app
 
-COPY package.json package.json
-COPY package-lock.json package-lock.json
+# Copy the package.json and package-lock.json files to the working directory
+COPY package*.json ./
+
+# Install app dependencies
 RUN npm ci
 
-# Copy the app source code to the working directory
+# Copy the TypeScript source code to the working directory
 COPY . ./
+
+# Build the TypeScript app
 RUN npm run build
 
-# From https://typeofnan.dev/how-to-serve-a-react-app-with-nginx-in-docker/
-FROM nginx:alpine
+# Use a lightweight base image
+FROM node:18-alpine
 
 LABEL org.opencontainers.image.source=https://github.com/neilenns/react-access-code-map
-LABEL org.opencontainers.image.description="Website for the Access Code Map project."
+LABEL org.opencontainers.image.description="Backend server for the Access Code Map project."
 LABEL org.opencontainers.image.licenses=MIT
 
 # Install curl for the healthcheck
 RUN apk --no-cache add curl
 
-# This is key, it's the location that nginx expects to find the source files
-# for the website
-WORKDIR /usr/share/nginx/html
+# Set the working directory in the container
+WORKDIR /usr/src/app
 
-# Create the folder where the docker-entrypoint.sh file will live
-RUN mkdir -p /usr/src/app
+# Copy the built distribution files from the previous build stage
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/package*.json ./
 
-# Delete any default static HTML files that come with the image
-RUN rm -rf ./*
+# Install only production dependencies
+RUN npm ci --only=production
 
-# Copy the app
-COPY --from=build /app/dist/ .
-COPY --from=build /app/docker-entrypoint.sh /usr/src/app/docker-entrypoint.sh
-RUN chmod +x /usr/src/app/docker-entrypoint.sh
+# Expose the port on which your Express.js app listens
+EXPOSE 3001
 
-EXPOSE 80
+# Pull the version from the github build environment
+ARG VERSION
+ENV VERSION=${VERSION:-dev}
+RUN echo $VERSION
 
-ENTRYPOINT ["/usr/src/app/docker-entrypoint.sh"]
+# Set the entrypoint file
+CMD ["node", "dist/main.mjs"]

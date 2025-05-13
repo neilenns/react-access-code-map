@@ -1,0 +1,32 @@
+{
+  "cSpell.enabledSchemes": {
+    "json": false
+  },
+  "debug.internalConsoleOptions": "neverOpen",
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "explorer.fileNesting.enabled": true,
+  "fileNestingUpdater.promptOnAutoUpdate": false,
+  "files.exclude": {
+    "**/.next": true,
+    "**/.open-next": true,
+    "**/.pnpm-store": true,
+    "**/.turbo": true,
+    "**/.wrangler": true,
+    "**/dist": true,
+    "**/next-env.d.ts": true,
+    "**/node_modules": true,
+    "**/out": true
+  },
+  "mdb.presetConnections": [
+    {
+      "connectionString": "mongodb://localhost:27017",
+      "name": "Clearance Lab local dev"
+    }
+  ],
+  "nanoid-generator.length": 21,
+  "npm.packageManager": "pnpm"
+}
