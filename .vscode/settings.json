@@ -28,5 +28,6 @@
     }
   ],
   "nanoid-generator.length": 21,
-  "npm.packageManager": "pnpm"
+  "npm.packageManager": "pnpm",
+  "cSpell.words": ["nvmrc"]
 }

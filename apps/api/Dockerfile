@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install app dependencies
-RUN npm ci
+RUN pnpm ci
 
 # Copy the TypeScript source code to the working directory
 COPY . ./
@@ -34,7 +34,7 @@ COPY --from=build /app/dist ./dist
 COPY --from=build /app/package*.json ./
 
 # Install only production dependencies
-RUN npm ci --only=production
+RUN pnpm ci --only=production
 
 # Expose the port on which your Express.js app listens
 EXPOSE 3001
