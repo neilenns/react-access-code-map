@@ -45,4 +45,4 @@ ENV VERSION=${VERSION:-dev}
 RUN echo $VERSION
 
 # Set the entrypoint file
-CMD ["node", "dist/main.mjs"]
+CMD ["node", "dist/index.js"]

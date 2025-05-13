@@ -7,9 +7,9 @@ import {
   getAuthToken,
   getRefreshToken,
   verifyUser,
-} from "../authenticate.mjs";
-import { ENV } from "../env.mjs";
-import { User } from "../models/user.mjs";
+} from "../authenticate.js";
+import { ENV } from "../env.js";
+import { User } from "../models/user.js";
 
 const router = express.Router();
 

@@ -2,7 +2,7 @@
 import { Logtail } from "@logtail/node";
 import { LogtailTransport } from "@logtail/winston";
 import winston from "winston";
-import { ENV } from "./env.mjs";
+import { ENV } from "./env.js";
 
 let logtail: Logtail;
 

@@ -1,7 +1,7 @@
 import { IncomingMessage } from "http";
 import morgan from "morgan";
-import { ENV } from "../env.mjs";
-import mainLogger from "../logger.mjs";
+import { ENV } from "../env.js";
+import mainLogger from "../logger.js";
 
 const logger = mainLogger.child({ service: "server" });
 

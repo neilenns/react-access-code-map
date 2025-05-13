@@ -5,10 +5,10 @@ import cors, { CorsOptions } from "cors";
 import express from "express";
 import { createHttpTerminator, HttpTerminator } from "http-terminator";
 import passport from "passport";
-import { ENV } from "./env.mjs";
-import mainLogger from "./logger.mjs";
-import morgan from "./middleware/morgan.mjs";
-import { isOriginAllowed } from "./util/cors.mjs";
+import { ENV } from "./env.js";
+import mainLogger from "./logger.js";
+import morgan from "./middleware/morgan.js";
+import { isOriginAllowed } from "./util/cors.js";
 
 const logger = mainLogger.child({ service: "server" });
 
@@ -19,15 +19,15 @@ const { debounce } = pkg;
 // Routes
 import fs from "fs";
 import https from "https";
-import defaultRouter from "./routes/default.mjs";
-import locationsRouter from "./routes/locations.mjs";
-import userRouter from "./routes/user.mjs";
+import defaultRouter from "./routes/default.js";
+import locationsRouter from "./routes/locations.js";
+import userRouter from "./routes/user.js";
 
 // Authentication
 import { Server } from "http";
-import "./authenticate.mjs";
-import "./strategies/jwtStrategy.mjs";
-import "./strategies/LocalStrategy.mjs";
+import "./authenticate.js";
+import "./strategies/jwtStrategy.js";
+import "./strategies/LocalStrategy.js";
 
 const app = express();
 var server: https.Server | Server;

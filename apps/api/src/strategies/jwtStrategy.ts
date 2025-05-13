@@ -1,7 +1,7 @@
 import passport from "passport";
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
-import { ENV } from "../env.mjs";
-import { User } from "../models/user.mjs";
+import { ENV } from "../env.js";
+import { User } from "../models/user.js";
 
 const opts: any = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();

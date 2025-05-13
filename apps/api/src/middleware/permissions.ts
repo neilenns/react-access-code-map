@@ -4,7 +4,7 @@
 
 // Import the User model
 import { Request, Response, NextFunction } from "express";
-import { User } from "../models/user.mjs";
+import { User } from "../models/user.js";
 
 export default function verifyPermissions(
   req: Request,
