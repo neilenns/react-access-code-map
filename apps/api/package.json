@@ -4,9 +4,12 @@
   "description": "",
   "main": "dist/main.mjs",
   "scripts": {
-    "start:dev": "tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node ./dist/main.mjs\"",
-    "start": "node ./dist/main.mjs",
-    "build": "tsc"
+    "dev": "tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node ./dist/main.mjs\"",
+    "ci": "pnpm run build",
+    "build": "tsc",
+    "clean": "rimraf dist node_modules",
+    "lint": "pnpm run lint:eslint",
+    "lint:eslint": "eslint ."
   },
   "keywords": [],
   "author": "",
@@ -50,6 +53,7 @@
     "@types/passport": "^1.0.12",
     "@types/passport-jwt": "^3.0.8",
     "@types/passport-local": "^1.0.35",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.1",
     "tsc-watch": "^6.0.4",
     "typescript": "^5.1.6"
