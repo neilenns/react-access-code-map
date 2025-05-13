@@ -6,9 +6,7 @@
     "dev": "dotenvx run -f .env.local -- tsup --watch --onSuccess \"node dist/index.js\"",
     "ci": "pnpm run build",
     "build": "tsup",
-    "clean": "rimraf dist node_modules",
-    "lint": "pnpm run lint:eslint",
-    "lint:eslint": "eslint ."
+    "clean": "rimraf dist node_modules"
   },
   "type": "module",
   "license": "MIT",

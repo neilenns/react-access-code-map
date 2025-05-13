@@ -29,3 +29,6 @@ dist/
 dev-dist/
 **/*.map
 node_modules
+
+# Turborepo
+**/.turbo
