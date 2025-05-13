@@ -1,0 +1,26 @@
+language: "en-US"
+reviews:
+  collapse_walkthrough: true
+  sequence_diagrams: false
+  auto_review:
+    enabled: false
+    drafts: false
+  tools:
+    # Disable eslint and markdown lint since they are handled separately
+    # by the ci.yaml workflow, and coderabbit doesn't know how to eslint
+    # nextjs projects.
+    eslint:
+      enabled: false
+    markdownlint:
+      enabled: false
+  path_filters:
+    - "!apps/web/src/components/ui/**"
+    - "!apps/web/src/hooks/**"
+  path_instructions:
+    - path: "**/*.md"
+      instructions: |
+        Review all markdown files and ensure that:
+          - All headings are in sentence, not title, case.
+          - All list sentences end in a period.
+          - Spelling and grammar is correct.
+          - Table headers are in sentence case.

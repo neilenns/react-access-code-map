@@ -23,7 +23,8 @@
         "vk-l.nanoid-generator",
         "github.vscode-github-actions",
         "ms-vscode-remote.remote-containers",
-        "Jacano.vscode-pnpm"
+        "Jacano.vscode-pnpm",
+        "ms-azuretools.vscode-containers"
       ]
     }
   },
